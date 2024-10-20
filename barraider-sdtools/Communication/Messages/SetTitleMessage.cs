@@ -1,40 +1,40 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace BarRaider.SdTools.Communication.Messages
 {
     internal class SetTitleMessage : IMessage
     {
-        [JsonProperty("event")]
+        [JsonPropertyName("event")]
         public string Event { get { return "setTitle"; } }
 
-        [JsonProperty("context")]
-        public string Context { get; private set; }
+        [JsonPropertyName("context")]
+        public string Context { get; set; }
 
-        [JsonProperty("payload")]
-        public IPayload Payload { get; private set; }
+        [JsonPropertyName("payload")]
+        public IPayload Payload { get; set; }
 
-        public SetTitleMessage(string title, string context, SDKTarget target, int? state)
+        public SetTitleMessage(string title, string context, SdkTarget target, int? state)
         {
-            this.Context = context;
-            this.Payload = new PayloadClass(title, target, state);
+            Context = context;
+            Payload = new PayloadClass(title, target, state);
         }
 
         private class PayloadClass : IPayload
         {
-            [JsonProperty("title")]
-            public string Title { get; private set; }
+            [JsonPropertyName("title")]
+            public string Title { get; set; }
 
-            [JsonProperty("target")]
-            public SDKTarget Target { get; private set; }
+            [JsonPropertyName("target")]
+            public SdkTarget Target { get; set; }
 
-            [JsonProperty("state", NullValueHandling = NullValueHandling.Ignore)]
-            public int? State { get; private set; }
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            public int? State { get; set; }
 
-            public PayloadClass(string title, SDKTarget target, int? state)
+            public PayloadClass(string title, SdkTarget target, int? state)
             {
-                this.Title = title;
-                this.Target = target;
-                this.State = state;
+                Title = title;
+                Target = target;
+                State = state;
             }
         }
     }

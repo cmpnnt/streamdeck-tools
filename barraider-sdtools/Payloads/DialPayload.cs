@@ -1,33 +1,31 @@
-﻿using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using BarRaider.SdTools.Wrappers;
 
 namespace BarRaider.SdTools.Payloads
 {
     /// <summary>
     /// Payload received when a dial is down or up
     /// </summary>
-    public class DialPayload
+    public record DialPayload
     {
         /// <summary>
         /// Controller which issued the event
         /// </summary>
-        [JsonProperty("controller")]
-        public string Controller { get; private set; }
+        [JsonPropertyName("controller")]
+        public string Controller { get; set; }
 
         /// <summary>
         /// Current event settings
         /// </summary>
-        [JsonProperty("settings")]
-        public JObject Settings { get; private set; }
+        [JsonPropertyName("settings")]
+        public JsonObject Settings { get; set; }
 
         /// <summary>
         /// Coordinates of key on the stream deck
         /// </summary>
-        [JsonProperty("coordinates")]
-        public KeyCoordinates Coordinates { get; private set; }
+        [JsonPropertyName("coordinates")]
+        public KeyCoordinates Coordinates { get; set; }
 
         /// <summary>
         /// Constructor
@@ -35,7 +33,7 @@ namespace BarRaider.SdTools.Payloads
         /// <param name="coordinates"></param>
         /// <param name="settings"></param>
         /// <param name="controller"></param>
-        public DialPayload(KeyCoordinates coordinates, JObject settings, string controller)
+        public DialPayload(KeyCoordinates coordinates, JsonObject settings, string controller)
         {
             Coordinates = coordinates;
             Settings = settings;

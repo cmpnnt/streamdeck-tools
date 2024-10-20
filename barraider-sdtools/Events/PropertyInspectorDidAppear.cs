@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace BarRaider.SdTools.Events
 {
@@ -10,20 +10,20 @@ namespace BarRaider.SdTools.Events
         /// <summary>
         /// ActionId
         /// </summary>
-        [JsonProperty("action")]
-        public string Action { get; private set; }
+        [JsonPropertyName("action")]
+        public string Action { get; set; }
 
         /// <summary>
         /// ContextId
         /// </summary>
-        [JsonProperty("context")]
-        public string Context { get; private set; }
+        [JsonPropertyName("context")]
+        public string Context { get; set; }
 
         /// <summary>
         /// Device Guid
         /// </summary>
-        [JsonProperty("device")]
-        public string Device { get; private set; }
+        [JsonPropertyName("device")]
+        public string Device { get; set; }
 
         /// <summary>
         /// Constructor

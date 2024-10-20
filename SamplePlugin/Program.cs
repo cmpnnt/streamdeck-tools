@@ -1,9 +1,7 @@
-﻿using BarRaider.SdTools;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
+using System.Text.Json.Nodes;
+using BarRaider.SdTools.Backend;
+using BarRaider.SdTools.Tools;
 
 namespace SamplePlugin
 {
@@ -12,9 +10,9 @@ namespace SamplePlugin
         static void Main(string[] args)
         {
             // Uncomment this line of code to allow for debugging
-            //while (!System.Diagnostics.Debugger.IsAttached) { System.Threading.Thread.Sleep(100); }
-
-            SDWrapper.Run(args);
+           //while (!System.Diagnostics.Debugger.IsAttached) { System.Threading.Thread.Sleep(100); }
+           
+            SdWrapper.Run(args);
         }
     }
 }

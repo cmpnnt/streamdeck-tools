@@ -1,5 +1,6 @@
-﻿using BarRaider.SdTools.Payloads;
-using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
+using BarRaider.SdTools.Payloads;
+
 
 namespace BarRaider.SdTools.Communication.SDEvents
 {
@@ -11,7 +12,7 @@ namespace BarRaider.SdTools.Communication.SDEvents
         /// <summary>
         /// Application payload
         /// </summary>
-        [JsonProperty("payload")]
-        public ApplicationPayload Payload { get; private set; }
+        [JsonPropertyName("payload")]
+        public ApplicationPayload Payload { get; set; }
     }
 }

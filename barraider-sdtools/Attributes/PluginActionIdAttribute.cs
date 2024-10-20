@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Attributes
 {
     /// <summary>
     /// PluginActionId attribute
@@ -16,15 +14,15 @@ namespace BarRaider.SdTools
         /// <summary>
         /// UUID of the action
         /// </summary>
-        public string ActionId { get; private set; }
+        public string ActionId { get; set; }
 
         /// <summary>
         /// Constructor - This attribute is used to indicate the UUID in the manifest file that matches to this class
         /// </summary>
-        /// <param name="ActionId"></param>
-        public PluginActionIdAttribute(string ActionId)
+        /// <param name="actionId"></param>
+        public PluginActionIdAttribute(string actionId)
         {
-            this.ActionId = ActionId;
+            ActionId = actionId;
         }
     }
 }

@@ -1,9 +1,6 @@
 ﻿using BarRaider.SdTools.Payloads;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Tools
 {
     internal static class PayloadExtensionMethods
     {

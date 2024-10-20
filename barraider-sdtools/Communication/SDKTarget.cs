@@ -3,7 +3,7 @@
     /// <summary>
     /// Target to send Title/Image to
     /// </summary>
-    public enum SDKTarget : int
+    public enum SdkTarget : int
     {
         /// <summary>
         /// Send to both App and Device

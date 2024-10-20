@@ -1,12 +1,12 @@
-﻿using BarRaider.SdTools.Wrappers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Text;
+using BarRaider.SdTools.Wrappers;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Tools
 {
     /// <summary>
     /// Library of tools used to manipulate graphics
@@ -20,7 +20,7 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public static Color ColorFromHex(string hexColor)
         {
-            return System.Drawing.ColorTranslator.FromHtml(hexColor);
+            return ColorTranslator.FromHtml(hexColor);
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace BarRaider.SdTools
             }
             catch (Exception ex)
             {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, $"SetImageOpacity exception {ex}");
+                Logger.Instance.LogMessage(TracingLevel.Error, $"SetImageOpacity exception {ex}");
                 return null;
             }
         }
@@ -268,7 +268,7 @@ namespace BarRaider.SdTools
             }
             catch (Exception ex)
             {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, $"WrapStringToFitImage Exception: {ex}");
+                Logger.Instance.LogMessage(TracingLevel.Error, $"WrapStringToFitImage Exception: {ex}");
                 return str;
             }
         }

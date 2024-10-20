@@ -1,9 +1,6 @@
 ﻿using BarRaider.SdTools.Payloads;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Backend
 {
     /// <summary>
     /// Interface used to capture dial/encoder events

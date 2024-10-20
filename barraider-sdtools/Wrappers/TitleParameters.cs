@@ -1,8 +1,7 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Drawing;
-using System.Text;
+using System.Text.Json.Serialization;
+using BarRaider.SdTools.Tools;
 
 namespace BarRaider.SdTools.Wrappers
 {
@@ -41,14 +40,14 @@ namespace BarRaider.SdTools.Wrappers
         /// <summary>
         /// Title Color
         /// </summary>
-        [JsonProperty("titleColor")]
-        public Color TitleColor { get; private set; } = Color.White;
+        [JsonPropertyName("titleColor")]
+        public Color TitleColor { get; set; } = Color.White;
 
         /// <summary>
         /// Font Size in Points
         /// </summary>
-        [JsonProperty("fontSize")]
-        public double FontSizeInPoints { get; private set; } = 10;
+        [JsonPropertyName("fontSize")]
+        public double FontSizeInPoints { get; set; } = 10;
 
         /// <summary>
         /// Font Size in Pixels
@@ -65,26 +64,26 @@ namespace BarRaider.SdTools.Wrappers
         /// <summary>
         /// Font Family
         /// </summary>
-        [JsonProperty("fontFamily")]
-        public FontFamily FontFamily { get; private set; } = new FontFamily(DEFAULT_FONT_FAMILY_NAME);
+        [JsonPropertyName("fontFamily")]
+        public FontFamily FontFamily { get; set; } = new FontFamily(DEFAULT_FONT_FAMILY_NAME);
 
         /// <summary>
         /// Font Style
         /// </summary>
-        [JsonProperty("fontStyle")]
-        public FontStyle FontStyle { get; private set; } = FontStyle.Bold;
+        [JsonPropertyName("fontStyle")]
+        public FontStyle FontStyle { get; set; } = FontStyle.Bold;
 
         /// <summary>
         /// Should Title be shown
         /// </summary>
-        [JsonProperty("showTitle")]
-        public bool ShowTitle { get; private set; }
+        [JsonPropertyName("showTitle")]
+        public bool ShowTitle { get; set; }
 
         /// <summary>
         /// Alignment position of the Title text on the key
         /// </summary>
-        [JsonProperty("titleAlignment")]
-        public TitleVerticalAlignment VerticalAlignment { get; private set; }
+        [JsonPropertyName("titleAlignment")]
+        public TitleVerticalAlignment VerticalAlignment { get; set; }
 
         /// <summary>
         /// Constructor
@@ -128,18 +127,18 @@ namespace BarRaider.SdTools.Wrappers
                 ShowTitle = showTitle;
 
                 // Color
-                if (!String.IsNullOrEmpty(titleColor))
+                if (!string.IsNullOrEmpty(titleColor))
                 {
                     TitleColor = ColorTranslator.FromHtml(titleColor);
                 }
 
-                if (!String.IsNullOrEmpty(fontFamily))
+                if (!string.IsNullOrEmpty(fontFamily))
                 {
                     FontFamily = new FontFamily(fontFamily);
                 }
 
                 FontSizeInPoints = fontSize;
-                if (!String.IsNullOrEmpty(fontStyle))
+                if (!string.IsNullOrEmpty(fontStyle))
                 {
                     switch (fontStyle.ToLowerInvariant())
                     {
@@ -156,7 +155,7 @@ namespace BarRaider.SdTools.Wrappers
                             FontStyle = FontStyle.Bold | FontStyle.Italic;
                             break;
                         default:
-                            Logger.Instance.LogMessage(TracingLevel.WARN, $"{this.GetType()} Cannot parse Font Style: {fontStyle}");
+                            Logger.Instance.LogMessage(TracingLevel.Warn, $"{GetType()} Cannot parse Font Style: {fontStyle}");
                             break;
                     }
                 }
@@ -183,7 +182,7 @@ namespace BarRaider.SdTools.Wrappers
             }
             catch (Exception ex)
             {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, $"TitleParameters failed to parse payload {ex}");
+                Logger.Instance.LogMessage(TracingLevel.Error, $"TitleParameters failed to parse payload {ex}");
             }
         }
     }

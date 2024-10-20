@@ -1,56 +1,58 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
+using System.Text.Json.Serialization;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.StreamDeckInfo
 {
     /// <summary>
     /// Class which holds information on the StreamDeck app and StreamDeck hardware device that the plugin is communicating with
     /// </summary>
-    public class StreamDeckInfo
+    public record StreamDeckInfo
     {
         /// <summary>
         /// Information on the StreamDeck App which we're communicating with
         /// </summary>
-        [JsonProperty(PropertyName = "application")]
-        public StreamDeckApplicationInfo Application { get; private set; }
-
+        [JsonPropertyName("application")]
+        public StreamDeckApplicationInfo Application { get; set; }
+        
         /// <summary>
-        /// Information on the StreamDeck hardware device that the plugin is running on
+        /// Collection of preferred colors used by the Stream Deck
         /// </summary>
-        [JsonProperty(PropertyName = "devices")]
-        public StreamDeckDeviceInfo[] Devices { get; private set; }
-
-        /// <summary>
-        /// Information on the Plugin we're currently running
-        /// </summary>
-        [JsonProperty(PropertyName = "plugin")]
-        public StreamDeckPluginInfo Plugin { get; private set; }
+        [JsonPropertyName("colors")]
+        public StreamDeckColors Colors { get; set; }
 
         /// <summary>
         /// Device pixel ratio
         /// </summary>
-        [JsonProperty(PropertyName = "devicePixelRatio")]
-        public int DevicePixelRatio { get; private set; }
+        [JsonPropertyName("devicePixelRatio")]
+        public int DevicePixelRatio { get; set; }
+        
+        /// <summary>
+        /// Information on the StreamDeck hardware device that the plugin is running on
+        /// </summary>
+        [JsonPropertyName("devices")]
+        public StreamDeckDeviceInfo[] Devices { get; set; }
 
+        /// <summary>
+        /// Information on the Plugin we're currently running
+        /// </summary>
+        [JsonPropertyName("plugin")]
+        public StreamDeckPluginInfo Plugin { get; set; }
+        
         /// <summary>
         /// Shows class information as string
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             if (Devices != null)
             {
                 sb.Append("Devices:\n");
-                for (int device = 0; device < Devices.Length; device++)
+                foreach (StreamDeckDeviceInfo info in Devices)
                 {
-                    if (Devices[device] != null)
+                    if (info != null)
                     {
-                        sb.Append($"[{Devices[device]}]\n");
+                        sb.Append($"[{info}]\n");
                     }
                 }
             }
@@ -64,6 +66,12 @@ namespace BarRaider.SdTools
             {
                 sb.Append($"PluginInfo: {Plugin}\n");
             }
+            
+            if (Colors != null)
+            {
+                sb.Append($"Colors: {Colors}\n");
+            }
+            
             return sb.ToString();
         }
     }

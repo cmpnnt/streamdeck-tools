@@ -1,9 +1,6 @@
 ﻿using BarRaider.SdTools.Payloads;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Backend
 {
     /// <summary>
     /// Main abstract class your plugin should derive from for dials (not keys)
@@ -71,7 +68,7 @@ namespace BarRaider.SdTools
         /// <summary>
         /// Connection object which handles your communication with the Stream Deck app
         /// </summary>
-        protected ISDConnection Connection { get; private set; }
+        protected ISdConnection Connection { get; set; }
 
         /// <summary>
         /// Constructor for PluginBase. Receives the communication and plugin settings 
@@ -91,7 +88,7 @@ namespace BarRaider.SdTools
         /// <param name="connection">Communication module with Stream Deck</param>
         /// <param name="payload">Plugin settings - NOTE: Not used in base class, should be consumed by deriving class</param>
 #pragma warning disable IDE0060 // Remove unused parameter
-        public EncoderBase(ISDConnection connection, InitialPayload payload)
+        public EncoderBase(ISdConnection connection, InitialPayload payload)
 #pragma warning restore IDE0060 // Remove unused parameter
         {
             Connection = connection;

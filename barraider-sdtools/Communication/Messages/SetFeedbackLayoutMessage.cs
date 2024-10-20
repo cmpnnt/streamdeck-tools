@@ -1,31 +1,31 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace BarRaider.SdTools.Communication.Messages
 {
     internal class SetFeedbackLayoutMessage : IMessage
     {
-        [JsonProperty("event")]
+        [JsonPropertyName("event")]
         public string Event { get { return "setFeedbackLayout"; } }
 
-        [JsonProperty("context")]
-        public string Context { get; private set; }
+        [JsonPropertyName("context")]
+        public string Context { get; set; }
 
-        [JsonProperty("payload")]
-        public IPayload Payload { get; private set; }
+        [JsonPropertyName("payload")]
+        public IPayload Payload { get; set; }
 
         public SetFeedbackLayoutMessage(string layout, string context)
         {
-            this.Context = context;
-            this.Payload = new PayloadClass(layout);
+            Context = context;
+            Payload = new PayloadClass(layout);
         }
 
         private class PayloadClass : IPayload
         {
-            [JsonProperty("layout")]
-            public string Layout { get; private set; }
+            [JsonPropertyName("layout")]
+            public string Layout { get; set; }
             public PayloadClass(string layout)
             {
-                this.Layout = layout;
+                Layout = layout;
             }
         }
     }

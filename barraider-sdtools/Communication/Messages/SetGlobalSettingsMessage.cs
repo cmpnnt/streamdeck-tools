@@ -1,23 +1,23 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 namespace BarRaider.SdTools.Communication.Messages
 {
     internal class SetGlobalSettingsMessage : IMessage
     {
-        [JsonProperty("event")]
+        [JsonPropertyName("event")]
         public string Event { get { return "setGlobalSettings"; } }
 
-        [JsonProperty("context")]
-        public string Context { get; private set; }
+        [JsonPropertyName("context")]
+        public string Context { get; set; }
 
-        [JsonProperty("payload")]
-        public JObject Payload { get; private set; }
+        [JsonPropertyName("payload")]
+        public JsonObject Payload { get; set; }
 
-        public SetGlobalSettingsMessage(JObject settings, string pluginUUID)
+        public SetGlobalSettingsMessage(JsonObject settings, string pluginUuid)
         {
-            this.Context = pluginUUID;
-            this.Payload = settings;
+            Context = pluginUuid;
+            Payload = settings;
         }
     }
 }

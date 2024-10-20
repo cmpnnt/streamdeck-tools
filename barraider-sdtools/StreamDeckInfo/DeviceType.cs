@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace BarRaider.SdTools
+﻿namespace BarRaider.SdTools.StreamDeckInfo
 {
     /// <summary>
     /// Type of StreamDeck hardware device, currently two are supported (classic and mini)
@@ -22,7 +18,7 @@ namespace BarRaider.SdTools
         /// <summary>
         /// StreamDeck XL with 32 keys
         /// </summary>
-        StreamDeckXL = 2,
+        StreamDeckXl = 2,
 
         /// <summary>
         /// StreamDeck Mobile version
@@ -42,7 +38,7 @@ namespace BarRaider.SdTools
         /// <summary>
         /// Corsair CUE SDK (?)
         /// </summary>
-        CorsairCueSDK = 6,
+        CorsairCueSdk = 6,
 
         /// <summary>
         /// Stream Deck+

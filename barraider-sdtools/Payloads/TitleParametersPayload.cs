@@ -1,42 +1,39 @@
-﻿using BarRaider.SdTools.Wrappers;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using BarRaider.SdTools.Wrappers;
 
 namespace BarRaider.SdTools.Payloads
 {
     /// <summary>
     /// Payload for TitleParametersDidChange Event
     /// </summary>
-    public class TitleParametersPayload
+    public record TitleParametersPayload
     {
         private TitleParameters titleParameters = null;
 
         /// <summary>
         /// Settings JSON Object
         /// </summary>
-        [JsonProperty("settings")]
-        public JObject Settings { get; private set; }
+        [JsonPropertyName("settings")]
+        public JsonObject Settings { get; set; }
 
         /// <summary>
         /// Key Coordinates
         /// </summary>
-        [JsonProperty("coordinates")]
-        public KeyCoordinates Coordinates { get; private set; }
+        [JsonPropertyName("coordinates")]
+        public KeyCoordinates Coordinates { get; set; }
 
         /// <summary>
         /// Key State
         /// </summary>
-        [JsonProperty("state")]
-        public uint State { get; private set; }
+        [JsonPropertyName("state")]
+        public uint State { get; set; }
 
         /// <summary>
         /// Title
         /// </summary>
-        [JsonProperty("title")]
-        public string Title { get; private set; }
+        [JsonPropertyName("title")]
+        public string Title { get; set; }
 
         /// <summary>
         /// Title Parameters
@@ -58,17 +55,14 @@ namespace BarRaider.SdTools.Payloads
 
                 return titleParameters;
             }
-            private set
-            {
-                titleParameters = value;
-            }
+            private set => titleParameters = value;
         }
 
         /// <summary>
         /// Raw Title Parameters (not as proper object)
         /// </summary>
-        [JsonProperty("titleParameters")]
-        public TitleParametersRawPayload TitleParametersRaw { get; private set; }
+        [JsonPropertyName("titleParameters")]
+        public TitleParametersRawPayload TitleParametersRaw { get; set; }
 
         /// <summary>
         /// Constructor
@@ -78,7 +72,7 @@ namespace BarRaider.SdTools.Payloads
         /// <param name="state"></param>
         /// <param name="title"></param>
         /// <param name="titleParameters"></param>
-        public TitleParametersPayload(JObject settings, KeyCoordinates coordinates, uint state, string title, TitleParameters titleParameters)
+        public TitleParametersPayload(JsonObject settings, KeyCoordinates coordinates, uint state, string title, TitleParameters titleParameters)
         {
             Settings = settings;
             Coordinates = coordinates;

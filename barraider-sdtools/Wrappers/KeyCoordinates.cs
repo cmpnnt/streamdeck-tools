@@ -1,21 +1,22 @@
-﻿using Newtonsoft.Json;
-namespace BarRaider.SdTools
+﻿using System.Text.Json.Serialization;
+
+namespace BarRaider.SdTools.Wrappers
 {
     /// <summary>
     /// Coordinates of the current key
     /// </summary>
-    public class KeyCoordinates
+    public record KeyCoordinates
     {
         /// <summary>
         /// Column of the current key
         /// </summary>
-        [JsonProperty("column")]
+        [JsonPropertyName("column")]
         public int Column { get; set; }
 
         /// <summary>
         /// Row of the current key
         /// </summary>
-        [JsonProperty("row")]
+        [JsonPropertyName("row")]
         public int Row { get; set; }
     }
 }

@@ -1,55 +1,49 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.StreamDeckInfo
 {
     /// <summary>
     /// Class which holds information on the StreamDeck hardware device
     /// </summary>
-    public class StreamDeckDeviceInfo
+    public record StreamDeckDeviceInfo
     {
+        /// <summary>
+        /// ID of the StreamDeck hardware device
+        /// </summary>
+        [JsonPropertyName("id")]
+        public string Id { get; set; }
+        
+        /// <summary>
+        /// Name of the StreamDeck hardware device
+        /// </summary>
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
+        
         /// <summary>
         /// Details on number of keys of the StreamDeck hardware device
         /// </summary>
-        [JsonProperty(PropertyName = "size")]
-        public StreamDeckDeviceSize Size { get; private set; }
+        [JsonPropertyName("size")]
+        public StreamDeckDeviceSize Size { get; set; }
 
         /// <summary>
         /// Type of StreamDeck hardware device
         /// </summary>
-        [JsonProperty(PropertyName = "type")]
-        public DeviceType Type { get; private set; }
-
-        /// <summary>
-        /// Id of the StreamDeck hardware device
-        /// </summary>
-        [JsonProperty(PropertyName = "id")]
-        public string Id { get; private set; }
+        [JsonPropertyName("type")]
+        public DeviceType Type { get; set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="size"></param>
         /// <param name="type"></param>
-        /// <param name="deviceId"></param>
-        public StreamDeckDeviceInfo(StreamDeckDeviceSize size, DeviceType type, string deviceId)
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        public StreamDeckDeviceInfo(StreamDeckDeviceSize size, DeviceType type, string id, string name)
         {
             Size = size;
             Type = type;
-            Id = deviceId;
-        }
-
-        /// <summary>
-        /// Shows class information as string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return $"Id: {Id} Type: {Type} Size: {Size?.ToString()}";
+            Id = id;
+            Name = name;
         }
     }
 }

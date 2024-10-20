@@ -1,43 +1,43 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace BarRaider.SdTools.Communication.Messages
 {
     internal class SwitchToProfileMessage : IMessage
     {
-        [JsonProperty("event")]
+        [JsonPropertyName("event")]
         public string Event { get { return "switchToProfile"; } }
 
-        [JsonProperty("context")]
-        public string Context { get; private set; }
+        [JsonPropertyName("context")]
+        public string Context { get; set; }
 
-        [JsonProperty("device")]
-        public string Device { get; private set; }
+        [JsonPropertyName("device")]
+        public string Device { get; set; }
 
-        [JsonProperty("payload")]
-        public IPayload Payload { get; private set; }
+        [JsonPropertyName("payload")]
+        public IPayload Payload { get; set; }
 
-        public SwitchToProfileMessage(string device, string profileName, string pluginUUID)
+        public SwitchToProfileMessage(string device, string profileName, string pluginUuid)
         {
-            this.Context = pluginUUID;
-            this.Device = device;
+            Context = pluginUuid;
+            Device = device;
             if (!string.IsNullOrEmpty(profileName))
             {
-                this.Payload = new PayloadClass(profileName);
+                Payload = new PayloadClass(profileName);
             }
             else
             {
-                this.Payload = new EmptyPayload();
+                Payload = new EmptyPayload();
             }
         }
 
         private class PayloadClass : IPayload
         {
-            [JsonProperty("profile")]
-            public string Profile { get; private set; }
+            [JsonPropertyName("profile")]
+            public string Profile { get; set; }
 
             public PayloadClass(string profile)
             {
-                this.Profile = profile;
+                Profile = profile;
             }
         }
     }

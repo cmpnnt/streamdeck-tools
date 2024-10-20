@@ -1,8 +1,6 @@
-﻿using BarRaider.SdTools.Wrappers;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -11,9 +9,14 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
-using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using BarRaider.SdTools.Attributes;
+using BarRaider.SdTools.StreamDeckInfo;
+using BarRaider.SdTools.Wrappers;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Tools
 {
     /// <summary>
     /// Set of common utilities used by various plugins
@@ -102,7 +105,7 @@ namespace BarRaider.SdTools
             }
             catch (Exception ex)
             {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, $"Base64StringToImage Exception: {ex}");
+                Logger.Instance.LogMessage(TracingLevel.Error, $"Base64StringToImage Exception: {ex}");
             }
             return null;
         }
@@ -121,10 +124,10 @@ namespace BarRaider.SdTools
                 case DeviceType.StreamDeckMini:
                 case DeviceType.StreamDeckMobile:
                     return CLASSIC_KEY_DEFAULT_HEIGHT;
-                case DeviceType.StreamDeckXL:
+                case DeviceType.StreamDeckXl:
                     return XL_KEY_DEFAULT_HEIGHT;
                 default:
-                    Logger.Instance.LogMessage(TracingLevel.ERROR, $"SDTools GetKeyDefaultHeight Error: Invalid StreamDeckDeviceType: {streamDeckType}");
+                    Logger.Instance.LogMessage(TracingLevel.Error, $"SDTools GetKeyDefaultHeight Error: Invalid StreamDeckDeviceType: {streamDeckType}");
                     break;
             }
             return 1;
@@ -144,10 +147,10 @@ namespace BarRaider.SdTools
                 case DeviceType.StreamDeckMini:
                 case DeviceType.StreamDeckMobile:
                     return CLASSIC_KEY_DEFAULT_WIDTH;
-                case DeviceType.StreamDeckXL:
+                case DeviceType.StreamDeckXl:
                     return XL_KEY_DEFAULT_WIDTH;
                 default:
-                    Logger.Instance.LogMessage(TracingLevel.ERROR, $"SDTools GetKeyDefaultHeight Error: Invalid StreamDeckDeviceType: {streamDeckType}");
+                    Logger.Instance.LogMessage(TracingLevel.Error, $"SDTools GetKeyDefaultHeight Error: Invalid StreamDeckDeviceType: {streamDeckType}");
                     break;
             }
             return 1;
@@ -204,7 +207,7 @@ namespace BarRaider.SdTools
             }
             catch (Exception ex)
             {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, $"SDTools GenerateKeyImage exception: {ex} Height: {height} Width: {width}");
+                Logger.Instance.LogMessage(TracingLevel.Error, $"SDTools GenerateKeyImage exception: {ex} Height: {height} Width: {width}");
             }
             graphics = null;
             return null;
@@ -238,9 +241,9 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="payload"></param>
         /// <returns></returns>
-        public static string FilenameFromPayload(Newtonsoft.Json.Linq.JToken payload)
+        public static string FilenameFromPayload(JsonElement payload)
         {
-            return FilenameFromString((string)payload);
+            return FilenameFromString(payload.ToString());
         }
 
         private static string FilenameFromString(string filenameWithFakepath)
@@ -252,7 +255,7 @@ namespace BarRaider.SdTools
 
             if (filenameWithFakepath == FILENAME_NO_FILE_STRING)
             {
-                return String.Empty;
+                return string.Empty;
             }
 
             return Uri.UnescapeDataString(filenameWithFakepath.Replace("C:\\fakepath\\", ""));
@@ -301,7 +304,7 @@ namespace BarRaider.SdTools
                 numberInBytes = 100d * numberInBytes / 1024d / 100d;
                 sizeCounter++;
             }
-            return String.Format(format[sizeCounter], numberInBytes);
+            return string.Format(format[sizeCounter], numberInBytes);
         }
 
         /// <summary>
@@ -328,7 +331,7 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="image"></param>
         /// <returns></returns>
-        public static string ImageToSHA512(Image image)
+        public static string ImageToSha512(Image image)
         {
             if (image == null)
             {
@@ -340,12 +343,12 @@ namespace BarRaider.SdTools
                 using (MemoryStream ms = new MemoryStream())
                 {
                     image.Save(ms, ImageFormat.Png);
-                    return BytesToSHA512(ms.ToArray());
+                    return BytesToSha512(ms.ToArray());
                 }
             }
             catch (Exception ex)
             {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, $"ImageToSHA512 Exception: {ex}");
+                Logger.Instance.LogMessage(TracingLevel.Error, $"ImageToSHA512 Exception: {ex}");
             }
             return null;
         }
@@ -355,13 +358,13 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        public static string StringToSHA512(string str)
+        public static string StringToSha512(string str)
         {
             if (str == null)
             {
                 return null;
             }
-            return BytesToSHA512(System.Text.Encoding.UTF8.GetBytes(str));
+            return BytesToSha512(System.Text.Encoding.UTF8.GetBytes(str));
         }
 
         /// <summary>
@@ -369,7 +372,7 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="byteStream"></param>
         /// <returns></returns>
-        public static string BytesToSHA512(byte[] byteStream)
+        public static string BytesToSha512(byte[] byteStream)
         {
             try
             {
@@ -381,7 +384,7 @@ namespace BarRaider.SdTools
             }
             catch (Exception ex)
             {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, $"BytesToSHA512 Exception: {ex}");
+                Logger.Instance.LogMessage(TracingLevel.Error, $"BytesToSHA512 Exception: {ex}");
             }
             return null;
         }
@@ -397,53 +400,46 @@ namespace BarRaider.SdTools
         /// <param name="toSettings"></param>
         /// <param name="fromJObject"></param>
         /// <returns>Number of properties updated</returns>
-        public static int AutoPopulateSettings<T>(T toSettings, JObject fromJObject)
+        public static int AutoPopulateSettings<T>(T toSettings, JsonObject fromJObject)
         {
-            Dictionary<string, PropertyInfo> dicProperties = MatchPropertiesWithJsonProperty(toSettings);
-            int totalPopulated = 0;
+            var dicProperties = MatchPropertiesWithJsonProperty(toSettings);
+            var totalPopulated = 0;
 
-            if (fromJObject != null)
+            if (fromJObject == null) return totalPopulated;
+            foreach (var prop in fromJObject)
             {
-                foreach (var prop in fromJObject)
+                if (!dicProperties.TryGetValue(prop.Key, out PropertyInfo info)) continue;
+                    
+                // Special handling for FilenameProperty
+                if (info.GetCustomAttributes(typeof(FilenamePropertyAttribute), true).Length > 0)
                 {
-                    if (dicProperties.ContainsKey(prop.Key))
-                    {
-                        PropertyInfo info = dicProperties[prop.Key];
-
-                        // Special handling for FilenameProperty
-                        if (info.GetCustomAttributes(typeof(FilenamePropertyAttribute), true).Length > 0)
-                        {
-                            string value = FilenameFromString((string)prop.Value);
-                            info.SetValue(toSettings, value);
-                        }
-                        else
-                        {
-                            info.SetValue(toSettings, Convert.ChangeType(prop.Value, info.PropertyType));
-                        }
-                        totalPopulated++;
-                    }
+                    var value = FilenameFromString((string)prop.Value);
+                    info.SetValue(toSettings, value);
                 }
+                else
+                {
+                    info.SetValue(toSettings, Convert.ChangeType(prop.Value, info.PropertyType));
+                }
+                totalPopulated++;
             }
             return totalPopulated;
         }
 
         private static Dictionary<string, PropertyInfo> MatchPropertiesWithJsonProperty<T>(T obj)
         {
-            Dictionary<string, PropertyInfo> dicProperties = new Dictionary<string, PropertyInfo>();
-            if (obj != null)
+            var dicProperties = new Dictionary<string, PropertyInfo>();
+            
+            if (obj == null) return dicProperties;
+            
+            var props = typeof(T).GetProperties();
+            foreach (PropertyInfo prop in props)
             {
-                PropertyInfo[] props = typeof(T).GetProperties();
-                foreach (PropertyInfo prop in props)
+                var attributes = prop.GetCustomAttributes(true);
+                foreach (var attr in attributes)
                 {
-                    object[] attributes = prop.GetCustomAttributes(true);
-                    foreach (object attr in attributes)
-                    {
-                        if (attr is JsonPropertyAttribute jprop)
-                        {
-                            dicProperties.Add(jprop.PropertyName, prop);
-                            break;
-                        }
-                    }
+                    if (attr is not JsonPropertyNameAttribute jprop) continue;
+                    dicProperties.Add(jprop.Name, prop);
+                    break;
                 }
             }
 
@@ -479,13 +475,13 @@ namespace BarRaider.SdTools
         {
             try
             {
-                return System.IO.Path.GetFileNameWithoutExtension(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+                return Path.GetFileNameWithoutExtension(System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName);
             }
             catch (Exception ex)
             {
-                Logger.Instance.LogMessage(TracingLevel.WARN, $"GetExeName failed {ex}");
+                Logger.Instance.LogMessage(TracingLevel.Warn, $"GetExeName failed {ex}");
             }
-            return String.Empty;
+            return string.Empty;
         }
 
         /// <summary>
@@ -494,10 +490,14 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public static PluginActionId[] AutoLoadPluginActions()
         {
-            List<PluginActionId> actions = new List<PluginActionId>();
+            List<PluginActionId> actions = [];
 
-            var pluginTypes = Assembly.GetEntryAssembly().GetTypes().Where(typ => typ.IsClass && typ.GetCustomAttributes(typeof(PluginActionIdAttribute), true).Length > 0).ToList();
-            pluginTypes.ForEach(typ =>
+            var pluginTypes = Assembly.GetEntryAssembly()?
+                .GetTypes()
+                .Where(typ => typ.IsClass && typ.GetCustomAttributes(typeof(PluginActionIdAttribute), true).Length > 0)
+                .ToList();
+            
+            pluginTypes?.ForEach(typ =>
             {
                 if (typ.GetCustomAttributes(typeof(PluginActionIdAttribute), true).First() is PluginActionIdAttribute attr)
                 {

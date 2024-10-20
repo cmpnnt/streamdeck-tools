@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using BarRaider.SdTools.Backend;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Wrappers
 {
     /// <summary>
     /// This class associates a plugin UUID (which is indicated in the Manifest file), with the type of the implementation class.
     /// The implementation class must be derived from the PluginBase class for this to work properly.
-    /// If the type passed does not derrive from PluginBase, a NotSupportedException will be thrown
+    /// If the type passed does not derive from PluginBase, a NotSupportedException will be thrown
     /// </summary>
     public class PluginActionId
     {
@@ -18,17 +15,14 @@ namespace BarRaider.SdTools
         /// <summary>
         /// Action UUID as indicated in the manifest file
         /// </summary>
-        public string ActionId { get; private set; }
+        public string ActionId { get; set; }
 
         /// <summary>
         /// Type of class that implemented this action. Must inherit PluginBase
         /// </summary>
         public Type PluginBaseType
         {
-            get
-            {
-                return pluginBaseType;
-            }
+            get => pluginBaseType;
             private set
             {
                 if (value == null || (!typeof(IKeypadPlugin).IsAssignableFrom(value) && !typeof(IEncoderPlugin).IsAssignableFrom(value)))

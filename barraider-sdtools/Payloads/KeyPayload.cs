@@ -1,42 +1,43 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using BarRaider.SdTools.Wrappers;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Payloads
 {
     /// <summary>
     /// Payload received when a key is pressed or released
     /// </summary>
-    public class KeyPayload
+    public record KeyPayload
     {
         /// <summary>
         /// Current event settings
         /// </summary>
-        [JsonProperty("settings")]
-        public JObject Settings { get; private set; }
+        [JsonPropertyName("settings")]
+        public JsonObject Settings { get; set; }
 
         /// <summary>
         /// Coordinates of key on the stream deck
         /// </summary>
-        [JsonProperty("coordinates")]
-        public KeyCoordinates Coordinates { get; private set; }
+        [JsonPropertyName("coordinates")]
+        public KeyCoordinates Coordinates { get; set; }
 
         /// <summary>
         /// Current key state
         /// </summary>
-        [JsonProperty("state")]
-        public uint State { get; private set; }
+        [JsonPropertyName("state")]
+        public uint State { get; set; }
 
         /// <summary>
         /// Desired state
         /// </summary>
-        [JsonProperty("userDesiredState")]
-        public uint UserDesiredState { get; private set; }
+        [JsonPropertyName("userDesiredState")]
+        public uint UserDesiredState { get; set; }
 
         /// <summary>
         /// Is part of a multiAction
         /// </summary>
-        [JsonProperty("isInMultiAction")]
-        public bool IsInMultiAction { get; private set; }
+        [JsonPropertyName("isInMultiAction")]
+        public bool IsInMultiAction { get; set; }
 
         /// <summary>
         /// Constructor
@@ -46,7 +47,7 @@ namespace BarRaider.SdTools
         /// <param name="state"></param>
         /// <param name="userDesiredState"></param>
         /// <param name="isInMultiAction"></param>
-        public KeyPayload(KeyCoordinates coordinates, JObject settings, uint state, uint userDesiredState, bool isInMultiAction)
+        public KeyPayload(KeyCoordinates coordinates, JsonObject settings, uint state, uint userDesiredState, bool isInMultiAction)
         {
             Coordinates = coordinates;
             Settings = settings;
@@ -56,7 +57,7 @@ namespace BarRaider.SdTools
         }
 
         /// <summary>
-        /// For Seralization
+        /// For Serialization
         /// </summary>
         public KeyPayload() { }
     }

@@ -1,32 +1,30 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using BarRaider.SdTools.Wrappers;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Payloads
 {
     /// <summary>
     /// Payload that holds all the settings in the ReceivedSettings event
     /// </summary>
-    public class ReceivedSettingsPayload
+    public record ReceivedSettingsPayload
     {
         /// <summary>
         /// Action's settings
         /// </summary>
-        [JsonProperty("settings")]
-        public JObject Settings { get; private set; }
+        [JsonPropertyName("settings")]
+        public JsonObject Settings { get; set; }
 
         /// <summary>
         /// Coordinates of the key pressed
         /// </summary>
-        [JsonProperty("coordinates")]
-        public KeyCoordinates Coordinates { get; private set; }
+        [JsonPropertyName("coordinates")]
+        public KeyCoordinates Coordinates { get; set; }
 
         /// <summary>
         /// Is event part of a multiaction
         /// </summary>
-        [JsonProperty("isInMultiAction")]
-        public bool IsInMultiAction { get; private set; }
+        [JsonPropertyName("isInMultiAction")]
+        public bool IsInMultiAction { get; set; }
     }
 }

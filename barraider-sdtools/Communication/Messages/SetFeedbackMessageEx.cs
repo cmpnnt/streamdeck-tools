@@ -1,23 +1,22 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
+﻿using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 namespace BarRaider.SdTools.Communication.Messages
 {
     internal class SetFeedbackMessageEx : IMessage
     {
-        [JsonProperty("event")]
+        [JsonPropertyName("event")]
         public string Event { get { return "setFeedback"; } }
 
-        [JsonProperty("context")]
-        public string Context { get; private set; }
+        [JsonPropertyName("context")]
+        public string Context { get; set; }
 
-        [JsonProperty("payload")]
-        public JObject Payload { get; private set; }
+        [JsonPropertyName("payload")]
+        public JsonObject Payload { get; set; }
 
-        public SetFeedbackMessageEx(JObject payload, string pluginUUID)
+        public SetFeedbackMessageEx(JsonObject payload, string pluginUuid)
         {
-            this.Context = pluginUUID;
+            Context = pluginUuid;
             Payload = payload;
         }
     }

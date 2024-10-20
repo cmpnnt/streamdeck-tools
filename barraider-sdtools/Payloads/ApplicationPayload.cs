@@ -1,21 +1,17 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text.Json.Serialization;
 
 namespace BarRaider.SdTools.Payloads
 {
     /// <summary>
     /// ApplicationPayload
     /// </summary>
-    public class ApplicationPayload
+    public record ApplicationPayload
     {
         /// <summary>
         /// Application Name
         /// </summary>
-        [JsonProperty("application")]
-        public string Application { get; private set; }
+        [JsonPropertyName("application")]
+        public string Application { get; set; }
 
         /// <summary>
         /// Constructor

@@ -1,11 +1,6 @@
 ﻿using NLog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Tools
 {
     /// <summary>
     /// Tracing levels used for Logger
@@ -15,27 +10,27 @@ namespace BarRaider.SdTools
         /// <summary>
         /// Debug level
         /// </summary>
-        DEBUG,
+        Debug,
 
         /// <summary>
         /// Informational level
         /// </summary>
-        INFO,
+        Info,
 
         /// <summary>
         /// Warning level
         /// </summary>
-        WARN,
+        Warn,
 
         /// <summary>
         /// Error level
         /// </summary>
-        ERROR,
+        Error,
 
         /// <summary>
         /// Fatal (highest) level
         /// </summary>
-        FATAL
+        Fatal
     }
 
     /// <summary>
@@ -43,8 +38,8 @@ namespace BarRaider.SdTools
     /// </summary>
     public class Logger
     {
-        private static Logger instance = null;
-        private static readonly object objLock = new object();
+        private static Logger _instance = null;
+        private static readonly object ObjLock = new object();
 
         /// <summary>
         /// Returns singelton entry of Log4Net logger
@@ -53,18 +48,18 @@ namespace BarRaider.SdTools
         {
             get
             {
-                if (instance != null)
+                if (_instance != null)
                 {
-                    return instance;
+                    return _instance;
                 }
 
-                lock (objLock)
+                lock (ObjLock)
                 {
-                    if (instance == null)
+                    if (_instance == null)
                     {
-                        instance = new Logger();
+                        _instance = new Logger();
                     }
-                    return instance;
+                    return _instance;
                 }
             }
         }
@@ -75,38 +70,38 @@ namespace BarRaider.SdTools
             var config = new NLog.Config.LoggingConfiguration();
             var logfile = new NLog.Targets.FileTarget("logfile") { FileName = "pluginlog.log", ArchiveEvery=NLog.Targets.FileArchivePeriod.Day, MaxArchiveFiles=3, ArchiveFileName="archive/log.{###}.log", ArchiveNumbering=NLog.Targets.ArchiveNumberingMode.Rolling, Layout = "${longdate}|${level:uppercase=true}|${processname}|${threadid}|${message}" };
             config.AddRule(LogLevel.Debug, LogLevel.Fatal, logfile);
-            NLog.LogManager.Configuration = config;
+            LogManager.Configuration = config;
             log = LogManager.GetCurrentClassLogger();
-            LogMessage(TracingLevel.DEBUG, "Logger Initialized");
+            LogMessage(TracingLevel.Debug, "Logger Initialized");
         }
 
         /// <summary>
         /// Add message to log with a specific severity level. 
         /// </summary>
-        /// <param name="Level"></param>
-        /// <param name="Message"></param>
-        public void LogMessage(TracingLevel Level, string Message)
+        /// <param name="level"></param>
+        /// <param name="message"></param>
+        public void LogMessage(TracingLevel level, string message)
         {
-            switch (Level)
+            switch (level)
             {
-                case TracingLevel.DEBUG:
-                    log.Debug(Message);
+                case TracingLevel.Debug:
+                    log.Debug(message);
                     break;
 
-                case TracingLevel.INFO:
-                    log.Info(Message);
+                case TracingLevel.Info:
+                    log.Info(message);
                     break;
 
-                case TracingLevel.WARN:
-                    log.Warn(Message);
+                case TracingLevel.Warn:
+                    log.Warn(message);
                     break;
 
-                case TracingLevel.ERROR:
-                    log.Error(Message);
+                case TracingLevel.Error:
+                    log.Error(message);
                     break;
 
-                case TracingLevel.FATAL:
-                    log.Fatal(Message);
+                case TracingLevel.Fatal:
+                    log.Fatal(message);
                     break;
             }
         }

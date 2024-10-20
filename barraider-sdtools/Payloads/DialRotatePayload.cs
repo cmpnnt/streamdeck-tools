@@ -1,45 +1,43 @@
-﻿using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using BarRaider.SdTools.Wrappers;
 
 namespace BarRaider.SdTools.Payloads
 {
     /// <summary>
     /// Payload received when a dial is rotated
     /// </summary>
-    public class DialRotatePayload
+    public record DialRotatePayload
     {
         /// <summary>
         /// Controller which issued the event
         /// </summary>
-        [JsonProperty("controller")]
-        public string Controller { get; private set; }
+        [JsonPropertyName("controller")]
+        public string Controller { get; set; }
 
         /// <summary>
         /// Current event settings
         /// </summary>
-        [JsonProperty("settings")]
-        public JObject Settings { get; private set; }
+        [JsonPropertyName("settings")]
+        public JsonObject Settings { get; set; }
 
         /// <summary>
         /// Coordinates of key on the stream deck
         /// </summary>
-        [JsonProperty("coordinates")]
-        public KeyCoordinates Coordinates { get; private set; }
+        [JsonPropertyName("coordinates")]
+        public KeyCoordinates Coordinates { get; set; }
 
         /// <summary>
         /// Number of ticks rotated. Positive is to the right, negative to the left
         /// </summary>
-        [JsonProperty("ticks")]
-        public int Ticks { get; private set; }
+        [JsonPropertyName("ticks")]
+        public int Ticks { get; set; }
 
         /// <summary>
         /// Boolean whether the dial is currently pressed or not
         /// </summary>
-        [JsonProperty("pressed")]
-        public bool IsDialPressed { get; private set; }
+        [JsonPropertyName("pressed")]
+        public bool IsDialPressed { get; set; }
 
         /// <summary>
         /// Constructor
@@ -49,7 +47,7 @@ namespace BarRaider.SdTools.Payloads
         /// <param name="controller"></param>
         /// <param name="ticks"></param>
         /// <param name="isDialPressed"></param>
-        public DialRotatePayload(KeyCoordinates coordinates, JObject settings, string controller, int ticks, bool isDialPressed)
+        public DialRotatePayload(KeyCoordinates coordinates, JsonObject settings, string controller, int ticks, bool isDialPressed)
         {
             Coordinates = coordinates;
             Settings = settings;

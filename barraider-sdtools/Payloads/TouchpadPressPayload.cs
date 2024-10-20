@@ -1,45 +1,43 @@
-﻿using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using BarRaider.SdTools.Wrappers;
 
 namespace BarRaider.SdTools.Payloads
 {
     /// <summary>
     /// Payload received when the touchpad (above the dials) is pressed
     /// </summary>
-    public class TouchpadPressPayload
+    public record TouchpadPressPayload
     {
         /// <summary>
         /// Controller which issued the event
         /// </summary>
-        [JsonProperty("controller")]
-        public string Controller { get; private set; }
+        [JsonPropertyName("controller")]
+        public string Controller { get; set; }
 
         /// <summary>
         /// Current event settings
         /// </summary>
-        [JsonProperty("settings")]
-        public JObject Settings { get; private set; }
+        [JsonPropertyName("settings")]
+        public JsonObject Settings { get; set; }
 
         /// <summary>
         /// Coordinates of key on the stream deck
         /// </summary>
-        [JsonProperty("coordinates")]
-        public KeyCoordinates Coordinates { get; private set; }
+        [JsonPropertyName("coordinates")]
+        public KeyCoordinates Coordinates { get; set; }
 
         /// <summary>
         /// Boolean whether it was a long press or not
         /// </summary>
-        [JsonProperty("hold")]
-        public bool IsLongPress { get; private set; }
+        [JsonPropertyName("hold")]
+        public bool IsLongPress { get; set; }
 
         /// <summary>
         /// Position on touchpad which was pressed
         /// </summary>
-        [JsonProperty("tapPos")]
-        public int[] TapPosition { get; private set; }
+        [JsonPropertyName("tapPos")]
+        public int[] TapPosition { get; set; }
 
 
         /// <summary>
@@ -50,7 +48,7 @@ namespace BarRaider.SdTools.Payloads
         /// <param name="controller"></param>
         /// <param name="isLongPress"></param>
         /// <param name="tapPosition"></param>
-        public TouchpadPressPayload(KeyCoordinates coordinates, JObject settings, string controller, bool isLongPress, int[] tapPosition)
+        public TouchpadPressPayload(KeyCoordinates coordinates, JsonObject settings, string controller, bool isLongPress, int[] tapPosition)
         {
             Coordinates = coordinates;
             Settings = settings;

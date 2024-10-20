@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 namespace BarRaider.SdTools.Communication.SDEvents
 {
@@ -11,19 +11,19 @@ namespace BarRaider.SdTools.Communication.SDEvents
         /// <summary>
         /// Action Name
         /// </summary>
-        [JsonProperty("action")]
-        public string Action { get; private set; }
+        [JsonPropertyName("action")]
+        public string Action { get; set; }
 
         /// <summary>
         /// Unique Action UUID
         /// </summary>
-        [JsonProperty("context")]
-        public string Context { get; private set; }
+        [JsonPropertyName("context")]
+        public string Context { get; set; }
 
         /// <summary>
         /// Payload
         /// </summary>
-        [JsonProperty("payload")]
-        public JObject Payload { get; private set; }
+        [JsonPropertyName("payload")]
+        public JsonObject Payload { get; set; }
     }
 }

@@ -1,5 +1,6 @@
-﻿using BarRaider.SdTools.Payloads;
-using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
+using BarRaider.SdTools.Payloads;
+
 
 namespace BarRaider.SdTools.Communication.SDEvents
 {
@@ -11,25 +12,25 @@ namespace BarRaider.SdTools.Communication.SDEvents
         /// <summary>
         /// Action name
         /// </summary>
-        [JsonProperty("action")]
-        public string Action { get; private set; }
+        [JsonPropertyName("action")]
+        public string Action { get; set; }
 
         /// <summary>
         /// Unique action UUID
         /// </summary>
-        [JsonProperty("context")]
-        public string Context { get; private set; }
+        [JsonPropertyName("context")]
+        public string Context { get; set; }
 
         /// <summary>
         /// Stream Deck device UUID
         /// </summary>
-        [JsonProperty("device")]
-        public string Device { get; private set; }
+        [JsonPropertyName("device")]
+        public string Device { get; set; }
 
         /// <summary>
         /// Key settings
         /// </summary>
-        [JsonProperty("payload")]
-        public KeyPayload Payload { get; private set; }
+        [JsonPropertyName("payload")]
+        public KeyPayload Payload { get; set; }
     }
 }

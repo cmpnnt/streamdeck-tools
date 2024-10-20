@@ -1,20 +1,19 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System.Text.Json.Serialization;
 
 namespace BarRaider.SdTools.Communication.Messages
 {
     internal class RegisterEventMessage : IMessage
     {
-        [JsonProperty("event")]
-        public string Event { get; private set; }
+        [JsonPropertyName("event")]
+        public string Event { get; set; }
 
-        [JsonProperty("uuid")]
-        public string UUID { get; private set; }
+        [JsonPropertyName("uuid")]
+        public string Uuid { get; set; }
 
         public RegisterEventMessage(string eventName, string uuid)
         {
-            this.Event = eventName;
-            this.UUID = uuid;
+            Event = eventName;
+            Uuid = uuid;
         }
     }
 }

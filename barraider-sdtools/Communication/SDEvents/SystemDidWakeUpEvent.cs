@@ -1,7 +1,4 @@
-﻿using BarRaider.SdTools.Payloads;
-using Newtonsoft.Json;
-
-namespace BarRaider.SdTools.Communication.SDEvents
+﻿namespace BarRaider.SdTools.Communication.SDEvents
 {
     /// <summary>
     /// Payload for SystemDidWakeUp event
