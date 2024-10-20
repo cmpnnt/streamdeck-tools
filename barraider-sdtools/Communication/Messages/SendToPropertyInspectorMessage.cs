@@ -1,27 +1,27 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 namespace BarRaider.SdTools.Communication.Messages
 {
     internal class SendToPropertyInspectorMessage : IMessage
     {
-        [JsonProperty("event")]
+        [JsonPropertyName("event")]
         public string Event { get { return "sendToPropertyInspector"; } }
 
-        [JsonProperty("context")]
+        [JsonPropertyName("context")]
         public string Context { get; private set; }
 
-        [JsonProperty("payload")]
-        public JObject Payload { get; private set; }
+        [JsonPropertyName("payload")]
+        public JsonObject Payload { get; private set; }
 
-        [JsonProperty("action")]
+        [JsonPropertyName("action")]
         public string Action { get; private set; }
 
-        public SendToPropertyInspectorMessage(string action, JObject data, string context)
+        public SendToPropertyInspectorMessage(string action, JsonObject data, string context)
         {
-            this.Context = context;
-            this.Payload = data;
-            this.Action = action;
+            Context = context;
+            Payload = data;
+            Action = action;
         }
     }
 }

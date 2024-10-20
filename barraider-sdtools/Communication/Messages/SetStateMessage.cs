@@ -1,33 +1,32 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Text.Json.Serialization;
 
 namespace BarRaider.SdTools.Communication.Messages
 {
     internal class SetStateMessage : IMessage
     {
-        [JsonProperty("event")]
+        [JsonPropertyName("event")]
         public string Event { get { return "setState"; } }
 
-        [JsonProperty("context")]
+        [JsonPropertyName("context")]
         public string Context { get; private set; }
 
-        [JsonProperty("payload")]
+        [JsonPropertyName("payload")]
         public IPayload Payload { get; private set; }
 
         public SetStateMessage(uint state, string context)
         {
-            this.Context = context;
-            this.Payload = new PayloadClass(state);
+            Context = context;
+            Payload = new PayloadClass(state);
         }
 
         private class PayloadClass : IPayload
         {
-            [JsonProperty("state")]
+            [JsonPropertyName("state")]
             public uint State { get; private set; }
 
             public PayloadClass(uint state)
             {
-                this.State = state;
+                State = state;
             }
         }
     }

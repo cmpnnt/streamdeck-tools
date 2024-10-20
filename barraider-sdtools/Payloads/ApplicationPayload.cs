@@ -1,8 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text.Json.Serialization;
 
 namespace BarRaider.SdTools.Payloads
 {
@@ -14,7 +10,7 @@ namespace BarRaider.SdTools.Payloads
         /// <summary>
         /// Application Name
         /// </summary>
-        [JsonProperty("application")]
+        [JsonPropertyName("application")]
         public string Application { get; private set; }
 
         /// <summary>

@@ -1,10 +1,8 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using BarRaider.SdTools.Wrappers;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Payloads
 {
     /// <summary>
     /// Payload that holds all the settings in the ReceivedSettings event
@@ -14,19 +12,19 @@ namespace BarRaider.SdTools
         /// <summary>
         /// Action's settings
         /// </summary>
-        [JsonProperty("settings")]
-        public JObject Settings { get; private set; }
+        [JsonPropertyName("settings")]
+        public JsonObject Settings { get; private set; }
 
         /// <summary>
         /// Coordinates of the key pressed
         /// </summary>
-        [JsonProperty("coordinates")]
+        [JsonPropertyName("coordinates")]
         public KeyCoordinates Coordinates { get; private set; }
 
         /// <summary>
         /// Is event part of a multiaction
         /// </summary>
-        [JsonProperty("isInMultiAction")]
+        [JsonPropertyName("isInMultiAction")]
         public bool IsInMultiAction { get; private set; }
     }
 }

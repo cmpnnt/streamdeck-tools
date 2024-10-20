@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using BarRaider.SdTools.Payloads;
+﻿using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using BarRaider.SdTools.Wrappers;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Payloads
 {
     /// <summary>
     /// Payload received during the plugin's constructor
@@ -12,45 +12,46 @@ namespace BarRaider.SdTools
         /// <summary>
         /// Plugin instance's settings (set through Property Inspector)
         /// </summary>
-        [JsonProperty("settings")]
-        public JObject Settings { get; private set; }
+        [JsonPropertyName("settings")]
+        public JsonObject Settings { get; private set; }
 
         /// <summary>
         /// Plugin's physical location on the Stream Deck device
         /// </summary>
-        [JsonProperty("coordinates")]
+        [JsonPropertyName("coordinates")]
         public KeyCoordinates Coordinates { get; private set; }
 
         /// <summary>
         /// Current plugin state
         /// </summary>
-        [JsonProperty("state")]
+        [JsonPropertyName("state")]
         public uint State { get; private set; }
 
         /// <summary>
         /// Is it in a Multiaction
         /// </summary>
-        [JsonProperty("isInMultiAction")]
+        [JsonPropertyName("isInMultiAction")]
         public bool IsInMultiAction { get; private set; }
 
         /// <summary>
         /// The controller of the current action. Values include "Keypad" and "Encoder".
         /// </summary>
-        [JsonProperty("controller")]
+        [JsonPropertyName("controller")]
         public string Controller { get; private set; }
 
         /// <summary>
         /// Information regarding the Stream Deck hardware device
         /// </summary>
-        [JsonProperty("deviceInfo", Required = Required.AllowNull)]
-        public StreamDeckInfo DeviceInfo { get; private set; }
+        [JsonPropertyName("deviceInfo")]
+        [JsonRequired]
+        public StreamDeckInfo.StreamDeckInfo DeviceInfo { get; private set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="appearancePayload"></param>
         /// <param name="deviceInfo"></param>
-        public InitialPayload(AppearancePayload appearancePayload, StreamDeckInfo deviceInfo)
+        public InitialPayload(AppearancePayload appearancePayload, StreamDeckInfo.StreamDeckInfo deviceInfo)
         {
             Coordinates = appearancePayload.Coordinates;
             Settings = appearancePayload.Settings;

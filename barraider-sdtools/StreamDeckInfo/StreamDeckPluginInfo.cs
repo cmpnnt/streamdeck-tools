@@ -1,11 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.StreamDeckInfo
 {
     /// <summary>
     /// Holds general information on the StreamDeck App we're communicating with
@@ -15,7 +10,7 @@ namespace BarRaider.SdTools
         /// <summary>
         /// Current version of the plugin
         /// </summary>
-        [JsonProperty(PropertyName = "version")]
+        [JsonPropertyName("version")]
         public string Version { get; private set; }
 
         /// <summary>

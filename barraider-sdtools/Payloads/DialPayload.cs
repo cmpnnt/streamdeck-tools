@@ -1,8 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using BarRaider.SdTools.Wrappers;
 
 namespace BarRaider.SdTools.Payloads
 {
@@ -14,19 +12,19 @@ namespace BarRaider.SdTools.Payloads
         /// <summary>
         /// Controller which issued the event
         /// </summary>
-        [JsonProperty("controller")]
+        [JsonPropertyName("controller")]
         public string Controller { get; private set; }
 
         /// <summary>
         /// Current event settings
         /// </summary>
-        [JsonProperty("settings")]
-        public JObject Settings { get; private set; }
+        [JsonPropertyName("settings")]
+        public JsonObject Settings { get; private set; }
 
         /// <summary>
         /// Coordinates of key on the stream deck
         /// </summary>
-        [JsonProperty("coordinates")]
+        [JsonPropertyName("coordinates")]
         public KeyCoordinates Coordinates { get; private set; }
 
         /// <summary>
@@ -35,7 +33,7 @@ namespace BarRaider.SdTools.Payloads
         /// <param name="coordinates"></param>
         /// <param name="settings"></param>
         /// <param name="controller"></param>
-        public DialPayload(KeyCoordinates coordinates, JObject settings, string controller)
+        public DialPayload(KeyCoordinates coordinates, JsonObject settings, string controller)
         {
             Coordinates = coordinates;
             Settings = settings;

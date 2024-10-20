@@ -1,40 +1,40 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace BarRaider.SdTools.Communication.Messages
 {
     internal class SetImageMessage : IMessage
     {
-        [JsonProperty("event")]
+        [JsonPropertyName("event")]
         public string Event { get { return "setImage"; } }
 
-        [JsonProperty("context")]
+        [JsonPropertyName("context")]
         public string Context { get; private set; }
 
-        [JsonProperty("payload")]
+        [JsonPropertyName("payload")]
         public IPayload Payload { get; private set; }
 
-        public SetImageMessage(string base64Image, string context, SDKTarget target, int? state)
+        public SetImageMessage(string base64Image, string context, SdkTarget target, int? state)
         {
-            this.Context = context;
-            this.Payload = new PayloadClass(base64Image, target, state);
+            Context = context;
+            Payload = new PayloadClass(base64Image, target, state);
         }
 
         private class PayloadClass : IPayload
         {
-            [JsonProperty("image")]
+            [JsonPropertyName("image")]
             public string Image { get; private set; }
 
-            [JsonProperty("target")]
-            public SDKTarget Target { get; private set; }
+            [JsonPropertyName("target")]
+            public SdkTarget Target { get; private set; }
 
-            [JsonProperty("state", NullValueHandling = NullValueHandling.Ignore)]
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             public int? State { get; private set; }
 
-            public PayloadClass(string image, SDKTarget target, int? state)
+            public PayloadClass(string image, SdkTarget target, int? state)
             {
-                this.Image = image;
-                this.Target = target;
-                this.State = state;
+                Image = image;
+                Target = target;
+                State = state;
             }
         }
     }

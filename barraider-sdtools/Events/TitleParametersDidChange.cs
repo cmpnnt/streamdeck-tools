@@ -1,5 +1,6 @@
-﻿using BarRaider.SdTools.Payloads;
-using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
+using BarRaider.SdTools.Payloads;
+
 
 namespace BarRaider.SdTools.Events
 {
@@ -11,25 +12,25 @@ namespace BarRaider.SdTools.Events
         /// <summary>
         /// Action Id
         /// </summary>
-        [JsonProperty("action")]
+        [JsonPropertyName("action")]
         public string Action { get; private set; }
 
         /// <summary>
         /// Context Id
         /// </summary>
-        [JsonProperty("context")]
+        [JsonPropertyName("context")]
         public string Context { get; private set; }
 
         /// <summary>
         /// Device Guid
         /// </summary>
-        [JsonProperty("device")]
+        [JsonPropertyName("device")]
         public string Device { get; private set; }
 
         /// <summary>
         /// Payload
         /// </summary>
-        [JsonProperty("payload")]
+        [JsonPropertyName("payload")]
         public TitleParametersPayload Payload { get; private set; }
 
         /// <summary>

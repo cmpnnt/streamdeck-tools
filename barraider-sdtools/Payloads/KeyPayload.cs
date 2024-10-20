@@ -1,7 +1,8 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using BarRaider.SdTools.Wrappers;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Payloads
 {
     /// <summary>
     /// Payload received when a key is pressed or released
@@ -11,31 +12,31 @@ namespace BarRaider.SdTools
         /// <summary>
         /// Current event settings
         /// </summary>
-        [JsonProperty("settings")]
-        public JObject Settings { get; private set; }
+        [JsonPropertyName("settings")]
+        public JsonObject Settings { get; private set; }
 
         /// <summary>
         /// Coordinates of key on the stream deck
         /// </summary>
-        [JsonProperty("coordinates")]
+        [JsonPropertyName("coordinates")]
         public KeyCoordinates Coordinates { get; private set; }
 
         /// <summary>
         /// Current key state
         /// </summary>
-        [JsonProperty("state")]
+        [JsonPropertyName("state")]
         public uint State { get; private set; }
 
         /// <summary>
         /// Desired state
         /// </summary>
-        [JsonProperty("userDesiredState")]
+        [JsonPropertyName("userDesiredState")]
         public uint UserDesiredState { get; private set; }
 
         /// <summary>
         /// Is part of a multiAction
         /// </summary>
-        [JsonProperty("isInMultiAction")]
+        [JsonPropertyName("isInMultiAction")]
         public bool IsInMultiAction { get; private set; }
 
         /// <summary>
@@ -46,7 +47,7 @@ namespace BarRaider.SdTools
         /// <param name="state"></param>
         /// <param name="userDesiredState"></param>
         /// <param name="isInMultiAction"></param>
-        public KeyPayload(KeyCoordinates coordinates, JObject settings, uint state, uint userDesiredState, bool isInMultiAction)
+        public KeyPayload(KeyCoordinates coordinates, JsonObject settings, uint state, uint userDesiredState, bool isInMultiAction)
         {
             Coordinates = coordinates;
             Settings = settings;

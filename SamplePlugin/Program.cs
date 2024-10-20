@@ -1,9 +1,4 @@
-﻿using BarRaider.SdTools;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BarRaider.SdTools.Backend;
 
 namespace SamplePlugin
 {
@@ -14,7 +9,7 @@ namespace SamplePlugin
             // Uncomment this line of code to allow for debugging
             //while (!System.Diagnostics.Debugger.IsAttached) { System.Threading.Thread.Sleep(100); }
 
-            SDWrapper.Run(args);
+            SdWrapper.Run(args);
         }
     }
 }

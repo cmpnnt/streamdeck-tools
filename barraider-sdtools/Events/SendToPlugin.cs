@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 namespace BarRaider.SdTools.Events
 {
@@ -11,20 +11,20 @@ namespace BarRaider.SdTools.Events
         /// <summary>
         /// ActionId
         /// </summary>
-        [JsonProperty("action")]
+        [JsonPropertyName("action")]
         public string Action { get; private set; }
 
         /// <summary>
         /// ContextId
         /// </summary>
-        [JsonProperty("context")]
+        [JsonPropertyName("context")]
         public string Context { get; private set; }
 
         /// <summary>
         /// Payload
         /// </summary>
-        [JsonProperty("payload")]
-        public JObject Payload { get; private set; }
+        [JsonPropertyName("payload")]
+        public JsonObject Payload { get; private set; }
 
         /// <summary>
         /// Constructor
@@ -32,7 +32,7 @@ namespace BarRaider.SdTools.Events
         /// <param name="action"></param>
         /// <param name="context"></param>
         /// <param name="payload"></param>
-        public SendToPlugin(string action, string context, JObject payload)
+        public SendToPlugin(string action, string context, JsonObject payload)
         {
             Action = action;
             Context = context;

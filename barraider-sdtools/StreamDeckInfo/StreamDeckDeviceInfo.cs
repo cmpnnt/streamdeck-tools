@@ -1,11 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.StreamDeckInfo
 {
     /// <summary>
     /// Class which holds information on the StreamDeck hardware device
@@ -15,19 +10,19 @@ namespace BarRaider.SdTools
         /// <summary>
         /// Details on number of keys of the StreamDeck hardware device
         /// </summary>
-        [JsonProperty(PropertyName = "size")]
+        [JsonPropertyName("size")]
         public StreamDeckDeviceSize Size { get; private set; }
 
         /// <summary>
         /// Type of StreamDeck hardware device
         /// </summary>
-        [JsonProperty(PropertyName = "type")]
+        [JsonPropertyName("type")]
         public DeviceType Type { get; private set; }
 
         /// <summary>
         /// Id of the StreamDeck hardware device
         /// </summary>
-        [JsonProperty(PropertyName = "id")]
+        [JsonPropertyName("id")]
         public string Id { get; private set; }
 
         /// <summary>

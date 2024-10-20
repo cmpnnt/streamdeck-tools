@@ -1,8 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using BarRaider.SdTools.Wrappers;
 
 namespace BarRaider.SdTools.Payloads
 {
@@ -14,31 +12,31 @@ namespace BarRaider.SdTools.Payloads
         /// <summary>
         /// Controller which issued the event
         /// </summary>
-        [JsonProperty("controller")]
+        [JsonPropertyName("controller")]
         public string Controller { get; private set; }
 
         /// <summary>
         /// Current event settings
         /// </summary>
-        [JsonProperty("settings")]
-        public JObject Settings { get; private set; }
+        [JsonPropertyName("settings")]
+        public JsonObject Settings { get; private set; }
 
         /// <summary>
         /// Coordinates of key on the stream deck
         /// </summary>
-        [JsonProperty("coordinates")]
+        [JsonPropertyName("coordinates")]
         public KeyCoordinates Coordinates { get; private set; }
 
         /// <summary>
         /// Boolean whether it was a long press or not
         /// </summary>
-        [JsonProperty("hold")]
+        [JsonPropertyName("hold")]
         public bool IsLongPress { get; private set; }
 
         /// <summary>
         /// Position on touchpad which was pressed
         /// </summary>
-        [JsonProperty("tapPos")]
+        [JsonPropertyName("tapPos")]
         public int[] TapPosition { get; private set; }
 
 
@@ -50,7 +48,7 @@ namespace BarRaider.SdTools.Payloads
         /// <param name="controller"></param>
         /// <param name="isLongPress"></param>
         /// <param name="tapPosition"></param>
-        public TouchpadPressPayload(KeyCoordinates coordinates, JObject settings, string controller, bool isLongPress, int[] tapPosition)
+        public TouchpadPressPayload(KeyCoordinates coordinates, JsonObject settings, string controller, bool isLongPress, int[] tapPosition)
         {
             Coordinates = coordinates;
             Settings = settings;

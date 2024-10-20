@@ -1,22 +1,22 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace BarRaider.SdTools.Communication.Messages
 {
     internal class SetFeedbackMessage : IMessage
     {
-        [JsonProperty("event")]
+        [JsonPropertyName("event")]
         public string Event { get { return "setFeedback"; } }
 
-        [JsonProperty("context")]
+        [JsonPropertyName("context")]
         public string Context { get; private set; }
 
-        [JsonProperty("payload")]
+        [JsonPropertyName("payload")]
         public Dictionary<string, string> DictKeyValues { get; private set; }
 
-        public SetFeedbackMessage(Dictionary<string, string> dictKeyValues, string pluginUUID)
+        public SetFeedbackMessage(Dictionary<string, string> dictKeyValues, string pluginUuid)
         {
-            this.Context = pluginUUID;
+            Context = pluginUuid;
             DictKeyValues = dictKeyValues;
         }
     }

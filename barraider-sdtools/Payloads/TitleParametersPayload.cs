@@ -1,9 +1,6 @@
-﻿using BarRaider.SdTools.Wrappers;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using BarRaider.SdTools.Wrappers;
 
 namespace BarRaider.SdTools.Payloads
 {
@@ -17,25 +14,25 @@ namespace BarRaider.SdTools.Payloads
         /// <summary>
         /// Settings JSON Object
         /// </summary>
-        [JsonProperty("settings")]
-        public JObject Settings { get; private set; }
+        [JsonPropertyName("settings")]
+        public JsonObject Settings { get; private set; }
 
         /// <summary>
         /// Key Coordinates
         /// </summary>
-        [JsonProperty("coordinates")]
+        [JsonPropertyName("coordinates")]
         public KeyCoordinates Coordinates { get; private set; }
 
         /// <summary>
         /// Key State
         /// </summary>
-        [JsonProperty("state")]
+        [JsonPropertyName("state")]
         public uint State { get; private set; }
 
         /// <summary>
         /// Title
         /// </summary>
-        [JsonProperty("title")]
+        [JsonPropertyName("title")]
         public string Title { get; private set; }
 
         /// <summary>
@@ -58,16 +55,13 @@ namespace BarRaider.SdTools.Payloads
 
                 return titleParameters;
             }
-            private set
-            {
-                titleParameters = value;
-            }
+            private set => titleParameters = value;
         }
 
         /// <summary>
         /// Raw Title Parameters (not as proper object)
         /// </summary>
-        [JsonProperty("titleParameters")]
+        [JsonPropertyName("titleParameters")]
         public TitleParametersRawPayload TitleParametersRaw { get; private set; }
 
         /// <summary>
@@ -78,7 +72,7 @@ namespace BarRaider.SdTools.Payloads
         /// <param name="state"></param>
         /// <param name="title"></param>
         /// <param name="titleParameters"></param>
-        public TitleParametersPayload(JObject settings, KeyCoordinates coordinates, uint state, string title, TitleParameters titleParameters)
+        public TitleParametersPayload(JsonObject settings, KeyCoordinates coordinates, uint state, string title, TitleParameters titleParameters)
         {
             Settings = settings;
             Coordinates = coordinates;

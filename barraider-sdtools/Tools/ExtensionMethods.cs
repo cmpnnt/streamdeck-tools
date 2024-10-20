@@ -1,14 +1,12 @@
-﻿using BarRaider.SdTools.Wrappers;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Text;
+using BarRaider.SdTools.Wrappers;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Tools
 {
     /// <summary>
     /// Extension methods for various objects
@@ -206,7 +204,7 @@ namespace BarRaider.SdTools
             {
                 if (titleParameters == null)
                 {
-                    Logger.Instance.LogMessage(TracingLevel.ERROR, $"AddTextPath: titleParameters is null");
+                    Logger.Instance.LogMessage(TracingLevel.Error, $"AddTextPath: titleParameters is null");
                     return;
                 }
 
@@ -246,7 +244,7 @@ namespace BarRaider.SdTools
             }
             catch (Exception ex)
             {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, $"AddTextPath Exception {ex}");
+                Logger.Instance.LogMessage(TracingLevel.Error, $"AddTextPath Exception {ex}");
             }
         }
 
@@ -263,7 +261,7 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public static string Truncate(this string str, int maxSize)
         {
-            if (String.IsNullOrEmpty(str))
+            if (string.IsNullOrEmpty(str))
             {
                 return null;
             }
@@ -325,7 +323,7 @@ namespace BarRaider.SdTools
             }
             catch (Exception ex)
             {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, $"SplitStringToFit Exception: {ex}");
+                Logger.Instance.LogMessage(TracingLevel.Error, $"SplitStringToFit Exception: {ex}");
                 return str;
             }
         }

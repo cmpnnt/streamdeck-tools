@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace BarRaider.SdTools.Communication.SDEvents
 {
@@ -10,7 +10,7 @@ namespace BarRaider.SdTools.Communication.SDEvents
         /// <summary>
         /// UUID of device that was disconnected
         /// </summary>
-        [JsonProperty("device")]
+        [JsonPropertyName("device")]
         public string Device { get; private set; }
     }
 }

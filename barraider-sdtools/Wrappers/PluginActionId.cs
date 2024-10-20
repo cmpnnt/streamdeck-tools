@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using BarRaider.SdTools.Backend;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Wrappers
 {
     /// <summary>
     /// This class associates a plugin UUID (which is indicated in the Manifest file), with the type of the implementation class.

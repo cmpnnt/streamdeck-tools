@@ -1,5 +1,6 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using BarRaider.SdTools.Wrappers;
 
 namespace BarRaider.SdTools.Payloads
 {
@@ -11,31 +12,31 @@ namespace BarRaider.SdTools.Payloads
         /// <summary>
         /// Additional settings
         /// </summary>
-        [JsonProperty("settings")]
-        public JObject Settings { get; private set; }
+        [JsonPropertyName("settings")]
+        public JsonObject Settings { get; private set; }
 
         /// <summary>
         /// Coordinates of key pressed
         /// </summary>
-        [JsonProperty("coordinates")]
+        [JsonPropertyName("coordinates")]
         public KeyCoordinates Coordinates { get; private set; }
 
         /// <summary>
         /// State of key
         /// </summary>
-        [JsonProperty("state")]
+        [JsonPropertyName("state")]
         public uint State { get; private set; }
 
         /// <summary>
         /// Is action in MultiAction
         /// </summary>
-        [JsonProperty("isInMultiAction")]
+        [JsonPropertyName("isInMultiAction")]
         public bool IsInMultiAction { get; private set; }
 
         /// <summary>
         /// Controller which issued the event
         /// </summary>
-        [JsonProperty("controller")]
+        [JsonPropertyName("controller")]
         public string Controller { get; private set; }
     }
 }

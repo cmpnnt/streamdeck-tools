@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
+using BarRaider.SdTools.StreamDeckInfo;
 
 namespace BarRaider.SdTools.Events
 {
@@ -10,13 +11,13 @@ namespace BarRaider.SdTools.Events
         /// <summary>
         /// Device GUID
         /// </summary>
-        [JsonProperty("device")]
+        [JsonPropertyName("device")]
         public string Device { get; private set; }
 
         /// <summary>
         /// Device Info
         /// </summary>
-        [JsonProperty("deviceInfo")]
+        [JsonPropertyName("deviceInfo")]
         public StreamDeckDeviceInfo DeviceInfo { get; private set; }
 
         /// <summary>

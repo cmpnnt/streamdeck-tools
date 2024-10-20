@@ -1,10 +1,6 @@
-﻿using BarRaider.SdTools.Events;
-using BarRaider.SdTools.Wrappers;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Tools
 {
     /// <summary>
     /// Interface for a plugin update handler
