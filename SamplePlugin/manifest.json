@@ -1,4 +1,5 @@
 {
+  "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
   "Actions": [
     {
       "Icon": "Images/icon",
@@ -7,13 +8,13 @@
         {
           "Image": "Images/pluginAction",
           "TitleAlignment": "middle",
-          "FontSize": "12"
+          "FontSize": 12
         }
       ],
       "SupportedInMultiActions": true,
       "Tooltip": "Sample Plugin to Test SDTools",
-      "UUID": "com.test.sdtools.sampleplugin",
-      "PropertyInspectorPath": "PropertyInspector/Sample.html"
+      "PropertyInspectorPath": "PropertyInspector/Sample.html",
+      "UUID": "com.test.sdtools.sampleplugin"
     }
   ],
   "Author": "BarRaider",
@@ -21,9 +22,9 @@
   "Name": "SDTools Sample Plugin",
   "Icon": "Images/pluginIcon",
   "URL": "https://barraider.com/",
-  "Version": "0.1",
-  "CodePath": "com.test.sdtools",
-  "Category": "Test",
+  "Version": "0.1.0.1",
+  "CodePath": "com.test.sdtools.exe",
+  "Category": "SDTools Sample Plugin",
   "CategoryIcon": "Images/categoryIcon",
   "OS": [
     {
@@ -33,13 +34,13 @@
   ],
   "SDKVersion": 2,
   "Software": {
-    "MinimumVersion": "4.4.1"
+    "MinimumVersion": "6.4"
   },
   "ApplicationsToMonitor": {
     "windows": [
       "notepad.exe",
       "calc.exe"
     ]
-  }
-
+  },
+  "UUID": "com.test.sdtools"
 }

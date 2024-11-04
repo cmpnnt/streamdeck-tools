@@ -1,11 +1,6 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.StreamDeckInfo
 {
     /// <summary>
     /// Layout of the keys on the StreamDeck hardware device

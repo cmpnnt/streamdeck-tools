@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
 
 namespace BarRaider.SdTools.Events
 {
@@ -18,7 +17,7 @@ namespace BarRaider.SdTools.Events
         /// Constructor
         /// </summary>
         /// <param name="device"></param>
-        public DeviceDidDisconnect(String device)
+        public DeviceDidDisconnect(string device)
         {
             Device = device;
         }

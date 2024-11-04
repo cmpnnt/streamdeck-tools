@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
-namespace BarRaider.SdTools
+
+namespace BarRaider.SdTools.Wrappers
 {
     /// <summary>
     /// Coordinates of the current key

@@ -3,21 +3,15 @@ using Newtonsoft.Json.Linq;
 
 namespace BarRaider.SdTools.Communication.Messages
 {
-    internal class SetGlobalSettingsMessage : IMessage
+    internal class SetGlobalSettingsMessage(JObject settings, string pluginUuid) : IMessage
     {
         [JsonProperty("event")]
-        public string Event { get { return "setGlobalSettings"; } }
+        public string Event => "setGlobalSettings";
 
         [JsonProperty("context")]
-        public string Context { get; private set; }
+        public string Context { get; private set; } = pluginUuid;
 
         [JsonProperty("payload")]
-        public JObject Payload { get; private set; }
-
-        public SetGlobalSettingsMessage(JObject settings, string pluginUUID)
-        {
-            this.Context = pluginUUID;
-            this.Payload = settings;
-        }
+        public JObject Payload { get; private set; } = settings;
     }
 }

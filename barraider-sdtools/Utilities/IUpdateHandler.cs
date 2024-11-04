@@ -1,10 +1,6 @@
-﻿using BarRaider.SdTools.Events;
-using BarRaider.SdTools.Wrappers;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Utilities
 {
     /// <summary>
     /// Interface for a plugin update handler
@@ -12,12 +8,10 @@ namespace BarRaider.SdTools
     public interface IUpdateHandler : IDisposable
     {
         #region Events
-
         /// <summary>
         /// Event received by the infrastructure after an upgrade check
         /// </summary>
         event EventHandler<PluginUpdateInfo> OnUpdateStatusChanged;
-
         #endregion
 
         #region Properties
@@ -25,11 +19,9 @@ namespace BarRaider.SdTools
         /// Is the current update a blocking one
         /// </summary>
         bool IsBlockingUpdate { get; }
-
         #endregion
 
         #region Methods
-
         /// <summary>
         /// Sets the information about the plugin
         /// </summary>
@@ -47,8 +39,6 @@ namespace BarRaider.SdTools
         /// Checks for update
         /// </summary>
         void CheckForUpdate();
-
         #endregion
-
     }
 }

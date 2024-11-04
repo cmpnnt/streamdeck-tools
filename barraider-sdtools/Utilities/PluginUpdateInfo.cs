@@ -1,9 +1,6 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Utilities
 {
     /// <summary>
     /// Status of update request
@@ -51,7 +48,7 @@ namespace BarRaider.SdTools
         /// Update URL
         /// </summary>
         [JsonProperty("updateURL")]
-        public string UpdateURL { get; private set; }
+        public string UpdateUrl { get; private set; }
 
         /// <summary>
         /// Update URL
@@ -70,12 +67,12 @@ namespace BarRaider.SdTools
         /// Constructor
         /// </summary>
         /// <param name="status"></param>
-        /// <param name="updateURL"></param>
+        /// <param name="updateUrl"></param>
         /// /// <param name="updateImage"></param>
-        public PluginUpdateInfo(PluginUpdateStatus status, string updateURL, string updateImage)
+        public PluginUpdateInfo(PluginUpdateStatus status, string updateUrl, string updateImage)
         {
             Status = status;
-            UpdateURL = updateURL;
+            UpdateUrl = updateUrl;
             UpdateImage = updateImage;
         }
     }

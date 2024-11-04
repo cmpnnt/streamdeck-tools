@@ -1,16 +1,12 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
+using Newtonsoft.Json;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.StreamDeckInfo
 {
     /// <summary>
     /// Class which holds information on the StreamDeck app and StreamDeck hardware device that the plugin is communicating with
     /// </summary>
-    public class StreamDeckInfo
+    public class RegistrationInfo
     {
         /// <summary>
         /// Information on the StreamDeck App which we're communicating with
@@ -42,28 +38,22 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             if (Devices != null)
             {
                 sb.Append("Devices:\n");
-                for (int device = 0; device < Devices.Length; device++)
+                foreach (StreamDeckDeviceInfo sdi in Devices)
                 {
-                    if (Devices[device] != null)
+                    if (sdi != null)
                     {
-                        sb.Append($"[{Devices[device]}]\n");
+                        sb.Append($"[{sdi}]\n");
                     }
                 }
             }
 
-            if (Application != null)
-            {
-                sb.Append($"ApplicationInfo: {Application}\n");
-            }
-
-            if (Plugin != null)
-            {
-                sb.Append($"PluginInfo: {Plugin}\n");
-            }
+            if (Application != null) sb.Append($"ApplicationInfo: {Application}\n");
+            if (Plugin != null) sb.Append($"PluginInfo: {Plugin}\n");
+            
             return sb.ToString();
         }
     }

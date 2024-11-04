@@ -2,17 +2,12 @@
 
 namespace BarRaider.SdTools.Communication.Messages
 {
-    internal class ShowAlertMessage : IMessage
+    internal class ShowAlertMessage(string context) : IMessage
     {
         [JsonProperty("event")]
-        public string Event { get { return "showAlert"; } }
+        public string Event => "showAlert";
 
         [JsonProperty("context")]
-        public string Context { get; private set; }
-
-        public ShowAlertMessage(string context)
-        {
-            this.Context = context;
-        }
+        public string Context { get; private set; } = context;
     }
 }

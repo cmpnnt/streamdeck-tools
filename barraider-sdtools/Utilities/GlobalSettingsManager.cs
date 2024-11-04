@@ -1,12 +1,12 @@
-﻿using BarRaider.SdTools.Communication;
+﻿using System;
+using System.Threading.Tasks;
+using BarRaider.SdTools.Communication;
 using BarRaider.SdTools.Communication.SDEvents;
 using BarRaider.SdTools.Payloads;
 using BarRaider.SdTools.Wrappers;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Threading.Tasks;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Utilities
 {
     /// <summary>
     /// Helper class which allows fetching the GlobalSettings of a plugin
@@ -14,42 +14,29 @@ namespace BarRaider.SdTools
     public class GlobalSettingsManager
     {
         #region Private Static Members
-
-        private static GlobalSettingsManager instance = null;
-        private static readonly object objLock = new object();
-
+        private static GlobalSettingsManager _instance;
+        private static readonly object ObjLock = new();
         #endregion
 
         #region Private Members
-
         private const int GET_GLOBAL_SETTINGS_DELAY_MS = 300;
-
-        private Communication.StreamDeckConnection connection;
-        private readonly System.Timers.Timer tmrGetGlobalSettings = new System.Timers.Timer();
-
+        private StreamDeckConnection streamDeckConnection;
+        private readonly System.Timers.Timer tmrGetGlobalSettings = new();
         #endregion
 
         #region Constructor
-
         /// <summary>
-        /// Returns singelton entry of GlobalSettingsManager
+        /// Returns singleton entry of GlobalSettingsManager
         /// </summary>
         public static GlobalSettingsManager Instance
         {
             get
             {
-                if (instance != null)
+                if (_instance != null) return _instance;
+                
+                lock (ObjLock)
                 {
-                    return instance;
-                }
-
-                lock (objLock)
-                {
-                    if (instance == null)
-                    {
-                        instance = new GlobalSettingsManager();
-                    }
-                    return instance;
+                    return _instance ??= new GlobalSettingsManager();
                 }
             }
         }
@@ -60,25 +47,22 @@ namespace BarRaider.SdTools
             tmrGetGlobalSettings.Elapsed += TmrGetGlobalSettings_Elapsed;
             tmrGetGlobalSettings.AutoReset = true;
         }
-
         #endregion
 
         #region Public Methods
-
         /// <summary>
         /// Event triggered when Global Settings are received
         /// </summary>
         public event EventHandler<ReceivedGlobalSettingsPayload> OnReceivedGlobalSettings;
-
-
+        
         internal void Initialize(StreamDeckConnection connection, int getGlobalSettingsDelayMs = GET_GLOBAL_SETTINGS_DELAY_MS)
         {
-            this.connection = connection;
-            this.connection.OnDidReceiveGlobalSettings += Connection_OnDidReceiveGlobalSettings;
+            this.streamDeckConnection = connection;
+            this.streamDeckConnection.OnDidReceiveGlobalSettings += StreamDeckConnectionOnDidReceiveGlobalSettings;
 
             tmrGetGlobalSettings.Stop();
             tmrGetGlobalSettings.Interval = getGlobalSettingsDelayMs;
-            Logger.Instance.LogMessage(TracingLevel.INFO, "GlobalSettingsManager initialized");
+            Logger.Instance.LogMessage(TracingLevel.Info, "GlobalSettingsManager initialized");
         }
 
         /// <summary>
@@ -87,13 +71,13 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public void RequestGlobalSettings()
         {
-            if (connection == null)
+            if (streamDeckConnection == null)
             {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, "GlobalSettingsManager::RequestGlobalSettings called while connection is null");
+                Logger.Instance.LogMessage(TracingLevel.Error, "GlobalSettingsManager::RequestGlobalSettings called while streamDeckConnection is null");
                 return;
             }
 
-            Logger.Instance.LogMessage(TracingLevel.INFO, "GlobalSettingsManager::RequestGlobalSettings called");
+            Logger.Instance.LogMessage(TracingLevel.Info, "GlobalSettingsManager::RequestGlobalSettings called");
             tmrGetGlobalSettings.Start();
         }
 
@@ -105,27 +89,24 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public async Task SetGlobalSettings(JObject settings, bool triggerDidReceiveGlobalSettings = true)
         {
-            if (connection == null)
+            if (streamDeckConnection == null)
             {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, "GlobalSettingsManager::SetGlobalSettings called while connection is null");
+                Logger.Instance.LogMessage(TracingLevel.Error, "GlobalSettingsManager::SetGlobalSettings called while streamDeckConnection is null");
                 return;
             }
 
-            Logger.Instance.LogMessage(TracingLevel.INFO, "GlobalSettingsManager::SetGlobalSettings called");
-            await connection.SetGlobalSettingsAsync(settings);
+            Logger.Instance.LogMessage(TracingLevel.Info, "GlobalSettingsManager::SetGlobalSettings called");
+            await streamDeckConnection.SetGlobalSettingsAsync(settings);
 
             if (triggerDidReceiveGlobalSettings)
             {
                 tmrGetGlobalSettings.Start();
             }
         }
-
-
         #endregion
 
         #region Private Methods
-
-        private void Connection_OnDidReceiveGlobalSettings(object sender, SDEventReceivedEventArgs<DidReceiveGlobalSettingsEvent> e)
+        private void StreamDeckConnectionOnDidReceiveGlobalSettings(object sender, SdEventReceivedEventArgs<DidReceiveGlobalSettingsEvent> e)
         {
             OnReceivedGlobalSettings?.Invoke(this, JObject.FromObject(e.Event.Payload).ToObject<ReceivedGlobalSettingsPayload>());
         }
@@ -134,10 +115,9 @@ namespace BarRaider.SdTools
         {
             tmrGetGlobalSettings.Stop();
 
-            Logger.Instance.LogMessage(TracingLevel.INFO, "GlobalSettingsManager::GetGlobalSettingsAsync triggered");
-            await connection.GetGlobalSettingsAsync();
+            Logger.Instance.LogMessage(TracingLevel.Info, "GlobalSettingsManager::GetGlobalSettingsAsync triggered");
+            await streamDeckConnection.GetGlobalSettingsAsync();
         }
-
         #endregion
     }
 }

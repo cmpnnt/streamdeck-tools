@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BarRaider.SdTools.Payloads;
-using Newtonsoft.Json.Linq;
+﻿using BarRaider.SdTools.Payloads;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Backend
 {
 
     /// <summary>
@@ -85,7 +79,7 @@ namespace BarRaider.SdTools
         /// <summary>
         /// Connection object which handles your communication with the Stream Deck app
         /// </summary>
-        protected ISDConnection Connection { get; private set; }
+        protected ISdConnection Connection { get; private set; }
 
         /// <summary>
         /// Constructor for PluginBase. Receives the communication and plugin settings 
@@ -104,9 +98,9 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="connection">Communication module with Stream Deck</param>
         /// <param name="payload">Plugin settings - NOTE: Not used in base class, should be consumed by deriving class</param>
-#pragma warning disable IDE0060 // Remove unused parameter
-        public KeyAndEncoderBase(ISDConnection connection, InitialPayload payload)
-#pragma warning restore IDE0060 // Remove unused parameter
+        #pragma warning disable IDE0060 // Remove unused parameter
+        public KeyAndEncoderBase(ISdConnection connection, InitialPayload payload)
+        #pragma warning restore IDE0060 // Remove unused parameter
         {
             Connection = connection;
         }

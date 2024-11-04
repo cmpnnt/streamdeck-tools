@@ -1,9 +1,6 @@
 ﻿using BarRaider.SdTools.Wrappers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BarRaider.SdTools.Payloads
 {
@@ -12,7 +9,7 @@ namespace BarRaider.SdTools.Payloads
     /// </summary>
     public class TitleParametersPayload
     {
-        private TitleParameters titleParameters = null;
+        private TitleParameters titleParameters;
 
         /// <summary>
         /// Settings JSON Object
@@ -30,7 +27,7 @@ namespace BarRaider.SdTools.Payloads
         /// Key State
         /// </summary>
         [JsonProperty("state")]
-        public uint State { get; private set; }
+        public uint? State { get; private set; }
 
         /// <summary>
         /// Title
@@ -58,10 +55,7 @@ namespace BarRaider.SdTools.Payloads
 
                 return titleParameters;
             }
-            private set
-            {
-                titleParameters = value;
-            }
+            private set => titleParameters = value;
         }
 
         /// <summary>
@@ -78,7 +72,7 @@ namespace BarRaider.SdTools.Payloads
         /// <param name="state"></param>
         /// <param name="title"></param>
         /// <param name="titleParameters"></param>
-        public TitleParametersPayload(JObject settings, KeyCoordinates coordinates, uint state, string title, TitleParameters titleParameters)
+        public TitleParametersPayload(JObject settings, KeyCoordinates coordinates, uint? state, string title, TitleParameters titleParameters)
         {
             Settings = settings;
             Coordinates = coordinates;

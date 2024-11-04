@@ -3,21 +3,15 @@ using Newtonsoft.Json.Linq;
 
 namespace BarRaider.SdTools.Communication.Messages
 {
-    internal class SetSettingsMessage : IMessage
+    internal class SetSettingsMessage(JObject settings, string context) : IMessage
     {
         [JsonProperty("event")]
-        public string Event { get { return "setSettings"; } }
+        public string Event => "setSettings";
 
         [JsonProperty("context")]
-        public string Context { get; private set; }
+        public string Context { get; private set; } = context;
 
         [JsonProperty("payload")]
-        public JObject Payload { get; private set; }
-
-        public SetSettingsMessage(JObject settings, string context)
-        {
-            this.Context = context;
-            this.Payload = settings;
-        }
+        public JObject Payload { get; private set; } = settings;
     }
 }

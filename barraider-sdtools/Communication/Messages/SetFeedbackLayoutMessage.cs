@@ -2,31 +2,21 @@
 
 namespace BarRaider.SdTools.Communication.Messages
 {
-    internal class SetFeedbackLayoutMessage : IMessage
+    internal class SetFeedbackLayoutMessage(string layout, string context) : IMessage
     {
         [JsonProperty("event")]
-        public string Event { get { return "setFeedbackLayout"; } }
+        public string Event => "setFeedbackLayout";
 
         [JsonProperty("context")]
-        public string Context { get; private set; }
+        public string Context { get; private set; } = context;
 
         [JsonProperty("payload")]
-        public IPayload Payload { get; private set; }
+        public IPayload Payload { get; private set; } = new PayloadClass(layout);
 
-        public SetFeedbackLayoutMessage(string layout, string context)
-        {
-            this.Context = context;
-            this.Payload = new PayloadClass(layout);
-        }
-
-        private class PayloadClass : IPayload
+        private class PayloadClass(string layout) : IPayload
         {
             [JsonProperty("layout")]
-            public string Layout { get; private set; }
-            public PayloadClass(string layout)
-            {
-                this.Layout = layout;
-            }
+            public string Layout { get; private set; } = layout;
         }
     }
 }

@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using BarRaider.SdTools.Payloads;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Backend
 {
     /// <summary>
     /// Common functions used by both keypad and dial plugins

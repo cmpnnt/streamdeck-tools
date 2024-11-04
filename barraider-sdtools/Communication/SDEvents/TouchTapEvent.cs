@@ -1,15 +1,12 @@
 ﻿using BarRaider.SdTools.Payloads;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BarRaider.SdTools.Communication.SDEvents
 {
     /// <summary>
     /// Payload for touchpad press
     /// </summary>
-    public class TouchpadPressEvent : BaseEvent
+    public class TouchTapEvent : BaseEvent
     {
         /// <summary>
         /// Action Name

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using BarRaider.SdTools.StreamDeckInfo;
+using Newtonsoft.Json;
 
 namespace BarRaider.SdTools.Communication.SDEvents
 {

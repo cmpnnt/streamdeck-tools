@@ -1,4 +1,5 @@
-﻿using CommandLine;
+﻿using BarRaider.SdTools.StreamDeckInfo;
+using CommandLine;
 using Newtonsoft.Json.Linq;
 
 namespace BarRaider.SdTools.Payloads
@@ -8,7 +9,7 @@ namespace BarRaider.SdTools.Payloads
     /// </summary>
     public class StreamDeckOptions
     {
-        private StreamDeckInfo deviceInfo;
+        private RegistrationInfo deviceInfo;
 
         /// <summary>
         /// Port to communicate with the StreamDeck app
@@ -20,7 +21,7 @@ namespace BarRaider.SdTools.Payloads
         /// UUID of the plugin
         /// </summary>
         [Option("pluginUUID", Required = true, HelpText = "The UUID of the plugin")]
-        public string PluginUUID { get; set; }
+        public string PluginUuid { get; set; }
 
         /// <summary>
         /// Name of the event we should pass to the StreamDeck app to register
@@ -37,7 +38,7 @@ namespace BarRaider.SdTools.Payloads
         /// <summary>
         /// Information regarding the StreamDeck app and StreamDeck hardware which was parsed from the RawInfo JSON field.
         /// </summary>
-        public StreamDeckInfo DeviceInfo
+        public RegistrationInfo DeviceInfo
         {
             get
             {
@@ -52,7 +53,7 @@ namespace BarRaider.SdTools.Payloads
                 }
 
                 JObject obj = JObject.Parse(RawInfo);
-                deviceInfo = obj.ToObject<StreamDeckInfo>();
+                deviceInfo = obj.ToObject<RegistrationInfo>();
                 return deviceInfo;
             }
         }

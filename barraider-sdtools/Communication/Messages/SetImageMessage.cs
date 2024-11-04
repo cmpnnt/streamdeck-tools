@@ -2,40 +2,28 @@
 
 namespace BarRaider.SdTools.Communication.Messages
 {
-    internal class SetImageMessage : IMessage
+    internal class SetImageMessage(string base64Image, string context, SdkTarget target, int? state)
+        : IMessage
     {
         [JsonProperty("event")]
-        public string Event { get { return "setImage"; } }
+        public string Event => "setImage";
 
         [JsonProperty("context")]
-        public string Context { get; private set; }
+        public string Context { get; private set; } = context;
 
         [JsonProperty("payload")]
-        public IPayload Payload { get; private set; }
+        public IPayload Payload { get; private set; } = new PayloadClass(base64Image, target, state);
 
-        public SetImageMessage(string base64Image, string context, SDKTarget target, int? state)
-        {
-            this.Context = context;
-            this.Payload = new PayloadClass(base64Image, target, state);
-        }
-
-        private class PayloadClass : IPayload
+        private class PayloadClass(string image, SdkTarget target, int? state) : IPayload
         {
             [JsonProperty("image")]
-            public string Image { get; private set; }
+            public string Image { get; private set; } = image;
 
             [JsonProperty("target")]
-            public SDKTarget Target { get; private set; }
+            public SdkTarget Target { get; private set; } = target;
 
             [JsonProperty("state", NullValueHandling = NullValueHandling.Ignore)]
-            public int? State { get; private set; }
-
-            public PayloadClass(string image, SDKTarget target, int? state)
-            {
-                this.Image = image;
-                this.Target = target;
-                this.State = state;
-            }
+            public int? State { get; private set; } = state;
         }
     }
 }

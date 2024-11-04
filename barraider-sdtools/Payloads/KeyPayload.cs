@@ -1,7 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using BarRaider.SdTools.Wrappers;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Payloads
 {
     /// <summary>
     /// Payload received when a key is pressed or released
@@ -24,7 +25,7 @@ namespace BarRaider.SdTools
         /// Current key state
         /// </summary>
         [JsonProperty("state")]
-        public uint State { get; private set; }
+        public uint? State { get; private set; }
 
         /// <summary>
         /// Desired state
@@ -46,7 +47,7 @@ namespace BarRaider.SdTools
         /// <param name="state"></param>
         /// <param name="userDesiredState"></param>
         /// <param name="isInMultiAction"></param>
-        public KeyPayload(KeyCoordinates coordinates, JObject settings, uint state, uint userDesiredState, bool isInMultiAction)
+        public KeyPayload(KeyCoordinates coordinates, JObject settings, uint? state, uint userDesiredState, bool isInMultiAction)
         {
             Coordinates = coordinates;
             Settings = settings;
@@ -56,7 +57,7 @@ namespace BarRaider.SdTools
         }
 
         /// <summary>
-        /// For Seralization
+        /// For serialization
         /// </summary>
         public KeyPayload() { }
     }

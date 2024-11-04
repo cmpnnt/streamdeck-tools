@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using BarRaider.SdTools.StreamDeckInfo;
+using BarRaider.SdTools.Wrappers;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using BarRaider.SdTools.Payloads;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Payloads
 {
     /// <summary>
     /// Payload received during the plugin's constructor
@@ -25,7 +26,7 @@ namespace BarRaider.SdTools
         /// Current plugin state
         /// </summary>
         [JsonProperty("state")]
-        public uint State { get; private set; }
+        public uint? State { get; private set; }
 
         /// <summary>
         /// Is it in a Multiaction
@@ -43,14 +44,14 @@ namespace BarRaider.SdTools
         /// Information regarding the Stream Deck hardware device
         /// </summary>
         [JsonProperty("deviceInfo", Required = Required.AllowNull)]
-        public StreamDeckInfo DeviceInfo { get; private set; }
+        public RegistrationInfo DeviceInfo { get; private set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="appearancePayload"></param>
         /// <param name="deviceInfo"></param>
-        public InitialPayload(AppearancePayload appearancePayload, StreamDeckInfo deviceInfo)
+        public InitialPayload(AppearancePayload appearancePayload, RegistrationInfo deviceInfo)
         {
             Coordinates = appearancePayload.Coordinates;
             Settings = appearancePayload.Settings;

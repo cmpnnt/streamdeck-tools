@@ -3,28 +3,18 @@ using System;
 
 namespace BarRaider.SdTools.Communication.Messages
 {
-    internal class OpenUrlMessage : IMessage
+    internal class OpenUrlMessage(Uri uri) : IMessage
     {
         [JsonProperty("event")]
-        public string Event { get { return "openUrl"; } }
+        public string Event => "openUrl";
 
         [JsonProperty("payload")]
-        public IPayload Payload { get; private set; }
+        public IPayload Payload { get; private set; } = new PayloadClass(uri);
 
-        public OpenUrlMessage(Uri uri)
-        {
-            this.Payload = new PayloadClass(uri);
-        }
-
-        private class PayloadClass : IPayload
+        private class PayloadClass(Uri uri) : IPayload
         {
             [JsonProperty("url")]
-            public string Url { get; private set; }
-
-            public PayloadClass(Uri uri)
-            {
-                this.Url = uri.ToString();
-            }
+            public string Url { get; private set; } = uri.ToString();
         }
     }
 }

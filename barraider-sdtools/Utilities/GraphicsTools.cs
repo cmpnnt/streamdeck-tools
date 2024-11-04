@@ -1,12 +1,12 @@
-﻿using BarRaider.SdTools.Wrappers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Text;
+using BarRaider.SdTools.Wrappers;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Utilities
 {
     /// <summary>
     /// Library of tools used to manipulate graphics
@@ -20,7 +20,7 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public static Color ColorFromHex(string hexColor)
         {
-            return System.Drawing.ColorTranslator.FromHtml(hexColor);
+            return ColorTranslator.FromHtml(hexColor);
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace BarRaider.SdTools
                 currentShade = 1;
             }
 
-            for (int idx = 0; idx < currentShade; idx++)
+            for (var idx = 0; idx < currentShade; idx++)
             {
                 r /= 2;
                 g /= 2;
@@ -80,8 +80,8 @@ namespace BarRaider.SdTools
             graphic.CompositingQuality = CompositingQuality.HighQuality;
 
             // Figure out the ratio
-            double ratioX = (double)newWidth / (double)originalWidth;
-            double ratioY = (double)newHeight / (double)originalHeight;
+            double ratioX = newWidth / (double)originalWidth;
+            double ratioY = newHeight / (double)originalHeight;
             // use whichever multiplier is smaller
             double ratio = ratioX < ratioY ? ratioX : ratioY;
 
@@ -91,8 +91,8 @@ namespace BarRaider.SdTools
 
             // Now calculate the X,Y position of the upper-left corner 
             // (one of these will always be zero)
-            int posX = Convert.ToInt32((newWidth - (originalWidth * ratio)) / 2);
-            int posY = Convert.ToInt32((newHeight - (originalHeight * ratio)) / 2);
+            var posX = Convert.ToInt32((newWidth - (originalWidth * ratio)) / 2);
+            var posY = Convert.ToInt32((newHeight - (originalHeight * ratio)) / 2);
 
             graphic.Clear(Color.Black); // Padding
             graphic.DrawImage(original, posX, posY, newWidth, newHeight);
@@ -111,11 +111,9 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public static Bitmap ExtractRectangle(Image image, int startX, int startY, int width, int height)
         {
-            Rectangle rec = new Rectangle(startX, startY, width, height);
-            using (Bitmap src = new Bitmap(image))
-            {
-                return src.Clone(rec, src.PixelFormat);
-            }
+            var rec = new Rectangle(startX, startY, width, height);
+            using var src = new Bitmap(image);
+            return src.Clone(rec, src.PixelFormat);
         }
 
         /// <summary>
@@ -129,32 +127,30 @@ namespace BarRaider.SdTools
             try
             {
                 //create a Bitmap the size of the image provided  
-                Bitmap bmp = new Bitmap(image.Width, image.Height);
+                var bmp = new Bitmap(image.Width, image.Height);
 
                 //create a graphics object from the image  
-                using (Graphics gfx = Graphics.FromImage(bmp))
+                using Graphics gfx = Graphics.FromImage(bmp);
+                //create a color matrix object  
+                var matrix = new ColorMatrix
                 {
-                    //create a color matrix object  
-                    ColorMatrix matrix = new ColorMatrix
-                    {
-                        //set the opacity  
-                        Matrix33 = opacity
-                    };
+                    //set the opacity  
+                    Matrix33 = opacity
+                };
 
-                    //create image attributes  
-                    ImageAttributes attributes = new ImageAttributes();
+                //create image attributes  
+                var attributes = new ImageAttributes();
 
-                    //set the color(opacity) of the image  
-                    attributes.SetColorMatrix(matrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+                //set the color(opacity) of the image  
+                attributes.SetColorMatrix(matrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
 
-                    //now draw the image  
-                    gfx.DrawImage(image, new Rectangle(0, 0, bmp.Width, bmp.Height), 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, attributes);
-                }
+                //now draw the image  
+                gfx.DrawImage(image, new Rectangle(0, 0, bmp.Width, bmp.Height), 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, attributes);
                 return bmp;
             }
             catch (Exception ex)
             {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, $"SetImageOpacity exception {ex}");
+                Logger.Instance.LogMessage(TracingLevel.Error, $"SetImageOpacity exception {ex}");
                 return null;
             }
         }
@@ -173,12 +169,21 @@ namespace BarRaider.SdTools
         /// <param name="expandToNextImage"></param>
         /// <param name="keyDrawStartingPosition"></param>
         /// <returns></returns>
-        public static Image[] DrawMultiLinedText(string text, int currentTextPosition, int lettersPerLine, int numberOfLines, Font font, Color backgroundColor, Color textColor, bool expandToNextImage, PointF keyDrawStartingPosition)
+        public static Image[] DrawMultiLinedText(
+            string text,
+            int currentTextPosition,
+            int lettersPerLine,
+            int numberOfLines,
+            Font font,
+            Color backgroundColor,
+            Color textColor,
+            bool expandToNextImage,
+            PointF keyDrawStartingPosition)
         {
             float currentWidth = keyDrawStartingPosition.X;
             float currentHeight = keyDrawStartingPosition.Y;
-            int currentLine = 0;
-            List<Image> images = new List<Image>();
+            var currentLine = 0;
+            var images = new List<Image>();
             Bitmap img = Tools.GenerateGenericKeyImage(out Graphics graphics);
             images.Add(img);
 
@@ -186,13 +191,13 @@ namespace BarRaider.SdTools
             var bgBrush = new SolidBrush(backgroundColor);
             graphics.FillRectangle(bgBrush, 0, 0, img.Width, img.Height);
 
-            float lineHeight = img.Height / numberOfLines;
+            float lineHeight = (float)img.Height / numberOfLines;
             if (numberOfLines == 1)
             {
-                currentHeight = img.Height / 2; // Align to middle
+                currentHeight = (float)img.Height / 2; // Align to middle
             }
 
-            float widthIncrement = img.Width / lettersPerLine;
+            float widthIncrement = (float)img.Width / lettersPerLine;
             for (int letter = currentTextPosition; letter < text.Length; letter++)
             {
                 // Check if I need to move back to the beginning of the key, but on a new line
@@ -203,7 +208,16 @@ namespace BarRaider.SdTools
                     {
                         if (expandToNextImage)
                         {
-                            images.AddRange(DrawMultiLinedText(text, letter, lettersPerLine, numberOfLines, font, backgroundColor, textColor, expandToNextImage, keyDrawStartingPosition));
+                            images.AddRange(DrawMultiLinedText(
+                                text,
+                                letter,
+                                lettersPerLine,
+                                numberOfLines,
+                                font,
+                                backgroundColor,
+                                textColor,
+                                true,
+                                keyDrawStartingPosition));
                         }
                         break;
                     }
@@ -228,7 +242,12 @@ namespace BarRaider.SdTools
         /// <param name="rightPaddingPixels"></param>
         /// <param name="imageWidthPixels"></param>
         /// <returns></returns>
-        public static string WrapStringToFitImage(string str, TitleParameters titleParameters, int leftPaddingPixels = 5, int rightPaddingPixels = 5, int imageWidthPixels = 72)
+        public static string WrapStringToFitImage(
+            string str,
+            TitleParameters titleParameters,
+            int leftPaddingPixels = 5,
+            int rightPaddingPixels = 5,
+            int imageWidthPixels = 72)
         {
             try
             {
@@ -238,27 +257,26 @@ namespace BarRaider.SdTools
                 }
 
                 int padding = leftPaddingPixels + rightPaddingPixels;
-                Font font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPixels, titleParameters.FontStyle, GraphicsUnit.Pixel);
-                StringBuilder finalString = new StringBuilder();
-                StringBuilder currentLine = new StringBuilder();
-                SizeF currentLineSize;
+                var font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPixels, titleParameters.FontStyle, GraphicsUnit.Pixel);
+                var finalString = new StringBuilder();
+                var currentLine = new StringBuilder();
 
-                using (Bitmap img = new Bitmap(imageWidthPixels, imageWidthPixels))
+                using (var img = new Bitmap(imageWidthPixels, imageWidthPixels))
                 {
                     using (Graphics graphics = Graphics.FromImage(img))
                     {
-                        for (int idx = 0; idx < str.Length; idx++)
+                        foreach (char t in str)
                         {
-                            currentLine.Append(str[idx]);
-                            currentLineSize = graphics.MeasureString(currentLine.ToString(), font);
+                            currentLine.Append(t);
+                            SizeF currentLineSize = graphics.MeasureString(currentLine.ToString(), font);
                             if (currentLineSize.Width <= img.Width - padding)
                             {
-                                finalString.Append(str[idx]);
+                                finalString.Append(t);
                             }
                             else // Overflow
                             {
-                                finalString.Append("\n" + str[idx]);
-                                currentLine = new StringBuilder(str[idx].ToString());
+                                finalString.Append("\n" + t);
+                                currentLine = new StringBuilder(t.ToString());
                             }
                         }
                     }
@@ -268,7 +286,7 @@ namespace BarRaider.SdTools
             }
             catch (Exception ex)
             {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, $"WrapStringToFitImage Exception: {ex}");
+                Logger.Instance.LogMessage(TracingLevel.Error, $"WrapStringToFitImage Exception: {ex}");
                 return str;
             }
         }

@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using BarRaider.SdTools.Wrappers;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace BarRaider.SdTools.Payloads
 {
     /// <summary>
-    /// Payload for Apperance settings
+    /// Payload for Appearance settings
     /// </summary>
     public class AppearancePayload
     {
@@ -24,7 +25,7 @@ namespace BarRaider.SdTools.Payloads
         /// State of key
         /// </summary>
         [JsonProperty("state")]
-        public uint State { get; private set; }
+        public uint? State { get; private set; }
 
         /// <summary>
         /// Is action in MultiAction

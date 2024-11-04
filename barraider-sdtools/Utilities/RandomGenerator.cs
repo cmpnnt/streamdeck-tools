@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Utilities
 {
     /// <summary>
     /// Helper class for generating random numbers
     /// </summary>
     public static class RandomGenerator
     {
-        private static readonly Random random = new Random();
+        private static readonly Random Random = new();
 
         /// <summary>
         /// Returns a non-negative random integer that is less than the specified maximum.
@@ -18,7 +16,7 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public static int Next(int maxValue)
         {
-            return random.Next(maxValue);
+            return Random.Next(maxValue);
         }
 
         /// <summary>
@@ -29,7 +27,7 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public static int Next(int minValue, int maxValue)
         {
-            return random.Next(minValue, maxValue);
+            return Random.Next(minValue, maxValue);
         }
     }
 }

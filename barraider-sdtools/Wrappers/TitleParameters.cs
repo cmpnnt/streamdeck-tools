@@ -1,8 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
+using BarRaider.SdTools.Utilities;
 
 namespace BarRaider.SdTools.Wrappers
 {
@@ -66,7 +65,7 @@ namespace BarRaider.SdTools.Wrappers
         /// Font Family
         /// </summary>
         [JsonProperty("fontFamily")]
-        public FontFamily FontFamily { get; private set; } = new FontFamily(DEFAULT_FONT_FAMILY_NAME);
+        public FontFamily FontFamily { get; private set; } = new(DEFAULT_FONT_FAMILY_NAME);
 
         /// <summary>
         /// Font Style
@@ -120,7 +119,6 @@ namespace BarRaider.SdTools.Wrappers
             ParsePayload(fontFamily, fontSize, fontStyle, fontUnderline, showTitle, titleAlignment, titleColor);
         }
 
-
         private void ParsePayload(string fontFamily, uint fontSize, string fontStyle, bool fontUnderline, bool showTitle, string titleAlignment, string titleColor)
         {
             try
@@ -128,18 +126,11 @@ namespace BarRaider.SdTools.Wrappers
                 ShowTitle = showTitle;
 
                 // Color
-                if (!String.IsNullOrEmpty(titleColor))
-                {
-                    TitleColor = ColorTranslator.FromHtml(titleColor);
-                }
-
-                if (!String.IsNullOrEmpty(fontFamily))
-                {
-                    FontFamily = new FontFamily(fontFamily);
-                }
-
+                if (!string.IsNullOrEmpty(titleColor)) TitleColor = ColorTranslator.FromHtml(titleColor);
+                if (!string.IsNullOrEmpty(fontFamily)) FontFamily = new FontFamily(fontFamily);
+                
                 FontSizeInPoints = fontSize;
-                if (!String.IsNullOrEmpty(fontStyle))
+                if (!string.IsNullOrEmpty(fontStyle))
                 {
                     switch (fontStyle.ToLowerInvariant())
                     {
@@ -156,34 +147,26 @@ namespace BarRaider.SdTools.Wrappers
                             FontStyle = FontStyle.Bold | FontStyle.Italic;
                             break;
                         default:
-                            Logger.Instance.LogMessage(TracingLevel.WARN, $"{this.GetType()} Cannot parse Font Style: {fontStyle}");
+                            Logger.Instance.LogMessage(TracingLevel.Warn, $"{GetType()} Cannot parse Font Style: {fontStyle}");
                             break;
                     }
                 }
-                if (fontUnderline)
-                {
-                    FontStyle |= FontStyle.Underline;
-                }
-
+                if (fontUnderline) FontStyle |= FontStyle.Underline;
+                
                 if (!string.IsNullOrEmpty(titleAlignment))
                 {
-                    switch (titleAlignment.ToLowerInvariant())
+                    VerticalAlignment = titleAlignment.ToLowerInvariant() switch
                     {
-                        case "top":
-                            VerticalAlignment = TitleVerticalAlignment.Top;
-                            break;
-                        case "bottom":
-                            VerticalAlignment = TitleVerticalAlignment.Bottom;
-                            break;
-                        case "middle":
-                            VerticalAlignment = TitleVerticalAlignment.Middle;
-                            break;
-                    }
+                        "top" => TitleVerticalAlignment.Top,
+                        "bottom" => TitleVerticalAlignment.Bottom,
+                        "middle" => TitleVerticalAlignment.Middle,
+                        _ => VerticalAlignment
+                    };
                 }
             }
             catch (Exception ex)
             {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, $"TitleParameters failed to parse payload {ex}");
+                Logger.Instance.LogMessage(TracingLevel.Error, $"TitleParameters failed to parse payload {ex}");
             }
         }
     }

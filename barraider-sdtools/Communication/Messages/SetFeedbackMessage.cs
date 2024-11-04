@@ -3,21 +3,16 @@ using System.Collections.Generic;
 
 namespace BarRaider.SdTools.Communication.Messages
 {
-    internal class SetFeedbackMessage : IMessage
+    internal class SetFeedbackMessage(Dictionary<string, string> dictKeyValues, string pluginUuid)
+        : IMessage
     {
         [JsonProperty("event")]
-        public string Event { get { return "setFeedback"; } }
+        public string Event => "setFeedback";
 
         [JsonProperty("context")]
-        public string Context { get; private set; }
+        public string Context { get; private set; } = pluginUuid;
 
         [JsonProperty("payload")]
-        public Dictionary<string, string> DictKeyValues { get; private set; }
-
-        public SetFeedbackMessage(Dictionary<string, string> dictKeyValues, string pluginUUID)
-        {
-            this.Context = pluginUUID;
-            DictKeyValues = dictKeyValues;
-        }
+        public Dictionary<string, string> DictKeyValues { get; private set; } = dictKeyValues;
     }
 }

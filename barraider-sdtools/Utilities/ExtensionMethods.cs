@@ -1,14 +1,12 @@
-﻿using BarRaider.SdTools.Wrappers;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Text;
+using BarRaider.SdTools.Wrappers;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Utilities
 {
     /// <summary>
     /// Extension methods for various objects
@@ -24,18 +22,12 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public static bool IsCoordinatesSame(this KeyCoordinates coordinates, KeyCoordinates secondCoordinates)
         {
-            if (secondCoordinates == null)
-            {
-                return false;
-            }
-
+            if (secondCoordinates == null) return false;
             return coordinates.Row == secondCoordinates.Row && coordinates.Column == secondCoordinates.Column;
         }
-
         #endregion
 
         #region Brushes/Colors
-
         /// <summary>
         /// Shows Color In Hex Format
         /// </summary>
@@ -43,7 +35,7 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public static string ToHex(this Color color)
         {
-            return string.Format("#{0:X2}{1:X2}{2:X2}", color.R, color.G, color.B);
+            return $"#{color.R:X2}{color.G:X2}{color.B:X2}";
         }
 
         /// <summary>
@@ -59,11 +51,9 @@ namespace BarRaider.SdTools
             }
             return null;
         }
-
         #endregion
 
         #region Image/Graphics
-
         /// <summary>
         /// Converts an Image into a Byte Array
         /// </summary>
@@ -71,11 +61,9 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public static byte[] ToByteArray(this Image image)
         {
-            using (var ms = new MemoryStream())
-            {
-                image.Save(ms, ImageFormat.Bmp);
-                return ms.ToArray();
-            }
+            using var ms = new MemoryStream();
+            image.Save(ms, ImageFormat.Bmp);
+            return ms.ToArray();
         }
 
         /// <summary>
@@ -122,11 +110,12 @@ namespace BarRaider.SdTools
             SizeF stringSize = graphics.MeasureString(text, font);
             float stringWidth = minIndentation;
             textFitsImage = false;
-            if (stringSize.Width < imageWidth)
-            {
-                textFitsImage = true;
-                stringWidth = Math.Abs((imageWidth - stringSize.Width)) / 2;
-            }
+            
+            if (!(stringSize.Width < imageWidth)) return stringWidth;
+            
+            textFitsImage = true;
+            stringWidth = Math.Abs((imageWidth - stringSize.Width)) / 2;
+            
             return stringWidth;
         }
 
@@ -158,16 +147,15 @@ namespace BarRaider.SdTools
         {
             bool textFitsImage;
             float size = font.Size;
-            Font variableFont = new Font(font.Name, size, font.Style, GraphicsUnit.Pixel);
+            var variableFont = new Font(font.Name, size, font.Style, GraphicsUnit.Pixel);
             do
             {
                 graphics.GetTextCenter(text, imageWidth, variableFont, out textFitsImage);
-                if (!textFitsImage)
-                {
-                    variableFont.Dispose();
-                    size -= 0.5f;
-                    variableFont = new Font(font.Name, size, font.Style, GraphicsUnit.Pixel);
-                }
+                if (textFitsImage) continue;
+                
+                variableFont.Dispose();
+                size -= 0.5f;
+                variableFont = new Font(font.Name, size, font.Style, GraphicsUnit.Pixel);
             }
             while (!textFitsImage && size > minimalFontSize);
 
@@ -206,35 +194,33 @@ namespace BarRaider.SdTools
             {
                 if (titleParameters == null)
                 {
-                    Logger.Instance.LogMessage(TracingLevel.ERROR, $"AddTextPath: titleParameters is null");
+                    Logger.Instance.LogMessage(TracingLevel.Error, $"AddTextPath: titleParameters is null");
                     return;
                 }
 
-                Font font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPixelsScaledToDefaultImage, titleParameters.FontStyle, GraphicsUnit.Pixel);
+                var font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPixelsScaledToDefaultImage, titleParameters.FontStyle, GraphicsUnit.Pixel);
                 Color color = titleParameters.TitleColor;
                 graphics.PageUnit = GraphicsUnit.Pixel;
                 float ratio = graphics.DpiY / imageWidth;
                 SizeF stringSize = graphics.MeasureString(text, font);
                 float textWidth = stringSize.Width * (1 - ratio);
                 float textHeight = stringSize.Height * (1 - ratio);
-                int stringWidth = 0;
+                var stringWidth = 0;
+                
                 if (textWidth < imageWidth)
                 {
                     stringWidth = (int)(Math.Abs((imageWidth - textWidth)) / 2) - pixelsAlignment;
                 }
 
-                int stringHeight = pixelsAlignment; // Top
-                if (titleParameters.VerticalAlignment == TitleVerticalAlignment.Middle)
+                int stringHeight = titleParameters.VerticalAlignment switch
                 {
-                    stringHeight = (imageHeight / 2) - pixelsAlignment;
-                }
-                else if (titleParameters.VerticalAlignment == TitleVerticalAlignment.Bottom)
-                {
-                    stringHeight = (int)(Math.Abs((imageHeight - textHeight)) - pixelsAlignment);
-                }
+                    TitleVerticalAlignment.Middle => (imageHeight / 2) - pixelsAlignment,
+                    TitleVerticalAlignment.Bottom => (int)(Math.Abs((imageHeight - textHeight)) - pixelsAlignment),
+                    _ => pixelsAlignment
+                };
 
-                Pen stroke = new Pen(strokeColor, strokeThickness);
-                GraphicsPath gpath = new GraphicsPath();
+                var stroke = new Pen(strokeColor, strokeThickness);
+                var gpath = new GraphicsPath();
                 gpath.AddString(text,
                                     font.FontFamily,
                                     (int)font.Style,
@@ -246,15 +232,12 @@ namespace BarRaider.SdTools
             }
             catch (Exception ex)
             {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, $"AddTextPath Exception {ex}");
+                Logger.Instance.LogMessage(TracingLevel.Error, $"AddTextPath Exception {ex}");
             }
         }
-
         #endregion
 
         #region String
-
-
         /// <summary>
         /// /// Truncates a string to the first maxSize characters. If maxSize is less than string length, original string will be returned
         /// </summary>
@@ -263,17 +246,12 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public static string Truncate(this string str, int maxSize)
         {
-            if (String.IsNullOrEmpty(str))
+            if (string.IsNullOrEmpty(str))
             {
                 return null;
             }
 
-            if (maxSize < 1)
-            {
-                return str;
-            }
-
-            return str.Substring(0, Math.Min(Math.Max(0, maxSize), str.Length));
+            return maxSize < 1 ? str : str[..Math.Min(Math.Max(0, maxSize), str.Length)];
         }
 
         /// <summary>
@@ -289,33 +267,29 @@ namespace BarRaider.SdTools
         {
             try
             {
-                if (titleParameters == null)
-                {
-                    return str;
-                }
-
+                if (titleParameters == null) return str;
+                
                 int padding = leftPaddingPixels + rightPaddingPixels;
-                Font font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPoints, titleParameters.FontStyle, GraphicsUnit.Pixel);
-                StringBuilder finalString = new StringBuilder();
-                StringBuilder currentLine = new StringBuilder();
-                SizeF currentLineSize;
+                var font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPoints, titleParameters.FontStyle, GraphicsUnit.Pixel);
+                var finalString = new StringBuilder();
+                var currentLine = new StringBuilder();
 
-                using (Bitmap img = new Bitmap(imageWidthPixels, imageWidthPixels))
+                using (var img = new Bitmap(imageWidthPixels, imageWidthPixels))
                 {
                     using (Graphics graphics = Graphics.FromImage(img))
                     {
-                        for (int idx = 0; idx < str.Length; idx++)
+                        foreach (char c in str)
                         {
-                            currentLine.Append(str[idx]);
-                            currentLineSize = graphics.MeasureString(currentLine.ToString(), font);
+                            currentLine.Append(c);
+                            SizeF currentLineSize = graphics.MeasureString(currentLine.ToString(), font);
                             if (currentLineSize.Width <= img.Width - padding)
                             {
-                                finalString.Append(str[idx]);
+                                finalString.Append(c);
                             }
                             else // Overflow
                             {
-                                finalString.Append("\n" + str[idx]);
-                                currentLine = new StringBuilder(str[idx].ToString());
+                                finalString.Append("\n" + c);
+                                currentLine = new StringBuilder(c.ToString());
                             }
                         }
                     }
@@ -325,12 +299,10 @@ namespace BarRaider.SdTools
             }
             catch (Exception ex)
             {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, $"SplitStringToFit Exception: {ex}");
+                Logger.Instance.LogMessage(TracingLevel.Error, $"SplitStringToFit Exception: {ex}");
                 return str;
             }
         }
-
-
         #endregion
     }
 }

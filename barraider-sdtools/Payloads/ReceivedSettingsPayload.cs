@@ -1,10 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using BarRaider.SdTools.Wrappers;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Payloads
 {
     /// <summary>
     /// Payload that holds all the settings in the ReceivedSettings event

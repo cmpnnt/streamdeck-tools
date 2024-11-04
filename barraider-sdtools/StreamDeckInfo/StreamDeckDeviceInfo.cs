@@ -1,11 +1,6 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.StreamDeckInfo
 {
     /// <summary>
     /// Class which holds information on the StreamDeck hardware device
@@ -49,7 +44,7 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public override string ToString()
         {
-            return $"Id: {Id} Type: {Type} Size: {Size?.ToString()}";
+            return $"Id: {Id} Type: {Type} Size: {Size}";
         }
     }
 }

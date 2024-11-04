@@ -2,40 +2,28 @@
 
 namespace BarRaider.SdTools.Communication.Messages
 {
-    internal class SetTitleMessage : IMessage
+    internal class SetTitleMessage(string title, string context, SdkTarget target, int? state)
+        : IMessage
     {
         [JsonProperty("event")]
-        public string Event { get { return "setTitle"; } }
+        public string Event => "setTitle";
 
         [JsonProperty("context")]
-        public string Context { get; private set; }
+        public string Context { get; private set; } = context;
 
         [JsonProperty("payload")]
-        public IPayload Payload { get; private set; }
+        public IPayload Payload { get; private set; } = new PayloadClass(title, target, state);
 
-        public SetTitleMessage(string title, string context, SDKTarget target, int? state)
-        {
-            this.Context = context;
-            this.Payload = new PayloadClass(title, target, state);
-        }
-
-        private class PayloadClass : IPayload
+        private class PayloadClass(string title, SdkTarget target, int? state) : IPayload
         {
             [JsonProperty("title")]
-            public string Title { get; private set; }
+            public string Title { get; private set; } = title;
 
             [JsonProperty("target")]
-            public SDKTarget Target { get; private set; }
+            public SdkTarget Target { get; private set; } = target;
 
             [JsonProperty("state", NullValueHandling = NullValueHandling.Ignore)]
-            public int? State { get; private set; }
-
-            public PayloadClass(string title, SDKTarget target, int? state)
-            {
-                this.Title = title;
-                this.Target = target;
-                this.State = state;
-            }
+            public int? State { get; private set; } = state;
         }
     }
 }

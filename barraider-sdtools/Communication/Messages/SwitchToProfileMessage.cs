@@ -5,7 +5,7 @@ namespace BarRaider.SdTools.Communication.Messages
     internal class SwitchToProfileMessage : IMessage
     {
         [JsonProperty("event")]
-        public string Event { get { return "switchToProfile"; } }
+        public string Event => "switchToProfile";
 
         [JsonProperty("context")]
         public string Context { get; private set; }
@@ -16,29 +16,24 @@ namespace BarRaider.SdTools.Communication.Messages
         [JsonProperty("payload")]
         public IPayload Payload { get; private set; }
 
-        public SwitchToProfileMessage(string device, string profileName, string pluginUUID)
+        public SwitchToProfileMessage(string device, string profileName, string pluginUuid)
         {
-            this.Context = pluginUUID;
-            this.Device = device;
+            Context = pluginUuid;
+            Device = device;
             if (!string.IsNullOrEmpty(profileName))
             {
-                this.Payload = new PayloadClass(profileName);
+                Payload = new PayloadClass(profileName);
             }
             else
             {
-                this.Payload = new EmptyPayload();
+                Payload = new EmptyPayload();
             }
         }
 
-        private class PayloadClass : IPayload
+        private class PayloadClass(string profile) : IPayload
         {
             [JsonProperty("profile")]
-            public string Profile { get; private set; }
-
-            public PayloadClass(string profile)
-            {
-                this.Profile = profile;
-            }
+            public string Profile { get; private set; } = profile;
         }
     }
 }

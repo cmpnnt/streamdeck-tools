@@ -1,58 +1,58 @@
-﻿using BarRaider.SdTools.Events;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Threading.Tasks;
+using BarRaider.SdTools.Events;
+using BarRaider.SdTools.StreamDeckInfo;
 using BarRaider.SdTools.Wrappers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Backend
 {
     /// <summary>
     /// Interface for a Stream Deck connection
     /// </summary>
-    public interface ISDConnection : IDisposable
+    public interface ISdConnection : IDisposable
     {
         #region Events
 
         /// <summary>
         /// Event received by the plugin when the Property Inspector uses the sendToPlugin event.
         /// </summary>
-        event EventHandler<SDEventReceivedEventArgs<SendToPlugin>> OnSendToPlugin;
+        event EventHandler<SdEventReceivedEventArgs<SendToPlugin>> OnSendToPlugin;
         /// <summary>
         /// Event received when the user changes the title or title parameters.
         /// </summary>
-        event EventHandler<SDEventReceivedEventArgs<TitleParametersDidChange>> OnTitleParametersDidChange;
+        event EventHandler<SdEventReceivedEventArgs<TitleParametersDidChange>> OnTitleParametersDidChange;
         /// <summary>
         /// Event received when a monitored application is terminated
         /// </summary>
-        event EventHandler<SDEventReceivedEventArgs<ApplicationDidTerminate>> OnApplicationDidTerminate;
+        event EventHandler<SdEventReceivedEventArgs<ApplicationDidTerminate>> OnApplicationDidTerminate;
         /// <summary>
         /// Event received when a monitored application is launched
         /// </summary>
-        event EventHandler<SDEventReceivedEventArgs<ApplicationDidLaunch>> OnApplicationDidLaunch;
+        event EventHandler<SdEventReceivedEventArgs<ApplicationDidLaunch>> OnApplicationDidLaunch;
         /// <summary>
         /// Event received when a device is unplugged from the computer
         /// </summary>
-        event EventHandler<SDEventReceivedEventArgs<DeviceDidDisconnect>> OnDeviceDidDisconnect;
+        event EventHandler<SdEventReceivedEventArgs<DeviceDidDisconnect>> OnDeviceDidDisconnect;
         /// <summary>
         /// Event received when a device is plugged to the computer.
         /// </summary>
-        event EventHandler<SDEventReceivedEventArgs<DeviceDidConnect>> OnDeviceDidConnect;
+        event EventHandler<SdEventReceivedEventArgs<DeviceDidConnect>> OnDeviceDidConnect;
         /// <summary>
         /// Event received when the Property Inspector appears in the Stream Deck software user interface, for example when selecting a new instance.
         /// </summary>
-        event EventHandler<SDEventReceivedEventArgs<PropertyInspectorDidAppear>> OnPropertyInspectorDidAppear;
+        event EventHandler<SdEventReceivedEventArgs<PropertyInspectorDidAppear>> OnPropertyInspectorDidAppear;
         /// <summary>
         /// Event received when the Property Inspector for an instance is removed from the Stream Deck software user interface, for example when selecting a different instance.
         /// </summary>
-        event EventHandler<SDEventReceivedEventArgs<PropertyInspectorDidDisappear>> OnPropertyInspectorDidDisappear;
+        event EventHandler<SdEventReceivedEventArgs<PropertyInspectorDidDisappear>> OnPropertyInspectorDidDisappear;
         /// <summary>
         /// Event received when the computer wakes up
         /// </summary>
-        event EventHandler<SDEventReceivedEventArgs<SystemDidWakeUp>> OnSystemDidWakeUp;
+        event EventHandler<SdEventReceivedEventArgs<SystemDidWakeUp>> OnSystemDidWakeUp;
 
         #endregion
 
@@ -150,7 +150,7 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        Task LogSDMessage(string message);
+        Task LogSdMessage(string message);
 
         /// <summary>
         /// Gets the Stream Deck device's info
@@ -183,7 +183,7 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="state"></param>
         /// <returns></returns>
-        Task SetStateAsync(uint state);
+        Task SetStateAsync(uint? state);
 
         /// <summary>
         /// Sets the values of touchpad layouts items
@@ -217,13 +217,13 @@ namespace BarRaider.SdTools
         /// An opaque value identifying the plugin. This value is received during the Registration procedure
         /// </summary>
         [JsonIgnore]
-        String ContextId { get; }
+        string ContextId { get; }
 
         /// <summary>
         /// An opaque value identifying the device the plugin is launched on.
         /// </summary>
         [JsonIgnore]
-        String DeviceId { get; }
+        string DeviceId { get; }
 
         /// <summary>
         /// StreamDeckConnection object, initialized based on the args received when launching the program
