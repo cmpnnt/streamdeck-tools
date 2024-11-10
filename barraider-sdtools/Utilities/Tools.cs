@@ -292,8 +292,7 @@ namespace BarRaider.SdTools.Utilities
         {
             try
             {
-                using var sha512 = SHA512.Create();
-                byte[] hash = sha512.ComputeHash(byteStream);
+                byte[] hash = SHA512.HashData(byteStream);
                 return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
             }
             catch (Exception ex)
