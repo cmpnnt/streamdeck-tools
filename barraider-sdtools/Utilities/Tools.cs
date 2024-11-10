@@ -262,7 +262,6 @@ namespace BarRaider.SdTools.Utilities
         {
             if (data == null) return null;
             
-
             try
             {
                 return BytesToSha512(data.ToArray());

@@ -2,8 +2,6 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using BarRaider.SdTools.Attributes;
 using BarRaider.SdTools.Backend;
@@ -58,34 +56,42 @@ namespace SamplePlugin
 
         private void Connection_OnTitleParametersDidChange(object sender, SdEventReceivedEventArgs<BarRaider.SdTools.Events.TitleParametersDidChange> e)
         {
+            // Your logic here. Feel free to remove this and the related event de/registrations if it's not needed
         }
 
         private void Connection_OnSendToPlugin(object sender, SdEventReceivedEventArgs<BarRaider.SdTools.Events.SendToPlugin> e)
         {
+            // Your logic here. Feel free to remove this and the related event de/registrations if it's not needed
         }
 
         private void Connection_OnPropertyInspectorDidDisappear(object sender, SdEventReceivedEventArgs<BarRaider.SdTools.Events.PropertyInspectorDidDisappear> e)
         {
+            // Your logic here. Feel free to remove this and the related event de/registrations if it's not needed
         }
 
         private void Connection_OnPropertyInspectorDidAppear(object sender, SdEventReceivedEventArgs<BarRaider.SdTools.Events.PropertyInspectorDidAppear> e)
         {
+            // Your logic here. Feel free to remove this and the related event de/registrations if it's not needed
         }
 
         private void Connection_OnDeviceDidDisconnect(object sender, SdEventReceivedEventArgs<BarRaider.SdTools.Events.DeviceDidDisconnect> e)
         {
+            // Your logic here. Feel free to remove this and the related event de/registrations if it's not needed
         }
 
         private void Connection_OnDeviceDidConnect(object sender, SdEventReceivedEventArgs<BarRaider.SdTools.Events.DeviceDidConnect> e)
         {
+            // Your logic here. Feel free to remove this and the related event de/registrations if it's not needed
         }
 
         private void Connection_OnApplicationDidTerminate(object sender, SdEventReceivedEventArgs<BarRaider.SdTools.Events.ApplicationDidTerminate> e)
         {
+            // Your logic here. Feel free to remove this and the related event de/registrations if it's not needed
         }
 
         private void Connection_OnApplicationDidLaunch(object sender, SdEventReceivedEventArgs<BarRaider.SdTools.Events.ApplicationDidLaunch> e)
         {
+            // Your logic here. Feel free to remove this and the related event de/registrations if it's not needed
         }
 
         public override void Dispose()
