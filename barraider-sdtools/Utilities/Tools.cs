@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -15,6 +11,7 @@ using BarRaider.SdTools.StreamDeckInfo;
 using BarRaider.SdTools.Wrappers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SkiaSharp;
 
 namespace BarRaider.SdTools.Utilities
 {
@@ -33,7 +30,6 @@ namespace BarRaider.SdTools.Utilities
         private const string FILENAME_NO_FILE_STRING = "No file...";
 
         #region Image Related
-
         /// <summary>
         /// Convert an image file to Base64 format. Set the addHeaderPrefix to true, if this is sent to the SendImageAsync function
         /// </summary>
@@ -42,13 +38,14 @@ namespace BarRaider.SdTools.Utilities
         /// <returns></returns>
         public static string FileToBase64(string fileName, bool addHeaderPrefix)
         {
-            if (!File.Exists(fileName))
-            {
-                return null;
-            }
-
-            using Image image = Image.FromFile(fileName);
+            if (!File.Exists(fileName)) return null;
+            using SKImage image = OpenImageFromFile(fileName);
             return ImageToBase64(image, addHeaderPrefix);
+        }
+
+        public static SKImage OpenImageFromFile(string fileName)
+        {
+            return SKImage.FromEncodedData(fileName);
         }
 
         /// <summary>
@@ -57,18 +54,25 @@ namespace BarRaider.SdTools.Utilities
         /// <param name="image"></param>
         /// <param name="addHeaderPrefix"></param>
         /// <returns></returns>
-        public static string ImageToBase64(Image image, bool addHeaderPrefix)
+        public static string ImageToBase64(SKImage image, bool addHeaderPrefix)
         {
-            if (image == null)
-            {
-                return null;
-            }
-
-            using var m = new MemoryStream();
-            image.Save(m, ImageFormat.Png);
-            byte[] imageBytes = m.ToArray();
-
-            // Convert byte[] to Base64 String
+            if (image == null) return null;
+            using SKBitmap bitmap = SKBitmap.FromImage(image);
+            byte[] imageBytes = bitmap.Bytes;
+            string base64String = Convert.ToBase64String(imageBytes);
+            return addHeaderPrefix ? HEADER_PREFIX + base64String : base64String;
+        }
+        
+        /// <summary>
+        /// Convert an in-memory image object to Base64 format. Set the addHeaderPrefix to true, if this is sent to the SendImageAsync function
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="addHeaderPrefix"></param>
+        /// <returns></returns>
+        public static string ImageToBase64(SKBitmap image, bool addHeaderPrefix)
+        {
+            if (image == null) return null;
+            byte[] imageBytes = image.Bytes;
             string base64String = Convert.ToBase64String(imageBytes);
             return addHeaderPrefix ? HEADER_PREFIX + base64String : base64String;
         }
@@ -78,24 +82,21 @@ namespace BarRaider.SdTools.Utilities
         /// </summary>
         /// <param name="base64String"></param>
         /// <returns></returns>
-        public static Image Base64StringToImage(string base64String)
+        public static SKImage Base64StringToImage(string base64String)
         {
             try
             {
-                if (string.IsNullOrEmpty(base64String))
-                {
-                    return null;
-                }
+                if (string.IsNullOrEmpty(base64String)) return null;
 
                 // Remove header
-                if (base64String.Substring(0, HEADER_PREFIX.Length) == HEADER_PREFIX)
+                if (base64String[..HEADER_PREFIX.Length] == HEADER_PREFIX)
                 {
-                    base64String = base64String.Substring(HEADER_PREFIX.Length);
+                    base64String = base64String[HEADER_PREFIX.Length..];
                 }
 
                 byte[] imageBytes = Convert.FromBase64String(base64String);
                 using var m = new MemoryStream(imageBytes);
-                return Image.FromStream(m);
+                return SKImage.FromEncodedData(m);
             }
             catch (Exception ex)
             {
@@ -155,24 +156,21 @@ namespace BarRaider.SdTools.Utilities
         /// New: To get the StreamDeckType use Connection.DeviceInfo()
         /// </summary>
         /// <param name="streamDeckType"></param>
-        /// <param name="graphics"></param>
         /// <returns></returns>
-        public static Bitmap GenerateKeyImage(DeviceType streamDeckType, out Graphics graphics)
+        public static Tuple<SKBitmap, SKCanvas> GenerateKeyImage(DeviceType streamDeckType)
         {
             int height = GetKeyDefaultHeight(streamDeckType);
             int width = GetKeyDefaultWidth(streamDeckType);
-
-            return GenerateKeyImage(height, width, out graphics);
+            return GenerateKeyImage(height, width);
         }
 
         /// <summary>
         /// Creates a key image that fits all Stream Decks
         /// </summary>
-        /// <param name="graphics"></param>
         /// <returns></returns>
-        public static Bitmap GenerateGenericKeyImage(out Graphics graphics)
+        public static Tuple<SKBitmap, SKCanvas> GenerateGenericKeyImage(SKColor? backgroundColor = null)
         {
-            return GenerateKeyImage(GENERIC_KEY_IMAGE_SIZE, GENERIC_KEY_IMAGE_SIZE, out graphics);
+            return GenerateKeyImage(GENERIC_KEY_IMAGE_SIZE, GENERIC_KEY_IMAGE_SIZE, backgroundColor);
         }
 
         /// <summary>
@@ -180,56 +178,26 @@ namespace BarRaider.SdTools.Utilities
         /// </summary>
         /// <param name="height"></param>
         /// <param name="width"></param>
-        /// <param name="graphics"></param>
+        /// <param name="backgroundColor"></param>
         /// <returns></returns>
-        private static Bitmap GenerateKeyImage(int height, int width, out Graphics graphics)
+        private static Tuple<SKBitmap, SKCanvas> GenerateKeyImage(int height, int width, SKColor? backgroundColor = null)
         {
             try
             {
-                var bitmap = new Bitmap(width, height);
-                var brush = new SolidBrush(Color.Black);
-
-                graphics = Graphics.FromImage(bitmap);
-                graphics.SmoothingMode = SmoothingMode.AntiAlias;
-                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
-
-                //Fill background black
-                graphics.FillRectangle(brush, 0, 0, width, height);
-                return bitmap;
+                var bitmap = new SKBitmap(width, height);
+                var canvas = new SKCanvas(bitmap);
+                canvas.DrawColor(backgroundColor ?? SKColors.Black);
+                return new Tuple<SKBitmap, SKCanvas>(bitmap, canvas);
             }
             catch (Exception ex)
             {
                 Logger.Instance.LogMessage(TracingLevel.Error, $"SDTools GenerateKeyImage exception: {ex} Height: {height} Width: {width}");
             }
-            graphics = null;
             return null;
         }
-
-        /// <summary>
-        /// Deprecated! Use AddTextPath on the Graphics extension method instead.
-        /// Adds a text path to an existing Graphics object. Uses TitleParser to emulate the Text settings in the Property Inspector
-        /// </summary>
-        /// <param name="graphics"></param>
-        /// <param name="titleParameters"></param>
-        /// <param name="imageHeight"></param>
-        /// <param name="imageWidth"></param>
-        /// <param name="text"></param>
-        /// <param name="pixelsAlignment"></param>
-        [Obsolete("Use graphics.AddTextPath() extension method instead")]
-        public static void AddTextPathToGraphics(Graphics graphics, TitleParameters titleParameters, int imageHeight, int imageWidth, string text, int pixelsAlignment = 15)
-        {
-            if (graphics != null)
-            {
-                graphics.AddTextPath(titleParameters, imageHeight, imageWidth, text, pixelsAlignment);
-            }
-        }
-
         #endregion
 
         #region Filename Related
-
         /// <summary>
         /// Extracts the actual filename from a file payload received from the Property Inspector
         /// </summary>
@@ -242,20 +210,15 @@ namespace BarRaider.SdTools.Utilities
 
         private static string FilenameFromString(string filenameWithFakepath)
         {
-            if (string.IsNullOrEmpty(filenameWithFakepath))
-            {
-                return null;
-            }
+            if (string.IsNullOrEmpty(filenameWithFakepath)) return null;
 
             return filenameWithFakepath == FILENAME_NO_FILE_STRING ? 
                 string.Empty : 
                 Uri.UnescapeDataString(filenameWithFakepath.Replace("C:\\fakepath\\", ""));
         }
-
         #endregion
 
         #region String Related
-
         /// <summary>
         /// Converts a long to a human-readable string. Example: 54,265 => 54.27k
         /// </summary>
@@ -263,24 +226,14 @@ namespace BarRaider.SdTools.Utilities
         /// <returns></returns>
         public static string FormatNumber(long num)
         {
-            if (num >= 100000000)
+            return num switch
             {
-                return (num / 1000000D).ToString("0.#M");
-            }
-            if (num >= 1000000)
-            {
-                return (num / 1000000D).ToString("0.##M");
-            }
-            if (num >= 100000)
-            {
-                return (num / 1000D).ToString("0.#k");
-            }
-            if (num >= 10000)
-            {
-                return (num / 1000D).ToString("0.##k");
-            }
-
-            return num.ToString("#,0");
+                >= 100000000 => (num / 1000000D).ToString("0.#M"),
+                >= 1000000 => (num / 1000000D).ToString("0.##M"),
+                >= 100000 => (num / 1000D).ToString("0.#k"),
+                >= 10000 => (num / 1000D).ToString("0.##k"),
+                _ => num.ToString("#,0")
+            };
         }
 
         //// <summary>Converts number in bytes to human-readable size (ex. "2 GB")</summary>
@@ -297,43 +250,22 @@ namespace BarRaider.SdTools.Utilities
             }
             return string.Format(format[sizeCounter], numberInBytes);
         }
-
-        /// <summary>
-        /// OBSOLETE - Use String.SplitToFitKey() from SdTools.ExtensionMethods
-        /// </summary>
-        /// <param name="str"></param>
-        /// <param name="titleParameters"></param>
-        /// <param name="leftPaddingPixels"></param>
-        /// <param name="rightPaddingPixels"></param>
-        /// <param name="imageWidthPixels"></param>
-        /// <returns></returns>
-        [Obsolete("Use String.SplitToFitKey(), now part of the SdTools.ExtensionMethods")]
-        public static string SplitStringToFit(string str, TitleParameters titleParameters, int leftPaddingPixels = 3, int rightPaddingPixels = 3, int imageWidthPixels = 72)
-        {
-            return str.SplitToFitKey(titleParameters, leftPaddingPixels, rightPaddingPixels, imageWidthPixels);
-        }
-
         #endregion
 
         #region SHA512
-
         /// <summary>
         /// Returns SHA512 Hash from an image object
         /// </summary>
-        /// <param name="image"></param>
+        /// <param name="data"></param>
         /// <returns></returns>
-        public static string ImageToSha512(Image image)
+        public static string ImageToSha512(SKData data)
         {
-            if (image == null)
-            {
-                return null;
-            }
+            if (data == null) return null;
+            
 
             try
             {
-                using var ms = new MemoryStream();
-                image.Save(ms, ImageFormat.Png);
-                return BytesToSha512(ms.ToArray());
+                return BytesToSha512(data.ToArray());
             }
             catch (Exception ex)
             {
@@ -349,11 +281,7 @@ namespace BarRaider.SdTools.Utilities
         /// <returns></returns>
         public static string StringToSha512(string str)
         {
-            if (str == null)
-            {
-                return null;
-            }
-            return BytesToSha512(Encoding.UTF8.GetBytes(str));
+            return str == null ? null : BytesToSha512(Encoding.UTF8.GetBytes(str));
         }
 
         /// <summary>
@@ -375,7 +303,6 @@ namespace BarRaider.SdTools.Utilities
             }
             return null;
         }
-
         #endregion
 
         #region JObject Related
@@ -434,7 +361,6 @@ namespace BarRaider.SdTools.Utilities
 
             return dicProperties;
         }
-
         #endregion
 
         #region Dials Related
@@ -476,6 +402,9 @@ namespace BarRaider.SdTools.Utilities
         /// <returns></returns>
         public static PluginActionId[] AutoLoadPluginActions()
         {
+            //TODO: replace reflection with source generation. See: https://papafe.dev/posts/source-generators-tips/#introduction
+            //TODO: Also add a manual registration option invoked in Program.cs. There should also be a method to set information used to generate the manifest.
+                // source generation can also be used to help generate the manifest
             var actions = new List<PluginActionId>();
 
             var pluginTypes = Assembly.GetEntryAssembly()?.GetTypes().Where(typ => typ.IsClass && typ.GetCustomAttributes(typeof(PluginActionIdAttribute), true).Length > 0).ToList();

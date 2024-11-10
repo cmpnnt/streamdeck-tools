@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
 using BarRaider.SdTools.Wrappers;
+using SkiaSharp;
 
 namespace BarRaider.SdTools.Utilities
 {
@@ -15,7 +13,7 @@ namespace BarRaider.SdTools.Utilities
     {
         #region Coordinates
         /// <summary>
-        /// Checks if too KeyCoordinates match to the same key
+        /// Checks if two KeyCoordinates match to the same key
         /// </summary>
         /// <param name="coordinates"></param>
         /// <param name="secondCoordinates"></param>
@@ -33,9 +31,9 @@ namespace BarRaider.SdTools.Utilities
         /// </summary>
         /// <param name="color"></param>
         /// <returns></returns>
-        public static string ToHex(this Color color)
+        public static string ToHex(this SKColor color)
         {
-            return $"#{color.R:X2}{color.G:X2}{color.B:X2}";
+            return $"#{color.Red:X2}{color.Green:X2}{color.Blue:X2}";
         }
 
         /// <summary>
@@ -43,13 +41,9 @@ namespace BarRaider.SdTools.Utilities
         /// </summary>
         /// <param name="brush"></param>
         /// <returns></returns>
-        public static string ToHex(this Brush brush)
+        public static string ToHex(this SKPaint brush)
         {
-            if (brush is SolidBrush solidBrush)
-            {
-                return solidBrush.Color.ToHex();
-            }
-            return null;
+            return brush.Color.ToHex();
         }
         #endregion
 
@@ -59,62 +53,101 @@ namespace BarRaider.SdTools.Utilities
         /// </summary>
         /// <param name="image"></param>
         /// <returns></returns>
-        public static byte[] ToByteArray(this Image image)
+        public static byte[] ToByteArray(this SKImage image)
         {
-            using var ms = new MemoryStream();
-            image.Save(ms, ImageFormat.Bmp);
-            return ms.ToArray();
+            using SKBitmap bitmap = SKBitmap.FromImage(image);
+            return bitmap.Bytes;
         }
 
         /// <summary>
-        /// Convert a in-memory image object to Base64 format. Set the addHeaderPrefix to true, if this is sent to the SendImageAsync function
+        /// Convert an in-memory SKImage to Base64 format. Set the addHeaderPrefix to true, if this is sent to the SendImageAsync function
         /// </summary>
         /// <param name="image"></param>
         /// <param name="addHeaderPrefix"></param>
         /// <returns></returns>
-        public static string ToBase64(this Image image, bool addHeaderPrefix)
+        public static string ToBase64(this SKImage image, bool addHeaderPrefix)
+        {
+            return Tools.ImageToBase64(image, addHeaderPrefix);
+        }
+        
+        /// <summary>
+        /// Convert an in-memory SKImage to Base64 format. Set the addHeaderPrefix to true, if this is sent to the SendImageAsync function
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="addHeaderPrefix"></param>
+        /// <returns></returns>
+        public static string ToBase64(this SKBitmap image, bool addHeaderPrefix)
         {
             return Tools.ImageToBase64(image, addHeaderPrefix);
         }
 
         /// <summary>
+        /// Draws a string on a Canvas object and returns the ending Y position of the string
+        /// </summary>
+        /// <param name="canvas"></param>
+        /// <param name="brush"></param>
+        /// <param name="text"></param>
+        /// <param name="position"></param>
+        /// <param name="horizontal"></param>
+        /// <returns></returns>
+        public static float DrawAndMeasureString(this SKCanvas canvas, SKPaint brush, string text, SKPoint position, bool horizontal = true)
+        {
+            SKRect bounds = canvas.LocalClipBounds;
+            float stringSize = brush.MeasureText(text, ref bounds);
+            canvas.DrawText(text, position, brush);
+            //TODO: These measurements might not be accurate.
+            //SEE: https://stackoverflow.com/questions/69907690/using-c-sharp-to-measure-the-width-of-a-string-in-pixels-in-a-cross-platform-way
+            
+            return (horizontal ? position.X : position.Y) + stringSize;
+        }
+        
+        /// <summary>
         /// Draws a string on a Graphics object and returns the ending Y position of the string
         /// </summary>
-        /// <param name="graphics"></param>
-        /// <param name="text"></param>
-        /// <param name="font"></param>
+        /// <param name="canvas"></param>
         /// <param name="brush"></param>
+        /// <param name="text"></param>
         /// <param name="position"></param>
         /// <returns></returns>
-        public static float DrawAndMeasureString(this Graphics graphics, string text, Font font, Brush brush, PointF position)
+        public static float DrawAndMeasureStringWidth(this SKCanvas canvas, SKPaint brush, string text, SKPoint position)
         {
-            SizeF stringSize = graphics.MeasureString(text, font);
-            graphics.DrawString(text, font, brush, position);
-
-            return position.Y + stringSize.Height;
+            return DrawAndMeasureString(canvas, brush, text, position);
+        }
+        
+        /// <summary>
+        /// Draws a string on a Graphics object and returns the ending Y position of the string
+        /// </summary>
+        /// <param name="canvas"></param>
+        /// <param name="brush"></param>
+        /// <param name="text"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public static float DrawAndMeasureStringHeight(this SKCanvas canvas, SKPaint brush, string text, SKPoint position)
+        {
+           return DrawAndMeasureString(canvas, brush, text, position, false);
         }
 
         /// <summary>
         /// Returns the center X position of a string, given the image's max Width and Font information
         /// </summary>
-        /// <param name="graphics"></param>
+        /// <param name="canvas"></param>
+        /// <param name="brush"></param>
         /// <param name="text"></param>
         /// <param name="imageWidth"></param>
-        /// <param name="font"></param>
-        /// /// <param name="textFitsImage">True/False - Does text fit image? False if text overflows</param>
+        /// <param name="textFitsImage">True/False - Does text fit image? False if text overflows</param>
         /// <param name="minIndentation"></param>
         /// 
         /// <returns></returns>
-        public static float GetTextCenter(this Graphics graphics, string text, int imageWidth, Font font, out bool textFitsImage, int minIndentation = 0)
+        public static float GetTextCenter(this SKCanvas canvas, SKPaint brush, string text, int imageWidth, out bool textFitsImage, int minIndentation = 0)
         {
-            SizeF stringSize = graphics.MeasureString(text, font);
+            float stringSize = brush.MeasureText(text);
             float stringWidth = minIndentation;
             textFitsImage = false;
             
-            if (!(stringSize.Width < imageWidth)) return stringWidth;
+            if (!(stringSize < imageWidth)) return stringWidth;
             
             textFitsImage = true;
-            stringWidth = Math.Abs((imageWidth - stringSize.Width)) / 2;
+            stringWidth = Math.Abs((imageWidth - stringSize)) / 2;
             
             return stringWidth;
         }
@@ -122,42 +155,49 @@ namespace BarRaider.SdTools.Utilities
         /// <summary>
         /// Returns the center X position of a string, given the image's max Width and Font information
         /// </summary>
-        /// <param name="graphics"></param>
+        /// <param name="canvas"></param>
+        /// <param name="brush"></param>
         /// <param name="text"></param>
         /// <param name="imageWidth"></param>
-        /// <param name="font"></param>
         /// <param name="minIndentation"></param>
         /// 
         /// <returns></returns>
-        public static float GetTextCenter(this Graphics graphics, string text, int imageWidth, Font font, int minIndentation = 0)
+        public static float GetTextCenter(this SKCanvas canvas, SKPaint brush, string text, int imageWidth, int minIndentation = 0)
         {
-            return graphics.GetTextCenter(text, imageWidth, font, out _, minIndentation);
+            return canvas.GetTextCenter(brush, text, imageWidth, out _, minIndentation);
         }
 
         /// <summary>
         /// Returns the highest size of the given font in which the text fits the image
         /// </summary>
-        /// <param name="graphics"></param>
+        /// <param name="canvas"></param>
         /// <param name="text"></param>
         /// <param name="imageWidth"></param>
         /// <param name="font"></param>
-        /// /// <param name="minimalFontSize"></param>
+        /// <param name="minimumFontSize"></param>
         /// <returns></returns>
-        public static float GetFontSizeWhereTextFitsImage(this Graphics graphics, string text, int imageWidth, Font font, int minimalFontSize = 6)
+        public static float GetFontSizeWhereTextFitsImage(this SKCanvas canvas, string text, int imageWidth, SKFont font, int minimumFontSize = 6)
         {
             bool textFitsImage;
             float size = font.Size;
-            var variableFont = new Font(font.Name, size, font.Style, GraphicsUnit.Pixel);
+            var variableFont = new SKFont(font.Typeface, size);
+
+            var brush = new SKPaint
+            {
+                IsAntialias = true,
+                Color = SKColors.Black,
+            };
+            
             do
             {
-                graphics.GetTextCenter(text, imageWidth, variableFont, out textFitsImage);
+                canvas.GetTextCenter(brush, text, imageWidth, out textFitsImage, minimumFontSize);
                 if (textFitsImage) continue;
                 
                 variableFont.Dispose();
                 size -= 0.5f;
-                variableFont = new Font(font.Name, size, font.Style, GraphicsUnit.Pixel);
+                variableFont = new SKFont(font.Typeface, size);
             }
-            while (!textFitsImage && size > minimalFontSize);
+            while (!textFitsImage && size > minimumFontSize);
 
             variableFont.Dispose();
             return size;
@@ -166,29 +206,11 @@ namespace BarRaider.SdTools.Utilities
         /// <summary>
         /// Adds a text path to an existing Graphics object. Uses TitleParameters to emulate the Text settings in the Property Inspector
         /// </summary>
-        /// <param name="graphics"></param>
+        /// <param name="canvas"></param>
         /// <param name="titleParameters"></param>
-        /// <param name="imageHeight"></param>
-        /// <param name="imageWidth"></param>
+        /// <param name="image"></param>
         /// <param name="text"></param>
-        /// <param name="pixelsAlignment"></param>
-        public static void AddTextPath(this Graphics graphics, TitleParameters titleParameters, int imageHeight, int imageWidth, string text, int pixelsAlignment = 15)
-        {
-            AddTextPath(graphics, titleParameters, imageHeight, imageWidth, text, Color.Black, 1, pixelsAlignment);
-        }
-
-        /// <summary>
-        /// Adds a text path to an existing Graphics object. Uses TitleParameters to emulate the Text settings in the Property Inspector
-        /// </summary>
-        /// <param name="graphics"></param>
-        /// <param name="titleParameters"></param>
-        /// <param name="imageHeight"></param>
-        /// <param name="imageWidth"></param>
-        /// <param name="text"></param>
-        /// <param name="strokeColor"></param>
-        /// <param name="strokeThickness"></param>
-        /// <param name="pixelsAlignment"></param>
-        public static void AddTextPath(this Graphics graphics, TitleParameters titleParameters, int imageHeight, int imageWidth, string text, Color strokeColor, float strokeThickness, int pixelsAlignment = 15)
+        public static void AddTextPath(this SKCanvas canvas, TitleParameters titleParameters, SKBitmap image, string text)
         {
             try
             {
@@ -197,38 +219,37 @@ namespace BarRaider.SdTools.Utilities
                     Logger.Instance.LogMessage(TracingLevel.Error, $"AddTextPath: titleParameters is null");
                     return;
                 }
-
-                var font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPixelsScaledToDefaultImage, titleParameters.FontStyle, GraphicsUnit.Pixel);
-                Color color = titleParameters.TitleColor;
-                graphics.PageUnit = GraphicsUnit.Pixel;
-                float ratio = graphics.DpiY / imageWidth;
-                SizeF stringSize = graphics.MeasureString(text, font);
-                float textWidth = stringSize.Width * (1 - ratio);
-                float textHeight = stringSize.Height * (1 - ratio);
-                var stringWidth = 0;
                 
-                if (textWidth < imageWidth)
+                using var font = new SKFont(titleParameters.FontFamily, (float)titleParameters.FontSizeInPixelsScaledToDefaultImage);
+                using var fill = new SKPaint(font);
+                fill.TextSize = (float)titleParameters.FontSizeInPixels;
+                fill.IsAntialias = true;
+                fill.Color = titleParameters.TitleColor;
+                fill.Style = titleParameters.TitleStrokeColor == default ? SKPaintStyle.StrokeAndFill : SKPaintStyle.Fill;
+                fill.TextAlign = SKTextAlign.Center;
+                
+                float textHeight = fill.TextSize;
+               
+                double stringHeight = titleParameters.VerticalAlignment switch
                 {
-                    stringWidth = (int)(Math.Abs((imageWidth - textWidth)) / 2) - pixelsAlignment;
-                }
-
-                int stringHeight = titleParameters.VerticalAlignment switch
-                {
-                    TitleVerticalAlignment.Middle => (imageHeight / 2) - pixelsAlignment,
-                    TitleVerticalAlignment.Bottom => (int)(Math.Abs((imageHeight - textHeight)) - pixelsAlignment),
-                    _ => pixelsAlignment
+                    // ReSharper disable once PossibleLossOfFraction
+                    TitleVerticalAlignment.Middle => (image.Height / 2) + titleParameters.FontSizeInPixels,
+                    TitleVerticalAlignment.Bottom => (int)(Math.Abs((image.Height - textHeight)) + titleParameters.FontSizeInPixels),
+                    _ => titleParameters.FontSizeInPixels
                 };
+                
+                canvas.DrawText(text, (float)image.Width/2, (float)stringHeight, font, fill);
 
-                var stroke = new Pen(strokeColor, strokeThickness);
-                var gpath = new GraphicsPath();
-                gpath.AddString(text,
-                                    font.FontFamily,
-                                    (int)font.Style,
-                                    graphics.DpiY * font.SizeInPoints / imageWidth,
-                                    new Point(stringWidth, stringHeight),
-                                    new StringFormat());
-                graphics.DrawPath(stroke, gpath);
-                graphics.FillPath(new SolidBrush(color), gpath);
+                if (titleParameters.TitleStrokeColor == default) return;
+                
+                using var stroke = new SKPaint(font);
+                stroke.TextSize = (float)titleParameters.FontSizeInPixels;
+                stroke.IsAntialias = true;
+                stroke.Color = titleParameters.TitleStrokeColor;
+                stroke.Style = SKPaintStyle.Stroke;
+                stroke.TextAlign = SKTextAlign.Center;
+                stroke.StrokeWidth = titleParameters.TitleStrokeThickness;
+                canvas.DrawText(text, (float)image.Width/2, (float)stringHeight, font, stroke);
             }
             catch (Exception ex)
             {
@@ -270,31 +291,29 @@ namespace BarRaider.SdTools.Utilities
                 if (titleParameters == null) return str;
                 
                 int padding = leftPaddingPixels + rightPaddingPixels;
-                var font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPoints, titleParameters.FontStyle, GraphicsUnit.Pixel);
                 var finalString = new StringBuilder();
                 var currentLine = new StringBuilder();
-
-                using (var img = new Bitmap(imageWidthPixels, imageWidthPixels))
+                
+                using (var paint = new SKPaint())
                 {
-                    using (Graphics graphics = Graphics.FromImage(img))
+                    paint.Typeface = SKTypeface.FromFamilyName(titleParameters.FontFamily.FamilyName);
+                    paint.TextSize = (float)titleParameters.FontSizeInPixels;
+                    foreach (char c in str)
                     {
-                        foreach (char c in str)
+                        currentLine.Append(c);
+                        float currentLineSize = paint.MeasureText(currentLine.ToString());
+                        if (currentLineSize <= imageWidthPixels - padding)
                         {
-                            currentLine.Append(c);
-                            SizeF currentLineSize = graphics.MeasureString(currentLine.ToString(), font);
-                            if (currentLineSize.Width <= img.Width - padding)
-                            {
-                                finalString.Append(c);
-                            }
-                            else // Overflow
-                            {
-                                finalString.Append("\n" + c);
-                                currentLine = new StringBuilder(c.ToString());
-                            }
+                            finalString.Append(c);
+                        }
+                        else // Overflow
+                        {
+                            finalString.Append("\n" + c);
+                            currentLine = new StringBuilder(c.ToString());
                         }
                     }
                 }
-
+                
                 return finalString.ToString();
             }
             catch (Exception ex)

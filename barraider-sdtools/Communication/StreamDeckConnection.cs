@@ -5,14 +5,12 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using BarRaider.SdTools.Utilities;
+using SkiaSharp;
 
 namespace BarRaider.SdTools.Communication
 {
@@ -141,7 +139,7 @@ namespace BarRaider.SdTools.Communication
         public event EventHandler<SdEventReceivedEventArgs<DialUpEvent>> OnDialUp;
 
         /// <summary>
-        /// Raised when the tochpad is pressed
+        /// Raised when the touchpad is pressed
         /// </summary>
         public event EventHandler<SdEventReceivedEventArgs<TouchTapEvent>> OnTouchpadPress;
 
@@ -191,13 +189,11 @@ namespace BarRaider.SdTools.Communication
             return SendAsync(new LogMessage(message));
         }
 
-        internal Task SetImageAsync(Image image, string context, SdkTarget target, int? state)
+        internal Task SetImageAsync(SKData data, string context, SdkTarget target, int? state)
         {
             try
             {
-                using var memoryStream = new MemoryStream();
-                image.Save(memoryStream, ImageFormat.Png);
-                byte[] imageBytes = memoryStream.ToArray();
+                byte[] imageBytes = data.ToArray();
 
                 // Convert byte[] to Base64 String
                 var base64String = $"data:image/png;base64,{Convert.ToBase64String(imageBytes)}";

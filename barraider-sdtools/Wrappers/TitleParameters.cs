@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Drawing;
 using BarRaider.SdTools.Utilities;
+using SkiaSharp;
 
 namespace BarRaider.SdTools.Wrappers
 {
@@ -25,6 +25,27 @@ namespace BarRaider.SdTools.Wrappers
         /// </summary>
         Bottom
     }
+    
+    /// <summary>
+    /// Enum for the alignment of the Title text on the key
+    /// </summary>
+    public enum TitleHorizontalAlignment
+    {
+        /// <summary>
+        /// Top Alignment
+        /// </summary>
+        Left,
+
+        /// <summary>
+        /// Middle/Center Alignment
+        /// </summary>
+        Middle,
+
+        /// <summary>
+        /// Bottom Alignment
+        /// </summary>
+        Right
+    }
 
     /// <summary>
     /// Class holding all the Title Information set by a user in the Property Inspector
@@ -38,10 +59,22 @@ namespace BarRaider.SdTools.Wrappers
         #endregion
 
         /// <summary>
-        /// Title Color
+        /// Title color
         /// </summary>
         [JsonProperty("titleColor")]
-        public Color TitleColor { get; private set; } = Color.White;
+        public SKColor TitleColor { get; private set; } = SKColors.White;
+        
+        /// <summary>
+        /// Title stroke color
+        /// </summary>
+        [JsonIgnore]
+        public SKColor TitleStrokeColor { get; set; }
+
+        /// <summary>
+        /// Title stroke thickness
+        /// </summary>
+        [JsonIgnore]
+        public float TitleStrokeThickness { get; set; } = 1f;
 
         /// <summary>
         /// Font Size in Points
@@ -50,40 +83,46 @@ namespace BarRaider.SdTools.Wrappers
         public double FontSizeInPoints { get; private set; } = 10;
 
         /// <summary>
-        /// Font Size in Pixels
+        /// Font size in Pixels
         /// </summary>
         [JsonIgnore]
         public double FontSizeInPixels => Math.Round(FontSizeInPoints * POINTS_TO_PIXEL_CONVERT);
 
         /// <summary>
-        /// Font Size Scaled to Image
+        /// Font size Scaled to Image
         /// </summary>
         [JsonIgnore]
         public double FontSizeInPixelsScaledToDefaultImage => Math.Round(FontSizeInPixels * DEFAULT_IMAGE_SIZE_FONT_SCALE);
 
         /// <summary>
-        /// Font Family
+        /// Font family
         /// </summary>
         [JsonProperty("fontFamily")]
-        public FontFamily FontFamily { get; private set; } = new(DEFAULT_FONT_FAMILY_NAME);
+        public SKTypeface FontFamily { get; private set; } = SKTypeface.FromFamilyName(DEFAULT_FONT_FAMILY_NAME);
 
         /// <summary>
-        /// Font Style
+        /// Font style
         /// </summary>
         [JsonProperty("fontStyle")]
-        public FontStyle FontStyle { get; private set; } = FontStyle.Bold;
+        public SKFontStyle FontStyle { get; private set; } = SKFontStyle.Bold;
 
         /// <summary>
-        /// Should Title be shown
+        /// Should title be shown
         /// </summary>
         [JsonProperty("showTitle")]
         public bool ShowTitle { get; private set; }
 
         /// <summary>
-        /// Alignment position of the Title text on the key
+        /// Vertical alignment of the title text on the key
         /// </summary>
         [JsonProperty("titleAlignment")]
         public TitleVerticalAlignment VerticalAlignment { get; private set; }
+        
+        /// <summary>
+        /// Horizontal alignment of the title text on the key
+        /// </summary>
+        [JsonIgnore]
+        public TitleHorizontalAlignment HorizontalAlignment { get; private set; }
 
         /// <summary>
         /// Constructor
@@ -94,7 +133,15 @@ namespace BarRaider.SdTools.Wrappers
         /// <param name="titleColor"></param>
         /// <param name="showTitle"></param>
         /// <param name="verticalAlignment"></param>
-        public TitleParameters(FontFamily fontFamily, FontStyle fontStyle, double fontSize, Color titleColor, bool showTitle, TitleVerticalAlignment verticalAlignment)
+        /// <param name="horizontalAlignment"></param>
+        public TitleParameters(
+            SKTypeface fontFamily,
+            SKFontStyle fontStyle,
+            double fontSize,
+            SKColor titleColor,
+            bool showTitle = true,
+            TitleVerticalAlignment verticalAlignment = TitleVerticalAlignment.Middle,
+            TitleHorizontalAlignment horizontalAlignment = TitleHorizontalAlignment.Middle)
         {
             FontFamily = fontFamily;
             FontStyle = fontStyle;
@@ -102,6 +149,7 @@ namespace BarRaider.SdTools.Wrappers
             TitleColor = titleColor;
             ShowTitle = showTitle;
             VerticalAlignment = verticalAlignment;
+            HorizontalAlignment = horizontalAlignment;
         }
 
         /// <summary>
@@ -126,8 +174,8 @@ namespace BarRaider.SdTools.Wrappers
                 ShowTitle = showTitle;
 
                 // Color
-                if (!string.IsNullOrEmpty(titleColor)) TitleColor = ColorTranslator.FromHtml(titleColor);
-                if (!string.IsNullOrEmpty(fontFamily)) FontFamily = new FontFamily(fontFamily);
+                if (!string.IsNullOrEmpty(titleColor)) TitleColor = SKColor.Parse(titleColor);
+                if (!string.IsNullOrEmpty(fontFamily)) FontFamily = SKTypeface.FromFamilyName(fontFamily);
                 
                 FontSizeInPoints = fontSize;
                 if (!string.IsNullOrEmpty(fontStyle))
@@ -135,23 +183,25 @@ namespace BarRaider.SdTools.Wrappers
                     switch (fontStyle.ToLowerInvariant())
                     {
                         case "regular":
-                            FontStyle = FontStyle.Regular;
+                            FontStyle = SKFontStyle.Normal;
                             break;
                         case "bold":
-                            FontStyle = FontStyle.Bold;
+                            FontStyle = SKFontStyle.Bold;
                             break;
                         case "italic":
-                            FontStyle = FontStyle.Italic;
+                            FontStyle = SKFontStyle.Italic;
                             break;
                         case "bold italic":
-                            FontStyle = FontStyle.Bold | FontStyle.Italic;
+                            FontStyle = SKFontStyle.BoldItalic;
                             break;
                         default:
                             Logger.Instance.LogMessage(TracingLevel.Warn, $"{GetType()} Cannot parse Font Style: {fontStyle}");
                             break;
                     }
                 }
-                if (fontUnderline) FontStyle |= FontStyle.Underline;
+                
+                // TODO: remove underline from the parameters of this method
+                if (fontUnderline) FontStyle = SKFontStyle.Normal;
                 
                 if (!string.IsNullOrEmpty(titleAlignment))
                 {

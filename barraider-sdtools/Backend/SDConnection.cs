@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using BarRaider.SdTools.Communication;
@@ -12,6 +11,7 @@ using BarRaider.SdTools.Utilities;
 using BarRaider.SdTools.Wrappers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SkiaSharp;
 
 namespace BarRaider.SdTools.Backend
 {
@@ -40,7 +40,6 @@ namespace BarRaider.SdTools.Backend
         #endregion
 
         #region Public Events
-
         /// <summary>
         /// Event received by the plugin when the Property Inspector uses the sendToPlugin event.
         /// </summary>
@@ -255,17 +254,18 @@ namespace BarRaider.SdTools.Backend
         /// <summary>
         /// Sets an image on the StreamDeck key
         /// </summary>
-        /// <param name="image">Image object</param>
+        /// <param name="data">An SKData object representing the encoded image</param>
         /// <param name="state">A 0-based integer value representing the state of an action with multiple states. This is an optional parameter. If not specified, the title is set to all states.</param>
         /// <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
         /// <returns></returns>
-        public async Task SetImageAsync(Image image, int? state = null, bool forceSendToStreamdeck = false)
+        public async Task SetImageAsync(SKData data, int? state = null, bool forceSendToStreamdeck = false)
         {
-            string hash = Tools.ImageToSha512(image);
+            string hash = Tools.ImageToSha512(data);
             if (forceSendToStreamdeck || hash != previousImageHash)
             {
+                Logger.Instance.LogMessage(TracingLevel.Info, "sending to streamdeck");
                 previousImageHash = hash;
-                await StreamDeckConnection.SetImageAsync(image, ContextId, SdkTarget.HardwareAndSoftware, state);
+                await StreamDeckConnection.SetImageAsync(data, ContextId, SdkTarget.HardwareAndSoftware, state);
             }
         }
 

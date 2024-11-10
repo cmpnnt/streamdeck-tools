@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.Text;
 using BarRaider.SdTools.Wrappers;
+using SkiaSharp;
 
 namespace BarRaider.SdTools.Utilities
 {
@@ -18,9 +16,9 @@ namespace BarRaider.SdTools.Utilities
         /// </summary>
         /// <param name="hexColor"></param>
         /// <returns></returns>
-        public static Color ColorFromHex(string hexColor)
+        public static SKColor ColorFromHex(string hexColor)
         {
-            return ColorTranslator.FromHtml(hexColor);
+            return SKColor.Parse(hexColor);
         }
 
         /// <summary>
@@ -30,13 +28,13 @@ namespace BarRaider.SdTools.Utilities
         /// <param name="currentShade"></param>
         /// <param name="totalAmountOfShades"></param>
         /// <returns></returns>
-        public static Color GenerateColorShades(string initialColor, int currentShade, int totalAmountOfShades)
+        public static SKColor GenerateColorShades(string initialColor, int currentShade, int totalAmountOfShades)
         {
-            Color color = ColorFromHex(initialColor);
-            int a = color.A;
-            double r = color.R;
-            double g = color.G;
-            double b = color.B;
+            SKColor color = ColorFromHex(initialColor);
+            byte a = color.Alpha;
+            byte r = color.Red;
+            byte g = color.Green;
+            byte b = color.Blue;
 
             // Try and increase the color in the last stage;
             if (currentShade == totalAmountOfShades - 1)
@@ -51,7 +49,7 @@ namespace BarRaider.SdTools.Utilities
                 b /= 2;
             }
 
-            return Color.FromArgb(a, (int)r, (int)g, (int)b);
+            return new SKColor(r, g, b, a);
         }
 
         /// <summary>
@@ -59,178 +57,80 @@ namespace BarRaider.SdTools.Utilities
         /// </summary>
         /// <param name="original"></param>
         /// <param name="newWidth"></param>
-        /// <param name="newHeight"></param>
         /// <returns></returns>
-        public static Image ResizeImage(Image original, int newWidth, int newHeight)
+        public static SKBitmap ResizeImage(SKBitmap original, int newWidth)
         {
-            if (original == null)
-            {
-                return null;
-            }
+            // Calculate the new height to maintain the aspect ratio
+            float aspectRatio = (float)original.Height / original.Width;
+            var newHeight = (int)(newWidth * aspectRatio);
 
-            int originalWidth = original.Width;
-            int originalHeight = original.Height;
+            // Create a new bitmap with the desired dimensions
+            var resizedImage = new SKBitmap(newWidth, newHeight);
 
-            Image canvas = new Bitmap(newWidth, newHeight);
-            Graphics graphic = Graphics.FromImage(canvas);
+            using var canvas = new SKCanvas(resizedImage);
+            // Draw the original image onto the new bitmap, scaling it to the new size
+            canvas.DrawBitmap(original, new SKRect(0, 0, newWidth, newHeight));
 
-            graphic.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            graphic.SmoothingMode = SmoothingMode.HighQuality;
-            graphic.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            graphic.CompositingQuality = CompositingQuality.HighQuality;
-
-            // Figure out the ratio
-            double ratioX = newWidth / (double)originalWidth;
-            double ratioY = newHeight / (double)originalHeight;
-            // use whichever multiplier is smaller
-            double ratio = ratioX < ratioY ? ratioX : ratioY;
-
-            // now we can get the new height and width
-            //int imgHeight = Convert.ToInt32(originalHeight * ratio);
-            //int imgWidth = Convert.ToInt32(originalWidth * ratio);
-
-            // Now calculate the X,Y position of the upper-left corner 
-            // (one of these will always be zero)
-            var posX = Convert.ToInt32((newWidth - (originalWidth * ratio)) / 2);
-            var posY = Convert.ToInt32((newHeight - (originalHeight * ratio)) / 2);
-
-            graphic.Clear(Color.Black); // Padding
-            graphic.DrawImage(original, posX, posY, newWidth, newHeight);
-
-            return canvas;
+            return resizedImage;
         }
 
+
         /// <summary>
-        /// Extract a part of an Image
+        /// Extract a part of an image (aka crop)
         /// </summary>
-        /// <param name="image"></param>
+        /// <param name="original"></param>
         /// <param name="startX"></param>
         /// <param name="startY"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <returns></returns>
-        public static Bitmap ExtractRectangle(Image image, int startX, int startY, int width, int height)
+        public static SKBitmap CropImage(SKBitmap original, int startX, int startY, int width, int height)
         {
-            var rec = new Rectangle(startX, startY, width, height);
-            using var src = new Bitmap(image);
-            return src.Clone(rec, src.PixelFormat);
-        }
+            var cropRect = new SKRectI(startX, startY, width, height);
+            
+            // Ensure the crop rectangle is within the bounds of the original image
+            cropRect.Intersect(new SKRectI(0, 0, original.Width, original.Height));
 
+            // Create a new bitmap to hold the cropped image
+            var croppedImage = new SKBitmap(cropRect.Width, cropRect.Height);
+
+            using var canvas = new SKCanvas(croppedImage);
+            // Draw the specified rectangle from the original image onto the new bitmap
+            canvas.DrawBitmap(original, cropRect, new SKRect(0, 0, cropRect.Width, cropRect.Height));
+
+            return croppedImage;
+        }
+        
         /// <summary>
         /// Creates a new image with different opacity
         /// </summary>
-        /// <param name="image"></param>
+        /// <param name="original"></param>
         /// <param name="opacity"></param>
         /// <returns></returns>
-        public static Image CreateOpacityImage(Image image, float opacity)
+        public static SKBitmap ChangeOpacity(SKBitmap original, byte opacity)
         {
             try
             {
-                //create a Bitmap the size of the image provided  
-                var bmp = new Bitmap(image.Width, image.Height);
+                // Create a new bitmap to hold the image with changed opacity
+                var newBitmap = new SKBitmap(original.Width, original.Height);
+                using var canvas = new SKCanvas(newBitmap);
+               
+                // Create a paint object with the desired opacity
+                var paint = new SKPaint();
+                paint.Color = new SKColor(255, 255, 255, opacity);
+                paint.IsAntialias = true;
 
-                //create a graphics object from the image  
-                using Graphics gfx = Graphics.FromImage(bmp);
-                //create a color matrix object  
-                var matrix = new ColorMatrix
-                {
-                    //set the opacity  
-                    Matrix33 = opacity
-                };
+                // Draw the original image onto the new bitmap using the paint object
+                canvas.Clear();
+                canvas.DrawBitmap(original, new SKRect(0, 0, original.Width, original.Height), paint);
 
-                //create image attributes  
-                var attributes = new ImageAttributes();
-
-                //set the color(opacity) of the image  
-                attributes.SetColorMatrix(matrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
-
-                //now draw the image  
-                gfx.DrawImage(image, new Rectangle(0, 0, bmp.Width, bmp.Height), 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, attributes);
-                return bmp;
+                return newBitmap;
             }
             catch (Exception ex)
             {
                 Logger.Instance.LogMessage(TracingLevel.Error, $"SetImageOpacity exception {ex}");
                 return null;
             }
-        }
-
-        /// <summary>
-        /// Generates one (or more) images where each one has a few letters drawn on them based on the parameters. You can set number of letters and number of lines per key. 
-        /// Use expandToNextImage to decide if you want only one Image returned or multiple if text is too long for one key
-        /// </summary>
-        /// <param name="text"></param>
-        /// <param name="currentTextPosition"></param>
-        /// <param name="lettersPerLine"></param>
-        /// <param name="numberOfLines"></param>
-        /// <param name="font"></param>
-        /// <param name="backgroundColor"></param>
-        /// <param name="textColor"></param>
-        /// <param name="expandToNextImage"></param>
-        /// <param name="keyDrawStartingPosition"></param>
-        /// <returns></returns>
-        public static Image[] DrawMultiLinedText(
-            string text,
-            int currentTextPosition,
-            int lettersPerLine,
-            int numberOfLines,
-            Font font,
-            Color backgroundColor,
-            Color textColor,
-            bool expandToNextImage,
-            PointF keyDrawStartingPosition)
-        {
-            float currentWidth = keyDrawStartingPosition.X;
-            float currentHeight = keyDrawStartingPosition.Y;
-            var currentLine = 0;
-            var images = new List<Image>();
-            Bitmap img = Tools.GenerateGenericKeyImage(out Graphics graphics);
-            images.Add(img);
-
-            // Draw Background
-            var bgBrush = new SolidBrush(backgroundColor);
-            graphics.FillRectangle(bgBrush, 0, 0, img.Width, img.Height);
-
-            float lineHeight = (float)img.Height / numberOfLines;
-            if (numberOfLines == 1)
-            {
-                currentHeight = (float)img.Height / 2; // Align to middle
-            }
-
-            float widthIncrement = (float)img.Width / lettersPerLine;
-            for (int letter = currentTextPosition; letter < text.Length; letter++)
-            {
-                // Check if I need to move back to the beginning of the key, but on a new line
-                if (letter > currentTextPosition && letter % lettersPerLine == 0)
-                {
-                    currentLine++;
-                    if (currentLine >= numberOfLines)
-                    {
-                        if (expandToNextImage)
-                        {
-                            images.AddRange(DrawMultiLinedText(
-                                text,
-                                letter,
-                                lettersPerLine,
-                                numberOfLines,
-                                font,
-                                backgroundColor,
-                                textColor,
-                                true,
-                                keyDrawStartingPosition));
-                        }
-                        break;
-                    }
-
-                    currentHeight += lineHeight;
-                    currentWidth = keyDrawStartingPosition.X;
-                }
-
-                graphics.DrawString(text[letter].ToString(), font, new SolidBrush(textColor), new PointF(currentWidth, currentHeight));
-                currentWidth += widthIncrement;
-            }
-            graphics.Dispose();
-            return images.ToArray();
         }
 
         /// <summary>
@@ -257,27 +157,25 @@ namespace BarRaider.SdTools.Utilities
                 }
 
                 int padding = leftPaddingPixels + rightPaddingPixels;
-                var font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPixels, titleParameters.FontStyle, GraphicsUnit.Pixel);
                 var finalString = new StringBuilder();
                 var currentLine = new StringBuilder();
 
-                using (var img = new Bitmap(imageWidthPixels, imageWidthPixels))
+                using (var paint = new SKPaint())
                 {
-                    using (Graphics graphics = Graphics.FromImage(img))
+                    paint.Typeface = SKTypeface.FromFamilyName(titleParameters.FontFamily.FamilyName);
+                    paint.TextSize = (float)titleParameters.FontSizeInPixels;
+                    foreach (char t in str)
                     {
-                        foreach (char t in str)
+                        currentLine.Append(t);
+                        float currentLineSize = paint.MeasureText(currentLine.ToString());
+                        if (currentLineSize <= imageWidthPixels - padding)
                         {
-                            currentLine.Append(t);
-                            SizeF currentLineSize = graphics.MeasureString(currentLine.ToString(), font);
-                            if (currentLineSize.Width <= img.Width - padding)
-                            {
-                                finalString.Append(t);
-                            }
-                            else // Overflow
-                            {
-                                finalString.Append("\n" + t);
-                                currentLine = new StringBuilder(t.ToString());
-                            }
+                            finalString.Append(t);
+                        }
+                        else // Overflow
+                        {
+                            finalString.Append("\n" + t);
+                            currentLine = new StringBuilder(t.ToString());
                         }
                     }
                 }

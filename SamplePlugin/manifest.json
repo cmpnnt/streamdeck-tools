@@ -4,6 +4,16 @@
     {
       "Icon": "Images/icon",
       "Name": "SDTools Test",
+      "Controllers": ["Keypad", "Encoder"],
+      "Encoder": {
+        "layout": "$B1",
+        "TriggerDescription": {
+          "Push": "Play / Pause",
+          "Rotate": "Adjust Volume",
+          "Touch": "Play / Pause",
+          "LongTouch": "Skip Track"
+        }
+      },
       "States": [
         {
           "Image": "Images/pluginAction",

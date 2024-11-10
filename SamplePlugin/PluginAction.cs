@@ -2,18 +2,19 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Drawing;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using BarRaider.SdTools.Attributes;
 using BarRaider.SdTools.Backend;
 using BarRaider.SdTools.Payloads;
 using BarRaider.SdTools.Utilities;
+using SkiaSharp;
 
 namespace SamplePlugin
 {
     [PluginActionId("com.test.sdtools.sampleplugin")]
-    public class PluginAction : KeypadBase
+    public class PluginAction : KeyAndEncoderBase
     {
         private class PluginSettings
         {
@@ -100,20 +101,45 @@ namespace SamplePlugin
             Logger.Instance.LogMessage(TracingLevel.Info, $"Destructor called");
         }
 
+        public override void DialRotate(DialRotatePayload payload)
+        {
+            Logger.Instance.LogMessage(TracingLevel.Info, "Dial rotated");
+        }
+
+        public override void DialDown(DialPayload payload)
+        {
+            Logger.Instance.LogMessage(TracingLevel.Info, "Dial pressed");
+        }
+
+        public override void DialUp(DialPayload payload)
+        {
+            Logger.Instance.LogMessage(TracingLevel.Info, "Dial released");
+        }
+
+        public override void TouchPress(TouchpadPressPayload payload)
+        {
+            Logger.Instance.LogMessage(TracingLevel.Info, "Touchpad pressed");
+        }
+
         public override async void KeyPressed(KeyPayload payload)
         {
-            // Just some example busy work to do when the button is pressed
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && OperatingSystem.IsWindowsVersionAtLeast(6,1))
+            // Just some example busy work to do when the button is released
+            var tp = new TitleParameters(SKTypeface.FromFamilyName("Arial"), SKFontStyle.Bold, 9f, SKColors.Gray)
             {
-
-                var tp = new TitleParameters(new FontFamily("Arial"), FontStyle.Bold, 20, Color.White, true, TitleVerticalAlignment.Middle);
-                using Image image = Tools.GenerateGenericKeyImage(out Graphics graphics);
-
-                graphics.FillRectangle(new SolidBrush(Color.White), 0, 0, image.Width, image.Height);
-                graphics.AddTextPath(tp, image.Height, image.Width, "Test");
-                graphics.Dispose();
-
-                await Connection.SetImageAsync(image);
+                TitleStrokeColor = SKColors.Black
+            };
+            
+            (SKBitmap image, SKCanvas canvas) = Tools.GenerateGenericKeyImage(SKColors.White);
+            
+            using(image)
+            using(canvas)
+            {
+                // canvas.FillRectangle(new SolidBrush(Color.White), 0, 0, image.Width, image.Height);
+                canvas.AddTextPath(tp, image, "Test");
+                using (SKData data = image.Encode(SKEncodedImageFormat.Png, 80))
+                {
+                    await Connection.SetImageAsync(data);
+                }
             }
             
             Logger.Instance.LogMessage(TracingLevel.Info, "Key Pressed");
@@ -121,17 +147,20 @@ namespace SamplePlugin
 
         public override async void KeyReleased(KeyPayload payload)
         {
-            // Just some example busy work to do when the button is released
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && OperatingSystem.IsWindowsVersionAtLeast(6,1))
-            {
-                var tp = new TitleParameters(new FontFamily("Arial"), FontStyle.Bold, 20, Color.White, true, TitleVerticalAlignment.Middle);
-                using Image image = Tools.GenerateGenericKeyImage(out Graphics graphics);
+            var rand = RandomGenerator.Next(100).ToString();
             
-                graphics.FillRectangle(new SolidBrush(Color.White), 0, 0, image.Width, image.Height);
-                graphics.AddTextPath(tp, image.Height, image.Width, "Test", Color.Black, 7);
-                graphics.Dispose();
-
-                await Connection.SetImageAsync(image);
+            // Just some example busy work to do when the button is released
+            var tp = new TitleParameters(SKTypeface.FromFamilyName("Arial"), SKFontStyle.Bold, 9, SKColors.White);
+            (SKBitmap image, SKCanvas canvas) = Tools.GenerateGenericKeyImage();
+            
+            using (image)
+            using (canvas)
+            {
+                canvas.AddTextPath(tp, image, rand);
+                using (SKData data = image.Encode(SKEncodedImageFormat.Png, 80))
+                {
+                    await Connection.SetImageAsync(data);
+                }
             }
             
             Logger.Instance.LogMessage(TracingLevel.Info, "Key Released");
