@@ -157,7 +157,7 @@ namespace BarRaider.SdTools.Utilities
         /// </summary>
         /// <param name="streamDeckType"></param>
         /// <returns></returns>
-        public static Tuple<SKBitmap, SKCanvas> GenerateKeyImage(DeviceType streamDeckType)
+        public static SKData GenerateKeyImage(DeviceType streamDeckType)
         {
             int height = GetKeyDefaultHeight(streamDeckType);
             int width = GetKeyDefaultWidth(streamDeckType);
@@ -168,26 +168,61 @@ namespace BarRaider.SdTools.Utilities
         /// Creates a key image that fits all Stream Decks
         /// </summary>
         /// <returns></returns>
-        public static Tuple<SKBitmap, SKCanvas> GenerateGenericKeyImage(SKColor? backgroundColor = null)
+        public static SKData GenerateGenericKeyImage()
         {
-            return GenerateKeyImage(GENERIC_KEY_IMAGE_SIZE, GENERIC_KEY_IMAGE_SIZE, backgroundColor);
+            return GenerateKeyImage(GENERIC_KEY_IMAGE_SIZE, GENERIC_KEY_IMAGE_SIZE, string.Empty, new TitleParameters(), SKColors.Empty, SKEncodedImageFormat.Png, 80);
         }
+        
+        /// <summary>
+        /// Creates a key image that fits all Stream Decks, with the specified color and font properties.
+        /// </summary>
+        /// <param name="titleParameters"></param>
+        /// <param name="text"></param>
+        /// <param name="backgroundColor"></param>
+        /// <param name="imageFormat"></param>
+        /// <param name="quality"></param>
+        /// <returns></returns>
+        public static SKData GenerateKeyImage(
+            TitleParameters titleParameters,
+            string text = default,
+            SKColor backgroundColor = default,
+            SKEncodedImageFormat imageFormat = SKEncodedImageFormat.Png,
+            int quality = 80)
+        {
+            return GenerateKeyImage(GENERIC_KEY_IMAGE_SIZE, GENERIC_KEY_IMAGE_SIZE, text, titleParameters, backgroundColor, imageFormat, quality);
+        }
+        
+        //TODO: Create a version of this that can set a background image from a file path or include that param and logic here.
 
         /// <summary>
-        /// Creates a key image based on given height and width
+        /// Creates a key image based on given height, width, color and font properties.
         /// </summary>
         /// <param name="height"></param>
         /// <param name="width"></param>
+        /// <param name="text"></param>
+        /// <param name="titleParameters"></param>
         /// <param name="backgroundColor"></param>
+        /// <param name="imageFormat"></param>
+        /// <param name="quality"></param>
         /// <returns></returns>
-        private static Tuple<SKBitmap, SKCanvas> GenerateKeyImage(int height, int width, SKColor? backgroundColor = null)
+        private static SKData GenerateKeyImage(
+            int height,
+            int width,
+            string text = default,
+            TitleParameters titleParameters = default,
+            SKColor backgroundColor = default,
+            SKEncodedImageFormat imageFormat = SKEncodedImageFormat.Png,
+            int quality = 80)
         {
             try
             {
-                var bitmap = new SKBitmap(width, height);
-                var canvas = new SKCanvas(bitmap);
-                canvas.DrawColor(backgroundColor ?? SKColors.Black);
-                return new Tuple<SKBitmap, SKCanvas>(bitmap, canvas);
+                using var bitmap = new SKBitmap(width, height);
+                using var canvas = new SKCanvas(bitmap);
+                backgroundColor = backgroundColor.Equals(default) ? SKColors.Black : backgroundColor;
+                canvas.DrawColor(backgroundColor);
+                canvas.AddTextPath(titleParameters, bitmap, text);
+                
+                return bitmap.Encode(imageFormat, quality);
             }
             catch (Exception ex)
             {

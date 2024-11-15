@@ -1,7 +1,6 @@
 ﻿using BarRaider.SdTools.Wrappers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Threading.Tasks;
 using BarRaider.SdTools.Attributes;
 using BarRaider.SdTools.Backend;
@@ -130,22 +129,17 @@ namespace SamplePlugin
         public override async void KeyPressed(KeyPayload payload)
         {
             // Just some example busy work to do when the button is released
-            var tp = new TitleParameters(SKTypeface.FromFamilyName("Arial"), SKFontStyle.Bold, 9f, SKColors.Gray)
+            var tp = new TitleParameters()
             {
-                TitleStrokeColor = SKColors.Black
+                FontFamily = SKTypeface.FromFamilyName("Arial"),
+                FontStyle = SKFontStyle.Bold,
+                FontSizeInPoints = 9f,
+                TitleColor = SKColors.Gray,
             };
             
-            (SKBitmap image, SKCanvas canvas) = Tools.GenerateGenericKeyImage(SKColors.White);
-            
-            using(image)
-            using(canvas)
+            using (SKData data = Tools.GenerateKeyImage(tp, "Test", SKColors.White))
             {
-                // canvas.FillRectangle(new SolidBrush(Color.White), 0, 0, image.Width, image.Height);
-                canvas.AddTextPath(tp, image, "Test");
-                using (SKData data = image.Encode(SKEncodedImageFormat.Png, 80))
-                {
-                    await Connection.SetImageAsync(data);
-                }
+                await Connection.SetImageAsync(data);
             }
             
             Logger.Instance.LogMessage(TracingLevel.Info, "Key Pressed");
@@ -156,17 +150,17 @@ namespace SamplePlugin
             var rand = RandomGenerator.Next(100).ToString();
             
             // Just some example busy work to do when the button is released
-            var tp = new TitleParameters(SKTypeface.FromFamilyName("Arial"), SKFontStyle.Bold, 9, SKColors.White);
-            (SKBitmap image, SKCanvas canvas) = Tools.GenerateGenericKeyImage();
-            
-            using (image)
-            using (canvas)
+            var tp = new TitleParameters()
             {
-                canvas.AddTextPath(tp, image, rand);
-                using (SKData data = image.Encode(SKEncodedImageFormat.Png, 80))
-                {
-                    await Connection.SetImageAsync(data);
-                }
+                FontFamily = SKTypeface.FromFamilyName("Arial"),
+                FontStyle = SKFontStyle.Bold,
+                FontSizeInPoints = 9f,
+                TitleColor = SKColors.White
+            };
+            
+            using (SKData data = Tools.GenerateKeyImage(tp, rand, SKColors.Black))
+            {
+                await Connection.SetImageAsync(data);
             }
             
             Logger.Instance.LogMessage(TracingLevel.Info, "Key Released");
