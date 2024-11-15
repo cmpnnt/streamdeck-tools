@@ -62,13 +62,13 @@ namespace BarRaider.SdTools.Wrappers
         /// Title color
         /// </summary>
         [JsonProperty("titleColor")]
-        public SKColor TitleColor { get; private set; } = SKColors.White;
-        
+        public SKColor TitleColor { get; set; } = SKColors.White;
+
         /// <summary>
         /// Title stroke color
         /// </summary>
         [JsonIgnore]
-        public SKColor TitleStrokeColor { get; set; }
+        public SKColor TitleStrokeColor { get; set; } = SKColors.Empty;
 
         /// <summary>
         /// Title stroke thickness
@@ -80,7 +80,7 @@ namespace BarRaider.SdTools.Wrappers
         /// Font Size in Points
         /// </summary>
         [JsonProperty("fontSize")]
-        public double FontSizeInPoints { get; private set; } = 10;
+        public double FontSizeInPoints { get; set; } = 10;
 
         /// <summary>
         /// Font size in Pixels
@@ -98,31 +98,31 @@ namespace BarRaider.SdTools.Wrappers
         /// Font family
         /// </summary>
         [JsonProperty("fontFamily")]
-        public SKTypeface FontFamily { get; private set; } = SKTypeface.FromFamilyName(DEFAULT_FONT_FAMILY_NAME);
+        public SKTypeface FontFamily { get; set; } = SKTypeface.FromFamilyName(DEFAULT_FONT_FAMILY_NAME);
 
         /// <summary>
         /// Font style
         /// </summary>
         [JsonProperty("fontStyle")]
-        public SKFontStyle FontStyle { get; private set; } = SKFontStyle.Bold;
+        public SKFontStyle FontStyle { get; set; } = SKFontStyle.Bold;
 
         /// <summary>
         /// Should title be shown
         /// </summary>
         [JsonProperty("showTitle")]
-        public bool ShowTitle { get; private set; }
+        public bool ShowTitle { get; set; } = true;
 
         /// <summary>
         /// Vertical alignment of the title text on the key
         /// </summary>
         [JsonProperty("titleAlignment")]
-        public TitleVerticalAlignment VerticalAlignment { get; private set; }
-        
+        public TitleVerticalAlignment VerticalAlignment { get; set; } = TitleVerticalAlignment.Middle;
+
         /// <summary>
         /// Horizontal alignment of the title text on the key
         /// </summary>
         [JsonIgnore]
-        public TitleHorizontalAlignment HorizontalAlignment { get; private set; }
+        public TitleHorizontalAlignment HorizontalAlignment { get; set; } = TitleHorizontalAlignment.Middle;
 
         /// <summary>
         /// Constructor
@@ -158,16 +158,20 @@ namespace BarRaider.SdTools.Wrappers
         /// <param name="fontFamily"></param>
         /// <param name="fontSize"></param>
         /// <param name="fontStyle"></param>
-        /// <param name="fontUnderline"></param>
         /// <param name="showTitle"></param>
         /// <param name="titleAlignment"></param>
         /// <param name="titleColor"></param>
-        public TitleParameters(string fontFamily, uint fontSize, string fontStyle, bool fontUnderline, bool showTitle, string titleAlignment, string titleColor)
+        public TitleParameters(string fontFamily, uint fontSize, string fontStyle, bool showTitle, string titleAlignment, string titleColor)
         {
-            ParsePayload(fontFamily, fontSize, fontStyle, fontUnderline, showTitle, titleAlignment, titleColor);
+            ParsePayload(fontFamily, fontSize, fontStyle, showTitle, titleAlignment, titleColor);
         }
+        
+        /// <summary>
+        /// Default constructor, for object initializer
+        /// </summary>
+        public TitleParameters(){}
 
-        private void ParsePayload(string fontFamily, uint fontSize, string fontStyle, bool fontUnderline, bool showTitle, string titleAlignment, string titleColor)
+        private void ParsePayload(string fontFamily, uint fontSize, string fontStyle, bool showTitle, string titleAlignment, string titleColor)
         {
             try
             {
@@ -199,9 +203,6 @@ namespace BarRaider.SdTools.Wrappers
                             break;
                     }
                 }
-                
-                // TODO: remove underline from the parameters of this method
-                if (fontUnderline) FontStyle = SKFontStyle.Normal;
                 
                 if (!string.IsNullOrEmpty(titleAlignment))
                 {
