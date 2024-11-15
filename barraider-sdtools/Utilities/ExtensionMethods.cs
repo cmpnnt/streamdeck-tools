@@ -232,6 +232,7 @@ namespace BarRaider.SdTools.Utilities
                 double stringHeight = titleParameters.VerticalAlignment switch
                 {
                     // ReSharper disable once PossibleLossOfFraction
+                    // TODO: Test all this stuff
                     TitleVerticalAlignment.Middle => (image.Height / 2) + titleParameters.FontSizeInPixels,
                     TitleVerticalAlignment.Bottom => (int)(Math.Abs((image.Height - textHeight)) + titleParameters.FontSizeInPixels),
                     _ => titleParameters.FontSizeInPixels
