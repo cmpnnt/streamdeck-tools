@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "barraider-sdtools", "barrai
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SamplePlugin", "SamplePlugin\SamplePlugin.csproj", "{4635D874-69C0-4010-BE46-77EF92EB1553}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActionIdGenerator", "ActionIdGenerator\ActionIdGenerator.csproj", "{689D4D6D-EBB6-42AE-9AA8-E715A771676F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,14 @@ Global
 		{4635D874-69C0-4010-BE46-77EF92EB1553}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4635D874-69C0-4010-BE46-77EF92EB1553}.Release|x64.ActiveCfg = Release|x64
 		{4635D874-69C0-4010-BE46-77EF92EB1553}.Release|x64.Build.0 = Release|x64
+		{689D4D6D-EBB6-42AE-9AA8-E715A771676F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{689D4D6D-EBB6-42AE-9AA8-E715A771676F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{689D4D6D-EBB6-42AE-9AA8-E715A771676F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{689D4D6D-EBB6-42AE-9AA8-E715A771676F}.Debug|x64.Build.0 = Debug|Any CPU
+		{689D4D6D-EBB6-42AE-9AA8-E715A771676F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{689D4D6D-EBB6-42AE-9AA8-E715A771676F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{689D4D6D-EBB6-42AE-9AA8-E715A771676F}.Release|x64.ActiveCfg = Release|Any CPU
+		{689D4D6D-EBB6-42AE-9AA8-E715A771676F}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

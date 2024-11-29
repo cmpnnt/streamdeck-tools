@@ -436,8 +436,6 @@ namespace BarRaider.SdTools.Utilities
         public static PluginActionId[] AutoLoadPluginActions()
         {
             //TODO: replace reflection with source generation. See: https://papafe.dev/posts/source-generators-tips/#introduction
-            //TODO: Also add a manual registration option invoked in Program.cs. There should also be a method to set information used to generate the manifest.
-                // source generation can also be used to help generate the manifest
             var actions = new List<PluginActionId>();
 
             var pluginTypes = Assembly.GetEntryAssembly()?.GetTypes().Where(typ => typ.IsClass && typ.GetCustomAttributes(typeof(PluginActionIdAttribute), true).Length > 0).ToList();

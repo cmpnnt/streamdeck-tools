@@ -18,13 +18,14 @@ namespace BarRaider.SdTools.Wrappers
         public string ActionId { get; private set; }
 
         /// <summary>
-        /// Type of class that implemented this action. Must inherit PluginBase
+        /// Type of class that implemented this action. Must inherit KeyAndEncoderBase, KeypadBase or EncoderBase
         /// </summary>
         public Type PluginBaseType
         {
             get => pluginBaseType;
             private set
             {
+                // TODO: Consider moving the validation logic here into the generated class
                 if (value == null || (!typeof(IKeypadPlugin).IsAssignableFrom(value) && !typeof(IEncoderPlugin).IsAssignableFrom(value)))
                 {
                     throw new NotSupportedException("Class type set to PluginBaseType does not inherit IKeypadPlugin or IEncoderPlugin");

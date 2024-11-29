@@ -46,7 +46,7 @@ namespace BarRaider.SdTools.Backend
         /// <param name="args"></param>
         /// <param name="supportedActionIds"></param>
         /// /// <param name="updateHandler"></param>
-        private static void Run(string[] args, PluginActionId[] supportedActionIds, IUpdateHandler updateHandler)
+        public static void Run(string[] args, PluginActionId[] supportedActionIds, IUpdateHandler updateHandler = null)
         {
             Logger.Instance.LogMessage(TracingLevel.Info, $"Plugin [{Tools.GetExeName()}] Loading - {supportedActionIds.Length} Actions Found");
             AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionTrapper;
@@ -73,7 +73,7 @@ namespace BarRaider.SdTools.Backend
                 with.HelpWriter = Console.Error;
             });
 
-            var options = parser.ParseArguments<StreamDeckOptions>(args);
+            ParserResult<StreamDeckOptions> options = parser.ParseArguments<StreamDeckOptions>(args);
             options.WithParsed(o => RunPlugin(o, supportedActionIds, updateHandler));
         }
 

@@ -27,6 +27,9 @@
     <OutputPath>bin\Debug\com.test.sdtools.sdPlugin\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ActionIdGenerator\ActionIdGenerator.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="App.config" />
     <None Include="manifest.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
