@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
+using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 
 namespace ActionIdGenerator;
-
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Collections.Generic;
-using System.Linq;
 
 [Generator]
 public class PluginActionIdGenerator : IIncrementalGenerator
@@ -32,13 +25,15 @@ public class PluginActionIdGenerator : IIncrementalGenerator
         IncrementalValueProvider<ImmutableArray<(string className, string argument)>> attributeData = classDeclarations
             .SelectMany((ctx, _) =>
             {
-                ClassDeclarationSyntax? classDecl = ctx.Item2;
+                ClassDeclarationSyntax? classDecl;
+                classDecl = ctx.Item2;
                 SemanticModel? semanticModel = ctx.Item1;
                 var className = semanticModel.GetDeclaredSymbol(classDecl)?.ToString();
 
                 return from attributeList in classDecl.AttributeLists
                     from attribute in attributeList.Attributes
-                    where attribute.Name.ToString().Contains("PluginActionId")
+                    where attribute.Name.ToString().Contains("PluginActionId") &&
+                          semanticModel.GetTypeInfo(attribute).Type?.ToDisplayString() == "BarRaider.SdTools.Attributes.PluginActionIdAttribute"
                     let argument = attribute.ArgumentList?.Arguments.FirstOrDefault()?.ToString().Trim('"')
                     where argument != null
                     select (className, argument);
