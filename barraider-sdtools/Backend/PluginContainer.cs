@@ -84,6 +84,8 @@ namespace BarRaider.SdTools.Backend
                 GlobalSettingsManager.Instance.Initialize(connection);
 
                 // We connected, loop every second until we disconnect
+                // TODO: Is there a better way to do this than a busy-wait? Some built-in background
+                    // thread that is delayed via Task.Delay? I don't like hogging a thread for this.
                 while (!disconnectEvent.WaitOne(TimeSpan.FromMilliseconds(1000)))
                 {
                     RunTick();

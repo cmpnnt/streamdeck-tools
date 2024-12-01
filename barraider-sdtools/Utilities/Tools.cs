@@ -438,7 +438,9 @@ namespace BarRaider.SdTools.Utilities
             //TODO: replace reflection with source generation. See: https://papafe.dev/posts/source-generators-tips/#introduction
             var actions = new List<PluginActionId>();
 
-            var pluginTypes = Assembly.GetEntryAssembly()?.GetTypes().Where(typ => typ.IsClass && typ.GetCustomAttributes(typeof(PluginActionIdAttribute), true).Length > 0).ToList();
+            // Get the plugin classes that are decorated with the PluginActionIdAttribute
+            List<Type> pluginTypes = Assembly.GetEntryAssembly()?.GetTypes().Where(typ => typ.IsClass && typ.GetCustomAttributes(typeof(PluginActionIdAttribute), true).Length > 0).ToList();
+            
             pluginTypes?.ForEach(typ =>
             {
                 if (typ.GetCustomAttributes(typeof(PluginActionIdAttribute), true).First() is PluginActionIdAttribute attr)
