@@ -10,13 +10,16 @@ internal static class Templates
         return $$"""
                using System;
                using System.Collections.Generic;
+               using BarRaider.SdTools.Wrappers;
+               
                namespace Cmpnnt.SdTools.Generators
                {
                    public static class PluginActionIdRegistry
                    {
-                       public static List<(Type ClassType, string ActionId)> GetPluginActionIds(){
-                           return new List<(Type, string)>
-                           {{{string.Join(",\n            ", actionIds.Select(a => $"(Type.GetType(\"{a.ClassName}\"), \"{a.Argument}\")"))}}};
+                       public static PluginActionId[] AutoLoadPluginActions(){
+                           var actions = new List<PluginActionId>
+                           {{{string.Join(",\n            ", actionIds.Select(a => $"new PluginActionId(\"{a.Argument}\", Type.GetType(\"{a.ClassName}\"))"))}}};
+                           return actions.ToArray();
                         }
                    }
                }

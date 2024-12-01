@@ -433,9 +433,10 @@ namespace BarRaider.SdTools.Utilities
         /// Uses the PluginActionId attribute on the various classes derived from PluginBase to find all the actions supported in this assembly
         /// </summary>
         /// <returns></returns>
+        [Obsolete("This reflection-based AutoLoad method is deprecated in favor of the source generated version defined in the package ActionIdGenerator.", false)]
         public static PluginActionId[] AutoLoadPluginActions()
         {
-            //TODO: replace reflection with source generation. See: https://papafe.dev/posts/source-generators-tips/#introduction
+            // TODO: Update the deprecation message with the actual name of the ActionIdGenerator package
             var actions = new List<PluginActionId>();
 
             // Get the plugin classes that are decorated with the PluginActionIdAttribute

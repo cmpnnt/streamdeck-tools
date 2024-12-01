@@ -34,6 +34,7 @@ namespace BarRaider.SdTools.Backend
         /// </summary>
         /// <param name="args"></param>
         /// <param name="updateHandler"></param>
+        [Obsolete("This method is deprecated in favor of the overload that takes a PluginActionId[] argument to enable native AOT.", false)]
         public static void Run(string[] args, IUpdateHandler updateHandler = null)
         {
             Run(args, Tools.AutoLoadPluginActions(), updateHandler);

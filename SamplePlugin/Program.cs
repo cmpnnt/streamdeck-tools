@@ -1,4 +1,5 @@
 ﻿using BarRaider.SdTools.Backend;
+using BarRaider.SdTools.Wrappers;
 using Cmpnnt.SdTools.Generators;
 
 namespace SamplePlugin
@@ -9,8 +10,8 @@ namespace SamplePlugin
         {
             // Uncomment this line of code to allow for debugging
             //while (!System.Diagnostics.Debugger.IsAttached) { System.Threading.Thread.Sleep(100); }
-            //PluginActionIdRegistry.GetPluginActionIds(); 
-            SdWrapper.Run(args);
+            PluginActionId[] pluginActionIds = PluginActionIdRegistry.AutoLoadPluginActions(); 
+            SdWrapper.Run(args, pluginActionIds);
         }
     }
 }
