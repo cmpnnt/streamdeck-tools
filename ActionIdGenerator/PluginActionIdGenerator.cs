@@ -21,21 +21,20 @@ public class PluginActionIdGenerator : IIncrementalGenerator
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         // Create a pipeline to collect class declarations with PluginActionIdAttribute
-        IncrementalValuesProvider<(SemanticModel SemanticModel, ClassDeclarationSyntax)> classDeclarations = context.SyntaxProvider
+        IncrementalValuesProvider<(SemanticModel SemanticModel, ClassDeclarationSyntax?)> classDeclarations = context.SyntaxProvider
             .CreateSyntaxProvider(
                 predicate: static (node, _) => node is ClassDeclarationSyntax { AttributeLists.Count: > 0 },
                 transform: static (context, _) => context)
-            .Where(context => context.Node is ClassDeclarationSyntax)
-            .Select((context, _) => (context.SemanticModel, context.Node as ClassDeclarationSyntax));
+            .Where(ctx => ctx.Node is ClassDeclarationSyntax)
+            .Select((ctx, _) => (ctx.SemanticModel, ctx.Node as ClassDeclarationSyntax));
 
         // Aggregate PluginActionIdAttribute arguments and class names
         IncrementalValueProvider<ImmutableArray<(string className, string argument)>> attributeData = classDeclarations
-            .SelectMany((context, _) =>
+            .SelectMany((ctx, _) =>
             {
-                ClassDeclarationSyntax? classDecl = context.Item2;
-                SemanticModel? semanticModel = context.Item1;
+                ClassDeclarationSyntax? classDecl = ctx.Item2;
+                SemanticModel? semanticModel = ctx.Item1;
                 var className = semanticModel.GetDeclaredSymbol(classDecl)?.ToString();
-                //string? classNamespace = (semanticModel.GetDeclaredSymbol(classDecl))?.ContainingNamespace.ToDisplayString();
 
                 return from attributeList in classDecl.AttributeLists
                     from attribute in attributeList.Attributes
