@@ -337,7 +337,11 @@ namespace BarRaider.SdTools.Utilities
             return null;
         }
         #endregion
-
+        
+        // TODO: This needs to be refactored to be AOT friendly. Also, the NewtonSoft JSON will be replaced by System.Text.Json
+        //   The inner settings classes without this generic type crap is problematic for source generated JSON serialization because
+        //   that relies on known classes into which the JSON can be deserialized. The inner classes for settings are always different.
+        //   That's probably why these hoops are necessary.
         #region JObject Related
         /// <summary>
         /// Iterates through the fromJObject, finds the property that matches in the toSettings object, and sets the value from the fromJObject object
@@ -348,12 +352,12 @@ namespace BarRaider.SdTools.Utilities
         /// <returns>Number of properties updated</returns>
         public static int AutoPopulateSettings<T>(T toSettings, JObject fromJObject)
         {
-            var dicProperties = MatchPropertiesWithJsonProperty(toSettings);
+            Dictionary<string, PropertyInfo> dicProperties = MatchPropertiesWithJsonProperty(toSettings);
             var totalPopulated = 0;
 
             if (fromJObject == null) return totalPopulated;
             
-            foreach (var prop in fromJObject)
+            foreach (KeyValuePair<string, JToken> prop in fromJObject)
             {
                 if (!dicProperties.TryGetValue(prop.Key, out PropertyInfo info)) continue;
                     
@@ -378,7 +382,7 @@ namespace BarRaider.SdTools.Utilities
             var dicProperties = new Dictionary<string, PropertyInfo>();
             if (obj == null) return dicProperties;
             
-            var props = typeof(T).GetProperties();
+            PropertyInfo[] props = typeof(T).GetProperties();
             
             foreach (PropertyInfo prop in props)
             {
@@ -427,30 +431,6 @@ namespace BarRaider.SdTools.Utilities
                 Logger.Instance.LogMessage(TracingLevel.Warn, $"GetExeName failed {ex}");
             }
             return string.Empty;
-        }
-
-        /// <summary>
-        /// Uses the PluginActionId attribute on the various classes derived from PluginBase to find all the actions supported in this assembly
-        /// </summary>
-        /// <returns></returns>
-        [Obsolete("This reflection-based AutoLoad method is deprecated in favor of the source generated version defined in the package ActionIdGenerator.", false)]
-        public static PluginActionId[] AutoLoadPluginActions()
-        {
-            // TODO: Update the deprecation message with the actual name of the ActionIdGenerator package
-            var actions = new List<PluginActionId>();
-
-            // Get the plugin classes that are decorated with the PluginActionIdAttribute
-            List<Type> pluginTypes = Assembly.GetEntryAssembly()?.GetTypes().Where(typ => typ.IsClass && typ.GetCustomAttributes(typeof(PluginActionIdAttribute), true).Length > 0).ToList();
-            
-            pluginTypes?.ForEach(typ =>
-            {
-                if (typ.GetCustomAttributes(typeof(PluginActionIdAttribute), true).First() is PluginActionIdAttribute attr)
-                {
-                    actions.Add(new PluginActionId(attr.ActionId, typ));
-                }
-            });
-
-            return actions.ToArray();
         }
         #endregion
     }

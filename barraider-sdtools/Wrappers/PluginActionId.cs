@@ -6,7 +6,7 @@ namespace BarRaider.SdTools.Wrappers
     /// <summary>
     /// This class associates a plugin UUID (which is indicated in the Manifest file), with the type of the implementation class.
     /// The implementation class must be derived from the PluginBase class for this to work properly.
-    /// If the type passed does not derrive from PluginBase, a NotSupportedException will be thrown
+    /// If the type passed does not derive from PluginBase, a NotSupportedException will be thrown
     /// </summary>
     public class PluginActionId
     {

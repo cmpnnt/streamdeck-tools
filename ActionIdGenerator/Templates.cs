@@ -7,6 +7,8 @@ internal static class Templates
 {
     public static string GetPluginActionIds(ImmutableArray<(string ClassName, string Argument)> actionIds)
     {
+        // TODO: Add a Factory property to the PluginActionId class and pass it in here
+        //   The factory approach is tricky because it still requires a generic, which uses a type
         return $$"""
                using System;
                using System.Collections.Generic;

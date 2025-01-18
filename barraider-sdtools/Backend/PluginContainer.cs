@@ -13,6 +13,7 @@ using Newtonsoft.Json.Linq;
 
 namespace BarRaider.SdTools.Backend
 {
+    // TODO: Replace async void with async Task
     class PluginContainer
     {
         private const int STREAMDECK_INITIAL_CONNECTION_TIMEOUT_SECONDS = 60;
@@ -33,6 +34,7 @@ namespace BarRaider.SdTools.Backend
         public PluginContainer(PluginActionId[] supportedActionIds, IUpdateHandler updateHandler)
         {
             this.updateHandler = updateHandler;
+            // TODO: instead of the PluginBaseType here, modify the PluginActionId class to have an instance of the Factory
             foreach (PluginActionId action in supportedActionIds)
             {
                 SupportedActions[action.ActionId] = action.PluginBaseType;
@@ -181,7 +183,7 @@ namespace BarRaider.SdTools.Backend
             await instancesLock.WaitAsync();
             try
             {
-                foreach (var kvp in Instances.ToArray())
+                foreach (KeyValuePair<string, ICommonPluginFunctions> kvp in Instances.ToArray())
                 {
                     kvp.Value.OnTick();
                 }
@@ -203,7 +205,7 @@ namespace BarRaider.SdTools.Backend
                 Logger.Instance.LogMessage(TracingLevel.Debug, $"Plugin OnWillAppear: Context: {e.Event.Context} Action: {e.Event.Action} Payload: {e.Event.Payload?.ToStringEx()}");
                 #endif
 
-                if (SupportedActions.TryGetValue(e.Event.Action, out Type actionValue))
+                if (SupportedActions.TryGetValue(e.Event.Action, out Type actionType))
                 {
                     try
                     {
@@ -213,11 +215,13 @@ namespace BarRaider.SdTools.Backend
                             return;
                         }
                         var payload = new InitialPayload(e.Event.Payload, deviceInfo);
-                        Instances[e.Event.Context] = (ICommonPluginFunctions)Activator.CreateInstance(actionValue, conn, payload);
+                        // TODO: The factory creates the instance here. This is all about creating new instances of plugins 
+                        //  so that you can have the same plugin on multiple keys to use its various actions
+                        Instances[e.Event.Context] = (ICommonPluginFunctions)Activator.CreateInstance(actionType, conn, payload);
                     }
                     catch (Exception ex)
                     {
-                        Logger.Instance.LogMessage(TracingLevel.Fatal, $"Could not create instance of {actionValue} with context {e.Event.Context} - This may be due to an Exception raised in the constructor, or the class does not inherit PluginBase with the same constructor {ex}");
+                        Logger.Instance.LogMessage(TracingLevel.Fatal, $"Could not create instance of {actionType} with context {e.Event.Context} - This may be due to an Exception raised in the constructor, or the class does not inherit PluginBase with the same constructor {ex}");
                     }
                 }
                 else

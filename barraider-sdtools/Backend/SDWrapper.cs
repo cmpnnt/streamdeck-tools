@@ -26,19 +26,7 @@ namespace BarRaider.SdTools.Backend
         /// * and SaviorXTanren's MixItUp.StreamDeckPlugin:
         /// * https://github.com/SaviorXTanren/mixer-mixitup/
         /// *************************************************************************/
-
-
-        /// <summary>
-        /// Library's main initialization point. 
-        /// Pass the args from your Main function. We'll handle the rest
-        /// </summary>
-        /// <param name="args"></param>
-        /// <param name="updateHandler"></param>
-        [Obsolete("This method is deprecated in favor of the overload that takes a PluginActionId[] argument to enable native AOT.", false)]
-        public static void Run(string[] args, IUpdateHandler updateHandler = null)
-        {
-            Run(args, Tools.AutoLoadPluginActions(), updateHandler);
-        }
+        
 
         /// <summary>
         /// Library's main initialization point. 

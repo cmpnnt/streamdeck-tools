@@ -13,6 +13,8 @@ namespace SamplePlugin
     [PluginActionId("com.test.sdtools.sampleplugin")]
     public class PluginAction : KeyAndEncoderBase
     {
+        // TODO: Can the framework be refactored to have a standardized settings class?
+        //   See: https://docs.elgato.com/streamdeck/sdk/guides/settings
         private class PluginSettings
         {
             public static PluginSettings CreateDefaultSettings()
