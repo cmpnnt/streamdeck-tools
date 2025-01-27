@@ -8,7 +8,7 @@ using BarRaider.SdTools.Payloads;
 using BarRaider.SdTools.Utilities;
 using SkiaSharp;
 
-namespace SamplePlugin
+namespace Cmpnnt.SamplePlugin
 {
     [PluginActionId("com.test.sdtools.sampleplugin2")]
     public class PluginAction2 : KeyAndEncoderBase

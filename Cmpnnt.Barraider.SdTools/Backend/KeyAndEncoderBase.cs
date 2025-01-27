@@ -9,8 +9,28 @@ namespace BarRaider.SdTools.Backend
     /// Holds implementation for all the basic functions
     /// If you're missing an event, you can register to it from the Connection.StreamDeckConnection object
     /// </summary>
-    public abstract class KeypadBase : IKeypadPlugin
+    public abstract class KeyAndEncoderBase : IKeypadPlugin, IEncoderPlugin
     {
+        /// <summary>
+        /// Called when the dial is rotated
+        /// </summary>
+        public abstract void DialRotate(DialRotatePayload payload);
+
+        /// <summary>
+        /// Called when the Dial is pressed
+        /// </summary>
+        public abstract void DialDown(DialPayload payload);
+
+        /// <summary>
+        /// Called when the Dial is released
+        /// </summary>
+        public abstract void DialUp(DialPayload payload);
+
+        /// <summary>
+        /// Called when the touchpad (above the dials) is pressed
+        /// </summary>
+        public abstract void TouchPress(TouchpadPressPayload payload);
+
         /// <summary>
         /// Called when a Stream Deck key is pressed
         /// </summary>
@@ -50,7 +70,10 @@ namespace BarRaider.SdTools.Backend
         public void Destroy()
         {
             Dispose();
-            Connection?.Dispose();
+            if (Connection != null)
+            {
+                Connection.Dispose();
+            }
         }
 
         /// <summary>
@@ -65,7 +88,7 @@ namespace BarRaider.SdTools.Backend
         /// Example for settings usage:
         /// * if (payload.Settings == null || payload.Settings.Count == 0)
         /// * {
-        /// *         // Create default settings
+        /// *         // CreateAction default settings
         /// * }
         /// * else
         /// * {
@@ -76,7 +99,7 @@ namespace BarRaider.SdTools.Backend
         /// <param name="connection">Communication module with Stream Deck</param>
         /// <param name="payload">Plugin settings - NOTE: Not used in base class, should be consumed by deriving class</param>
         #pragma warning disable IDE0060 // Remove unused parameter
-        public KeypadBase(ISdConnection connection, InitialPayload payload)
+        public KeyAndEncoderBase(ISdConnection connection, InitialPayload payload)
         #pragma warning restore IDE0060 // Remove unused parameter
         {
             Connection = connection;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -14,32 +15,26 @@ using Newtonsoft.Json.Linq;
 namespace BarRaider.SdTools.Backend
 {
     // TODO: Replace async void with async Task
-    class PluginContainer
+    internal class PluginContainer(IPluginActionRegistry actionRegistry, IUpdateHandler updateHandler)
     {
         private const int STREAMDECK_INITIAL_CONNECTION_TIMEOUT_SECONDS = 60;
         private StreamDeckConnection connection;
         private readonly ManualResetEvent connectEvent = new(false);
         private readonly ManualResetEvent disconnectEvent = new(false);
         private readonly SemaphoreSlim instancesLock = new(1);
-        private readonly IUpdateHandler updateHandler;
         private string pluginUuid;
         private RegistrationInfo deviceInfo;
         private PluginUpdateInfo lastUpdateInfo;
+
+        /// <summary>
+        /// All current instances of plugin actions. Keyed on Action UUID. Action instances are added
+        /// when the StreamDeck page containing the plugin is shown and removed when it is not visible.
+        /// See the method Connection_OnWillAppear() in this file for that logic.
         
-        private static readonly Dictionary<string, Type> SupportedActions = new();
-
-        // Holds all instances of plugin
+        /// Note that your _plugin_ will still run on the user's machine as long as it is installed, even if
+        /// there are no actions running. So, this logic keeps resource usage down when no actions are running.
+        /// </summary>
         private static readonly Dictionary<string, ICommonPluginFunctions> Instances = new();
-
-        public PluginContainer(PluginActionId[] supportedActionIds, IUpdateHandler updateHandler)
-        {
-            this.updateHandler = updateHandler;
-            // TODO: instead of the PluginBaseType here, modify the PluginActionId class to have an instance of the Factory
-            foreach (PluginActionId action in supportedActionIds)
-            {
-                SupportedActions[action.ActionId] = action.PluginBaseType;
-            }
-        }
 
         public void Run(StreamDeckOptions options)
         {
@@ -87,7 +82,7 @@ namespace BarRaider.SdTools.Backend
 
                 // We connected, loop every second until we disconnect
                 // TODO: Is there a better way to do this than a busy-wait? Some built-in background
-                    // thread that is delayed via Task.Delay? I don't like hogging a thread for this.
+                // Task that is delayed via Task.Delay? I don't like hogging a thread for this.
                 while (!disconnectEvent.WaitOne(TimeSpan.FromMilliseconds(1000)))
                 {
                     RunTick();
@@ -205,7 +200,7 @@ namespace BarRaider.SdTools.Backend
                 Logger.Instance.LogMessage(TracingLevel.Debug, $"Plugin OnWillAppear: Context: {e.Event.Context} Action: {e.Event.Action} Payload: {e.Event.Payload?.ToStringEx()}");
                 #endif
 
-                if (SupportedActions.TryGetValue(e.Event.Action, out Type actionType))
+                if (actionRegistry.PluginActionIDs().Contains(e.Event.Action))
                 {
                     try
                     {
@@ -215,13 +210,15 @@ namespace BarRaider.SdTools.Backend
                             return;
                         }
                         var payload = new InitialPayload(e.Event.Payload, deviceInfo);
-                        // TODO: The factory creates the instance here. This is all about creating new instances of plugins 
-                        //  so that you can have the same plugin on multiple keys to use its various actions
-                        Instances[e.Event.Context] = (ICommonPluginFunctions)Activator.CreateInstance(actionType, conn, payload);
+                        Instances[e.Event.Context] = actionRegistry.CreateAction(e.Event.Action, conn, payload);
+                        
+                        #if DEBUG
+                        Logger.Instance.LogMessage(TracingLevel.Debug, $"Instance count is now {Instances.Count}");
+                        #endif
                     }
                     catch (Exception ex)
                     {
-                        Logger.Instance.LogMessage(TracingLevel.Fatal, $"Could not create instance of {actionType} with context {e.Event.Context} - This may be due to an Exception raised in the constructor, or the class does not inherit PluginBase with the same constructor {ex}");
+                        Logger.Instance.LogMessage(TracingLevel.Fatal, $"Could not create instance of {e.Event.Action} with context {e.Event.Context} - This may be due to an Exception raised in the constructor, or the class does not inherit PluginBase with the same constructor {ex}");
                     }
                 }
                 else
@@ -247,6 +244,10 @@ namespace BarRaider.SdTools.Backend
                 if (!Instances.TryGetValue(e.Event.Context, out ICommonPluginFunctions value)) return;
                 value.Destroy();
                 Instances.Remove(e.Event.Context);
+                
+                #if DEBUG
+                Logger.Instance.LogMessage(TracingLevel.Debug, $"Instance count is now {Instances.Count}");
+                #endif
             }
             finally
             {

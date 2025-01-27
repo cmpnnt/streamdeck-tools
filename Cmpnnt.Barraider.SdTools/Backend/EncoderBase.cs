@@ -77,7 +77,7 @@ namespace BarRaider.SdTools.Backend
         /// Example for settings usage:
         /// * if (payload.Settings == null || payload.Settings.Count == 0)
         /// * {
-        /// *         // Create default settings
+        /// *         // CreateAction default settings
         /// * }
         /// * else
         /// * {

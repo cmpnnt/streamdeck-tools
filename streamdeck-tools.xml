@@ -1537,7 +1537,7 @@
             <param name="fromJObject"></param>
             <returns>Number of properties updated</returns>
         </member>
-        <member name="M:BarRaider.SdTools.Tools.AutoLoadPluginActions">
+        <member name="M:BarRaider.SdTools.Tools.AutoLoadPluginActionIDs">
             <summary>
             Uses the PluginActionId attribute on the various classes derived from PluginBase to find all the actions supported in this assembly
             </summary>

@@ -1,14 +1,15 @@
-﻿using System;
-using BarRaider.SdTools.Payloads;
+﻿using BarRaider.SdTools.Payloads;
 
 namespace BarRaider.SdTools.Backend
 {
 
     /// <summary>
-    /// Obsolete! Use `KeypadBase` moving forward, or choose one of the other options: `EncoderBase`, `KeyAndEncoderBase`
+    /// Main abstract class your plugin should derive from for keys (not dials)
+    /// For dials use the EncoderBase or KeyAndEncoderBase
+    /// Holds implementation for all the basic functions
+    /// If you're missing an event, you can register to it from the Connection.StreamDeckConnection object
     /// </summary>
-    [Obsolete("PluginBase will be removed in next version. Use either 'KeypadBase' (if you don't support dials), 'EncoderBase' (for only dials), 'KeyAndEncoderBase' (for both keys and dials) instead")]
-    public abstract class PluginBase : IKeypadPlugin
+    public abstract class KeypadBase : IKeypadPlugin
     {
         /// <summary>
         /// Called when a Stream Deck key is pressed
@@ -64,7 +65,7 @@ namespace BarRaider.SdTools.Backend
         /// Example for settings usage:
         /// * if (payload.Settings == null || payload.Settings.Count == 0)
         /// * {
-        /// *         // Create default settings
+        /// *         // CreateAction default settings
         /// * }
         /// * else
         /// * {
@@ -75,7 +76,7 @@ namespace BarRaider.SdTools.Backend
         /// <param name="connection">Communication module with Stream Deck</param>
         /// <param name="payload">Plugin settings - NOTE: Not used in base class, should be consumed by deriving class</param>
         #pragma warning disable IDE0060 // Remove unused parameter
-        public PluginBase(ISdConnection connection, InitialPayload payload)
+        public KeypadBase(ISdConnection connection, InitialPayload payload)
         #pragma warning restore IDE0060 // Remove unused parameter
         {
             Connection = connection;

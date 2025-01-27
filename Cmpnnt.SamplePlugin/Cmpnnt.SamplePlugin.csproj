@@ -27,7 +27,7 @@
     <OutputPath>bin\Debug\com.test.sdtools.sdPlugin\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ActionIdGenerator\ActionIdGenerator.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
+    <ProjectReference Include="..\Cmpnnt.ActionRegistryGenerator\Cmpnnt.ActionRegistryGenerator.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -93,7 +93,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\barraider-sdtools\barraider-sdtools.csproj" />
+    <ProjectReference Include="..\Cmpnnt.Barraider.SdTools\Cmpnnt.Barraider.SdTools.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

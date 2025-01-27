@@ -63,7 +63,7 @@ namespace BarRaider.SdTools.Utilities
             float aspectRatio = (float)original.Height / original.Width;
             var newHeight = (int)(newWidth * aspectRatio);
 
-            // Create a new bitmap with the desired dimensions
+            // CreateAction a new bitmap with the desired dimensions
             var resizedImage = new SKBitmap(newWidth, newHeight);
 
             using var canvas = new SKCanvas(resizedImage);
@@ -90,7 +90,7 @@ namespace BarRaider.SdTools.Utilities
             // Ensure the crop rectangle is within the bounds of the original image
             cropRect.Intersect(new SKRectI(0, 0, original.Width, original.Height));
 
-            // Create a new bitmap to hold the cropped image
+            // CreateAction a new bitmap to hold the cropped image
             var croppedImage = new SKBitmap(cropRect.Width, cropRect.Height);
 
             using var canvas = new SKCanvas(croppedImage);
@@ -110,11 +110,11 @@ namespace BarRaider.SdTools.Utilities
         {
             try
             {
-                // Create a new bitmap to hold the image with changed opacity
+                // CreateAction a new bitmap to hold the image with changed opacity
                 var newBitmap = new SKBitmap(original.Width, original.Height);
                 using var canvas = new SKCanvas(newBitmap);
                
-                // Create a paint object with the desired opacity
+                // CreateAction a paint object with the desired opacity
                 var paint = new SKPaint();
                 paint.Color = new SKColor(255, 255, 255, opacity);
                 paint.IsAntialias = true;

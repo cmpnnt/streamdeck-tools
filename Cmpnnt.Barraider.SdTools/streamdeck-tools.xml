@@ -96,7 +96,7 @@
             Example for settings usage:
             * if (payload.Settings == null || payload.Settings.Count == 0)
             * {
-            *         // Create default settings
+            *         // CreateAction default settings
             * }
             * else
             * {
@@ -472,7 +472,7 @@
             Example for settings usage:
             * if (payload.Settings == null || payload.Settings.Count == 0)
             * {
-            *         // Create default settings
+            *         // CreateAction default settings
             * }
             * else
             * {
@@ -542,7 +542,7 @@
             Example for settings usage:
             * if (payload.Settings == null || payload.Settings.Count == 0)
             * {
-            *         // Create default settings
+            *         // CreateAction default settings
             * }
             * else
             * {
@@ -609,7 +609,7 @@
             Example for settings usage:
             * if (payload.Settings == null || payload.Settings.Count == 0)
             * {
-            *         // Create default settings
+            *         // CreateAction default settings
             * }
             * else
             * {
@@ -871,7 +871,7 @@
             *          CommandLineParser by gsscoder
             *          streamdeck-client-csharp by Shane DeSeranno
             *          Newtonsoft.Json by James Newton-King
-            * 2. Create a class that implements the IPluginable interface (which is located in BarRaider.SDTools), this will be your main plugin
+            * 2. CreateAction a class that implements the IPluginable interface (which is located in BarRaider.SDTools), this will be your main plugin
             * 3. Pass the type of the class to the main function
              </summary>
         </member>
@@ -2761,7 +2761,7 @@
             <param name="originalMax"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.Utilities.AutoLoadPluginActions">
+        <member name="M:BarRaider.SdTools.Utilities.PluginActionIDs">
             <summary>
             Uses the PluginActionId attribute on the various classes derived from PluginBase to find all the actions supported in this assembly
             </summary>

@@ -6,11 +6,12 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 
-namespace ActionIdGenerator;
+namespace Cmpnnt.ActionRegistryGenerator;
 
 [Generator]
-public class PluginActionIdGenerator : IIncrementalGenerator
+public class PluginRegistrar : IIncrementalGenerator
 {
+    //
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         // Create a pipeline to collect class declarations with PluginActionIdAttribute
@@ -25,8 +26,7 @@ public class PluginActionIdGenerator : IIncrementalGenerator
         IncrementalValueProvider<ImmutableArray<(string className, string argument)>> attributeData = classDeclarations
             .SelectMany((ctx, _) =>
             {
-                ClassDeclarationSyntax? classDecl;
-                classDecl = ctx.Item2;
+                ClassDeclarationSyntax? classDecl = ctx.Item2;
                 SemanticModel? semanticModel = ctx.Item1;
                 var className = semanticModel.GetDeclaredSymbol(classDecl)?.ToString();
 
@@ -43,12 +43,13 @@ public class PluginActionIdGenerator : IIncrementalGenerator
         // Register the source output
         context.RegisterSourceOutput(attributeData, Generate); // Generate is a method group. It's the same as `(ctx, actionIds) => Generate(ctx, actionIds)`
     }
-
-    private void Generate(SourceProductionContext context, ImmutableArray<(string ClassName, string Argument)> actionIds)
+    
+    private static void Generate(SourceProductionContext context, ImmutableArray<(string, string)> actions)
     {
+        if (actions.IsEmpty) return;
         // Generate a new class with a method that returns the extracted arguments
-        SourceText actionIdSource = SourceText.From(Templates.GetPluginActionIds(actionIds), Encoding.UTF8);
-        context.AddSource($"PluginActionIdRegistry.g.cs", actionIdSource);
+        SourceText actionIdSource = SourceText.From(Templates.CreateRegistrar(actions), Encoding.UTF8);
+        context.AddSource($"ActionRegistrar.g.cs", actionIdSource);
     }
 }
 
