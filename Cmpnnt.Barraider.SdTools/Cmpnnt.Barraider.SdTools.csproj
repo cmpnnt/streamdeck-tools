@@ -23,6 +23,8 @@
         <RootNamespace>BarRaider.SdTools</RootNamespace>
         <AssemblyName>StreamDeckTools</AssemblyName>
         <PackageIcon>BRLogo_460.png</PackageIcon>
+        <Configurations>Debug;Release</Configurations>
+        <Platforms>AnyCPU;ARM64;x64</Platforms>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0|AnyCPU'">
         <NoWarn>1701;1702;CA1416</NoWarn>
