@@ -16,9 +16,9 @@ namespace BarRaider.SdTools.Backend
         /// /************************************************************************
         /// Based on Barraider's C# StreamDeck tools, which in turn was based on:
         ///   * Initial configuration from TyrenDe's streamdeck-client-csharp example:
-        ///   * https://github.com/TyrenDe/streamdeck-client-csharp
+        ///     - https://github.com/TyrenDe/streamdeck-client-csharp
         ///   *  and SaviorXTanren's MixItUp.StreamDeckPlugin:
-        ///   * https://github.com/SaviorXTanren/mixer-mixitup/
+        ///     - https://github.com/SaviorXTanren/mixer-mixitup/
         /// *************************************************************************/
 
         /// <summary>
