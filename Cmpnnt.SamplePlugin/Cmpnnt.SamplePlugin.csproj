@@ -1,34 +1,45 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk" InitialTargets="SetOutputDir" >
+  
+  <UsingTask TaskName="Cmpnnt.BuildTasks.SetOutputDirectory" TaskFactory="TaskHostFactory" AssemblyFile="$(TaskAssemblyPath)" />
+  <UsingTask TaskName="Cmpnnt.BuildTasks.RenameOutputDirectory" TaskFactory="TaskHostFactory" AssemblyFile="$(TaskAssemblyPath)" />
+  
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AssemblyName>com.test.sdtools</AssemblyName>
     <Platforms>AnyCPU;x64;ARM64</Platforms>
+    <!-- TODO: convert to native compilation -->
+    <!-- TODO: extract properties and targets into .props and .targets files and reference them here -->
   </PropertyGroup>
-<!-- TODO: convert to native compilation, remove AnyCPU and update bin paths to include architecture -->
-<!-- TODO: Potentially remove these lines all together? That might be all I need to do to get the path I want -->
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>bin\Release\com.test.sdtools.sdPlugin\</OutputPath>
+  
+  <PropertyGroup>
+    <JsonFilePath>manifest.json</JsonFilePath>
+    <TaskAssemblyPath>$(SolutionDir)Cmpnnt.BuildTasks\bin\$(Configuration)\$(Platform)\Cmpnnt.BuildTasks.dll</TaskAssemblyPath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutputPath>bin\Release\com.test.sdtools.sdPlugin\</OutputPath>
+  <PropertyGroup>
+    <OutDir>bin\$(Configuration)\$(Platform)\tmp.sdPlugin\</OutDir>
+    <BaseDir>$(MSBuildThisFileDirectory)bin\$(Configuration)\$(Platform)</BaseDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
-    <OutputPath>bin\Release\com.test.sdtools.sdPlugin\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>bin\Debug\com.test.sdtools.sdPlugin\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutputPath>bin\Debug\com.test.sdtools.sdPlugin\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
-    <OutputPath>bin\Debug\com.test.sdtools.sdPlugin\</OutputPath>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Cmpnnt.ActionRegistryGenerator\Cmpnnt.ActionRegistryGenerator.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
-  </ItemGroup>
+  
+  <Target Name="BuildTasks">
+    <MSBuild Projects="..\Cmpnnt.BuildTasks\Cmpnnt.BuildTasks.csproj" />
+  </Target>
+  
+  <Target Name="SetOutputDir" DependsOnTargets="BuildTasks">
+    <Cmpnnt.BuildTasks.SetOutputDirectory JsonFilePath="$(JsonFilePath)">
+      <Output TaskParameter="OutputDirectory" PropertyName="OutputDirectory" />
+    </Cmpnnt.BuildTasks.SetOutputDirectory>
+  </Target>
+  
+  <Target Name="RenameOutputDirectory" AfterTargets="Build" DependsOnTargets="SetOutputDir">
+    <PropertyGroup>
+      <RenamedDir>$(BaseDir)\$(OutputDirectory).sdPlugin</RenamedDir>
+    </PropertyGroup>
+    <Cmpnnt.BuildTasks.RenameOutputDirectory OldPath="$(BaseDir)\tmp.sdPlugin" NewPath="$(RenamedDir)" />
+    <Message Importance="high" Text="Output directory renamed to $(RenamedDir)" />
+  </Target>
+  
   <ItemGroup>
     <None Include="App.config" />
     <None Include="manifest.json">
@@ -93,9 +104,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Cmpnnt.Barraider.SdTools\Cmpnnt.Barraider.SdTools.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Cmpnnt.ActionRegistryGenerator\Cmpnnt.ActionRegistryGenerator.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
+    <ProjectReference Include="..\Cmpnnt.Barraider.SdTools\Cmpnnt.Barraider.SdTools.csproj" />
   </ItemGroup>
 </Project>

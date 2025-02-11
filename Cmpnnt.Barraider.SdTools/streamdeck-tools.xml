@@ -4,30 +4,30 @@
         <name>StreamDeckTools</name>
     </assembly>
     <members>
-        <member name="T:BarRaider.SdTools.FilenamePropertyAttribute">
+        <member name="T:BarRaider.SdTools.Attributes.FilenamePropertyAttribute">
             <summary>
             FilenamePropertyAttribute - Used to indicate the current property holds a file name. 
             This will allow StreamDeck Utilities to strip the mandatory "C:\fakepath\" added by the SDK
             </summary>
         </member>
-        <member name="T:BarRaider.SdTools.PluginActionIdAttribute">
+        <member name="T:BarRaider.SdTools.Attributes.PluginActionIdAttribute">
             <summary>
             PluginActionId attribute
             Used to indicate the UUID in the manifest file that matches to this class
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.PluginActionIdAttribute.ActionId">
+        <member name="P:BarRaider.SdTools.Attributes.PluginActionIdAttribute.ActionId">
             <summary>
             UUID of the action
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.PluginActionIdAttribute.#ctor(System.String)">
+        <member name="M:BarRaider.SdTools.Attributes.PluginActionIdAttribute.#ctor(System.String)">
             <summary>
             Constructor - This attribute is used to indicate the UUID in the manifest file that matches to this class
             </summary>
-            <param name="ActionId"></param>
+            <param name="actionId"></param>
         </member>
-        <member name="T:BarRaider.SdTools.EncoderBase">
+        <member name="T:BarRaider.SdTools.Backend.EncoderBase">
             <summary>
             Main abstract class your plugin should derive from for dials (not keys)
             For keys use the KeyBase or KeyAndEncoderBase
@@ -35,60 +35,60 @@
             If you're missing an event, you can register to it from the Connection.StreamDeckConnection object
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.EncoderBase.DialRotate(BarRaider.SdTools.Payloads.DialRotatePayload)">
+        <member name="M:BarRaider.SdTools.Backend.EncoderBase.DialRotate(BarRaider.SdTools.Payloads.DialRotatePayload)">
             <summary>
             Called when the dial is rotated
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.EncoderBase.DialDown(BarRaider.SdTools.Payloads.DialPayload)">
+        <member name="M:BarRaider.SdTools.Backend.EncoderBase.DialDown(BarRaider.SdTools.Payloads.DialPayload)">
             <summary>
             Called when the Dial is pressed
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.EncoderBase.DialUp(BarRaider.SdTools.Payloads.DialPayload)">
+        <member name="M:BarRaider.SdTools.Backend.EncoderBase.DialUp(BarRaider.SdTools.Payloads.DialPayload)">
             <summary>
             Called when the Dial is released
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.EncoderBase.TouchPress(BarRaider.SdTools.Payloads.TouchpadPressPayload)">
+        <member name="M:BarRaider.SdTools.Backend.EncoderBase.TouchPress(BarRaider.SdTools.Payloads.TouchpadPressPayload)">
             <summary>
             Called when the touchpad (above the dials) is pressed
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.EncoderBase.ReceivedSettings(BarRaider.SdTools.ReceivedSettingsPayload)">
+        <member name="M:BarRaider.SdTools.Backend.EncoderBase.ReceivedSettings(BarRaider.SdTools.Payloads.ReceivedSettingsPayload)">
             <summary>
             Called when the PropertyInspector has new settings
             </summary>
             <param name="payload"></param>
         </member>
-        <member name="M:BarRaider.SdTools.EncoderBase.ReceivedGlobalSettings(BarRaider.SdTools.ReceivedGlobalSettingsPayload)">
+        <member name="M:BarRaider.SdTools.Backend.EncoderBase.ReceivedGlobalSettings(BarRaider.SdTools.Payloads.ReceivedGlobalSettingsPayload)">
             <summary>
             Called when GetGlobalSettings is called.
             </summary>
             <param name="payload"></param>
         </member>
-        <member name="M:BarRaider.SdTools.EncoderBase.OnTick">
+        <member name="M:BarRaider.SdTools.Backend.EncoderBase.OnTick">
             <summary>
             Called every second
             Logic for displaying title/image can go here
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.EncoderBase.Dispose">
+        <member name="M:BarRaider.SdTools.Backend.EncoderBase.Dispose">
             <summary>
             Abstract method Called when the plugin is disposed
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.EncoderBase.Destroy">
+        <member name="M:BarRaider.SdTools.Backend.EncoderBase.Destroy">
             <summary>
             Main iDisposable Dispose function
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.EncoderBase.Connection">
+        <member name="P:BarRaider.SdTools.Backend.EncoderBase.Connection">
             <summary>
             Connection object which handles your communication with the Stream Deck app
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.EncoderBase.#ctor(BarRaider.SdTools.ISDConnection,BarRaider.SdTools.InitialPayload)">
+        <member name="M:BarRaider.SdTools.Backend.EncoderBase.#ctor(BarRaider.SdTools.Backend.ISdConnection,BarRaider.SdTools.Payloads.InitialPayload)">
             <summary>
             Constructor for PluginBase. Receives the communication and plugin settings 
             Note that the settings object is not used by the base and should be consumed by the deriving class.
@@ -107,139 +107,160 @@
             <param name="connection">Communication module with Stream Deck</param>
             <param name="payload">Plugin settings - NOTE: Not used in base class, should be consumed by deriving class</param>
         </member>
-        <member name="T:BarRaider.SdTools.ICommonPluginFunctions">
+        <member name="T:BarRaider.SdTools.Backend.ICommonPluginFunctions">
             <summary>
             Common functions used by both keypad and dial plugins
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.ICommonPluginFunctions.ReceivedSettings(BarRaider.SdTools.ReceivedSettingsPayload)">
+        <member name="M:BarRaider.SdTools.Backend.ICommonPluginFunctions.ReceivedSettings(BarRaider.SdTools.Payloads.ReceivedSettingsPayload)">
             <summary>
             Called when the PropertyInspector has new settings
             </summary>
             <param name="payload"></param>
         </member>
-        <member name="M:BarRaider.SdTools.ICommonPluginFunctions.ReceivedGlobalSettings(BarRaider.SdTools.ReceivedGlobalSettingsPayload)">
+        <member name="M:BarRaider.SdTools.Backend.ICommonPluginFunctions.ReceivedGlobalSettings(BarRaider.SdTools.Payloads.ReceivedGlobalSettingsPayload)">
             <summary>
             Called when GetGlobalSettings is called.
             </summary>
             <param name="payload"></param>
         </member>
-        <member name="M:BarRaider.SdTools.ICommonPluginFunctions.OnTick">
+        <member name="M:BarRaider.SdTools.Backend.ICommonPluginFunctions.OnTick">
             <summary>
             Called every second
             Logic for displaying title/image can go here
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.ICommonPluginFunctions.Destroy">
+        <member name="M:BarRaider.SdTools.Backend.ICommonPluginFunctions.Destroy">
             <summary>
             Internal function used by StreamDeckTools to prevent memory leaks
             </summary>
         </member>
-        <member name="T:BarRaider.SdTools.IEncoderPlugin">
+        <member name="T:BarRaider.SdTools.Backend.IEncoderPlugin">
             <summary>
             Interface used to capture dial/encoder events
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.IEncoderPlugin.DialRotate(BarRaider.SdTools.Payloads.DialRotatePayload)">
+        <member name="M:BarRaider.SdTools.Backend.IEncoderPlugin.DialRotate(BarRaider.SdTools.Payloads.DialRotatePayload)">
             <summary>
             Called when the dial is rotated
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.IEncoderPlugin.DialDown(BarRaider.SdTools.Payloads.DialPayload)">
+        <member name="M:BarRaider.SdTools.Backend.IEncoderPlugin.DialDown(BarRaider.SdTools.Payloads.DialPayload)">
             <summary>
             Called when the Dial is pressed
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.IEncoderPlugin.DialUp(BarRaider.SdTools.Payloads.DialPayload)">
+        <member name="M:BarRaider.SdTools.Backend.IEncoderPlugin.DialUp(BarRaider.SdTools.Payloads.DialPayload)">
             <summary>
             Called when the Dial is released
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.IEncoderPlugin.TouchPress(BarRaider.SdTools.Payloads.TouchpadPressPayload)">
+        <member name="M:BarRaider.SdTools.Backend.IEncoderPlugin.TouchPress(BarRaider.SdTools.Payloads.TouchpadPressPayload)">
             <summary>
             Called when the touchpad (above the dials) is pressed
             </summary>
         </member>
-        <member name="T:BarRaider.SdTools.IKeypadPlugin">
+        <member name="T:BarRaider.SdTools.Backend.IKeypadPlugin">
             <summary>
             Interface used to capture key events
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.IKeypadPlugin.KeyPressed(BarRaider.SdTools.KeyPayload)">
+        <member name="M:BarRaider.SdTools.Backend.IKeypadPlugin.KeyPressed(BarRaider.SdTools.Payloads.KeyPayload)">
             <summary>
             Called when a Stream Deck key is pressed
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.IKeypadPlugin.KeyReleased(BarRaider.SdTools.KeyPayload)">
+        <member name="M:BarRaider.SdTools.Backend.IKeypadPlugin.KeyReleased(BarRaider.SdTools.Payloads.KeyPayload)">
             <summary>
             Called when a Stream Deck key is released
             </summary>
         </member>
-        <member name="T:BarRaider.SdTools.ISDConnection">
+        <member name="T:BarRaider.SdTools.Backend.IPluginActionRegistry">
+            <summary>
+            This class is intended to be implemented by a class generated in Cmpnnt.ActionRegistryGenerator
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.Backend.IPluginActionRegistry.PluginActionIDs">
+            <summary>
+            An immutable set with the PluginAction UUIDs are found in both the plugin's manifest
+            and in the attribute that decorates each action of your plugin. 
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.Backend.IPluginActionRegistry.CreateAction(System.String,BarRaider.SdTools.Backend.ISdConnection,BarRaider.SdTools.Payloads.InitialPayload)">
+            <summary>
+            Contains a source-generated factory for each action supported by this plugin.
+            </summary>
+            <param name="actionId">The UUID of the PluginAction of which to create a new instance</param>
+            <param name="connection">Contains the information necessary to connect to the Stream Deck</param>
+            <param name="payload">The initial payload received during the plugin's construction. Contains basic
+            information about the plugin.</param>
+            <returns>An instance of the PluginAction that corresponds to the given <paramref name="actionId"/></returns>
+        </member>
+        <member name="T:BarRaider.SdTools.Backend.ISdConnection">
             <summary>
             Interface for a Stream Deck connection
             </summary>
         </member>
-        <member name="E:BarRaider.SdTools.ISDConnection.OnSendToPlugin">
+        <member name="E:BarRaider.SdTools.Backend.ISdConnection.OnSendToPlugin">
             <summary>
             Event received by the plugin when the Property Inspector uses the sendToPlugin event.
             </summary>
         </member>
-        <member name="E:BarRaider.SdTools.ISDConnection.OnTitleParametersDidChange">
+        <member name="E:BarRaider.SdTools.Backend.ISdConnection.OnTitleParametersDidChange">
             <summary>
             Event received when the user changes the title or title parameters.
             </summary>
         </member>
-        <member name="E:BarRaider.SdTools.ISDConnection.OnApplicationDidTerminate">
+        <member name="E:BarRaider.SdTools.Backend.ISdConnection.OnApplicationDidTerminate">
             <summary>
             Event received when a monitored application is terminated
             </summary>
         </member>
-        <member name="E:BarRaider.SdTools.ISDConnection.OnApplicationDidLaunch">
+        <member name="E:BarRaider.SdTools.Backend.ISdConnection.OnApplicationDidLaunch">
             <summary>
             Event received when a monitored application is launched
             </summary>
         </member>
-        <member name="E:BarRaider.SdTools.ISDConnection.OnDeviceDidDisconnect">
+        <member name="E:BarRaider.SdTools.Backend.ISdConnection.OnDeviceDidDisconnect">
             <summary>
             Event received when a device is unplugged from the computer
             </summary>
         </member>
-        <member name="E:BarRaider.SdTools.ISDConnection.OnDeviceDidConnect">
+        <member name="E:BarRaider.SdTools.Backend.ISdConnection.OnDeviceDidConnect">
             <summary>
             Event received when a device is plugged to the computer.
             </summary>
         </member>
-        <member name="E:BarRaider.SdTools.ISDConnection.OnPropertyInspectorDidAppear">
+        <member name="E:BarRaider.SdTools.Backend.ISdConnection.OnPropertyInspectorDidAppear">
             <summary>
             Event received when the Property Inspector appears in the Stream Deck software user interface, for example when selecting a new instance.
             </summary>
         </member>
-        <member name="E:BarRaider.SdTools.ISDConnection.OnPropertyInspectorDidDisappear">
+        <member name="E:BarRaider.SdTools.Backend.ISdConnection.OnPropertyInspectorDidDisappear">
             <summary>
             Event received when the Property Inspector for an instance is removed from the Stream Deck software user interface, for example when selecting a different instance.
             </summary>
         </member>
-        <member name="E:BarRaider.SdTools.ISDConnection.OnSystemDidWakeUp">
+        <member name="E:BarRaider.SdTools.Backend.ISdConnection.OnSystemDidWakeUp">
             <summary>
             Event received when the computer wakes up
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.ISDConnection.SendToPropertyInspectorAsync(Newtonsoft.Json.Linq.JObject)">
+        <member name="M:BarRaider.SdTools.Backend.ISdConnection.SendToPropertyInspectorAsync(Newtonsoft.Json.Linq.JObject)">
             <summary>
             Send settings to the PropertyInspector
             </summary>
             <param name="settings"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ISDConnection.SetSettingsAsync(Newtonsoft.Json.Linq.JObject)">
+        <member name="M:BarRaider.SdTools.Backend.ISdConnection.SetSettingsAsync(Newtonsoft.Json.Linq.JObject)">
             <summary>
             Persists your plugin settings
             </summary>
             <param name="settings"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ISDConnection.SetGlobalSettingsAsync(Newtonsoft.Json.Linq.JObject,System.Boolean)">
+        <member name="M:BarRaider.SdTools.Backend.ISdConnection.SetGlobalSettingsAsync(Newtonsoft.Json.Linq.JObject,System.Boolean)">
             <summary>
             Persists your global plugin settings
             </summary>
@@ -247,13 +268,13 @@
             <param name="triggerDidReceiveGlobalSettings">Boolean whether to also trigger a didReceiveGlobalSettings event. Default is true</param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ISDConnection.GetGlobalSettingsAsync">
+        <member name="M:BarRaider.SdTools.Backend.ISdConnection.GetGlobalSettingsAsync">
             <summary>
             Persists your global plugin settings
             </summary>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ISDConnection.SetImageAsync(System.String,System.Nullable{System.Int32},System.Boolean)">
+        <member name="M:BarRaider.SdTools.Backend.ISdConnection.SetImageAsync(System.String,System.Nullable{System.Int32},System.Boolean)">
             <summary>
             Sets an image on the StreamDeck key.
             </summary>
@@ -262,22 +283,22 @@
             <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ISDConnection.SetImageAsync(System.Drawing.Image,System.Nullable{System.Int32},System.Boolean)">
+        <member name="M:BarRaider.SdTools.Backend.ISdConnection.SetImageAsync(SkiaSharp.SKData,System.Nullable{System.Int32},System.Boolean)">
             <summary>
             Sets an image on the StreamDeck key
             </summary>
-            <param name="image">Image object</param>
+            <param name="data">An SKData object representing the encoded image</param>
             <param name="state">A 0-based integer value representing the state of an action with multiple states. This is an optional parameter. If not specified, the title is set to all states.</param>
             <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ISDConnection.SetDefaultImageAsync">
+        <member name="M:BarRaider.SdTools.Backend.ISdConnection.SetDefaultImageAsync">
             <summary>
             Sets the default image for this state, as configured in the manifest
             </summary>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ISDConnection.SetTitleAsync(System.String,System.Nullable{System.Int32})">
+        <member name="M:BarRaider.SdTools.Backend.ISdConnection.SetTitleAsync(System.String,System.Nullable{System.Int32})">
             <summary>
             Sets a title on the StreamDeck key
             </summary>
@@ -285,14 +306,14 @@
             <param name="state">A 0-based integer value representing the state of an action with multiple states. This is an optional parameter. If not specified, the title is set to all states.</param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ISDConnection.SwitchProfileAsync(System.String)">
+        <member name="M:BarRaider.SdTools.Backend.ISdConnection.SwitchProfileAsync(System.String)">
             <summary>
             Switches to one of the plugin's built-in profiles
             </summary>
             <param name="profileName"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ISDConnection.SwitchProfileAsync(System.String,System.String)">
+        <member name="M:BarRaider.SdTools.Backend.ISdConnection.SwitchProfileAsync(System.String,System.String)">
             <summary>
             Switches to one of the plugin's built-in profiles. Allows to choose which device to switch it on.
             </summary>
@@ -300,100 +321,100 @@
             <param name="deviceId"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ISDConnection.ShowAlert">
+        <member name="M:BarRaider.SdTools.Backend.ISdConnection.ShowAlert">
             <summary>
             Shows the Alert (Yellow Triangle) on the StreamDeck key
             </summary>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ISDConnection.ShowOk">
+        <member name="M:BarRaider.SdTools.Backend.ISdConnection.ShowOk">
             <summary>
             Shows the Success (Green checkmark) on the StreamDeck key
             </summary>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ISDConnection.LogSDMessage(System.String)">
+        <member name="M:BarRaider.SdTools.Backend.ISdConnection.LogSdMessage(System.String)">
             <summary>
             Add a message to the Stream Deck log. This is the log located at: %appdata%\Elgato\StreamDeck\logs\StreamDeck0.log
             </summary>
             <param name="message"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ISDConnection.DeviceInfo">
+        <member name="M:BarRaider.SdTools.Backend.ISdConnection.DeviceInfo">
             <summary>
             Gets the Stream Deck device's info
             </summary>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ISDConnection.GetSettingsAsync">
+        <member name="M:BarRaider.SdTools.Backend.ISdConnection.GetSettingsAsync">
             <summary>
             Tells Stream Deck to return the current plugin settings via the ReceivedSettings function
             </summary>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ISDConnection.OpenUrlAsync(System.String)">
+        <member name="M:BarRaider.SdTools.Backend.ISdConnection.OpenUrlAsync(System.String)">
             <summary>
             Opens a URI in the user's browser
             </summary>
             <param name="uri"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ISDConnection.OpenUrlAsync(System.Uri)">
+        <member name="M:BarRaider.SdTools.Backend.ISdConnection.OpenUrlAsync(System.Uri)">
             <summary>
             Opens a URI in the user's browser
             </summary>
             <param name="uri"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ISDConnection.SetStateAsync(System.UInt32)">
+        <member name="M:BarRaider.SdTools.Backend.ISdConnection.SetStateAsync(System.Nullable{System.UInt32})">
             <summary>
             Sets the plugin to a specific state which is pre-configured in the manifest file
             </summary>
             <param name="state"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ISDConnection.SetFeedbackAsync(System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:BarRaider.SdTools.Backend.ISdConnection.SetFeedbackAsync(System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             Sets the values of touchpad layouts items
             </summary>
             <param name="dictKeyValue">Dictionary holding the layout item keys and values you want to change</param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ISDConnection.SetFeedbackAsync(System.String,System.String)">
+        <member name="M:BarRaider.SdTools.Backend.ISdConnection.SetFeedbackAsync(System.String,System.String)">
             <summary>
             Sets the value of a single touchpad layout item
             </summary>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ISDConnection.SetFeedbackAsync(Newtonsoft.Json.Linq.JObject)">
+        <member name="M:BarRaider.SdTools.Backend.ISdConnection.SetFeedbackAsync(Newtonsoft.Json.Linq.JObject)">
             <summary>
             Sets the values of touchpad layouts items using a preset JObject
             </summary>
             <param name="feedbackPayload"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ISDConnection.SetFeedbackLayoutAsync(System.String)">
+        <member name="M:BarRaider.SdTools.Backend.ISdConnection.SetFeedbackLayoutAsync(System.String)">
             <summary>
             Changes the current Stream Deck+ touch display layout
             </summary>
             <returns></returns>
         </member>
-        <member name="P:BarRaider.SdTools.ISDConnection.ContextId">
+        <member name="P:BarRaider.SdTools.Backend.ISdConnection.ContextId">
             <summary>
             An opaque value identifying the plugin. This value is received during the Registration procedure
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.ISDConnection.DeviceId">
+        <member name="P:BarRaider.SdTools.Backend.ISdConnection.DeviceId">
             <summary>
             An opaque value identifying the device the plugin is launched on.
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.ISDConnection.StreamDeckConnection">
+        <member name="P:BarRaider.SdTools.Backend.ISdConnection.StreamDeckConnection">
             <summary>
             StreamDeckConnection object, initialized based on the args received when launching the program
             </summary>
         </member>
-        <member name="T:BarRaider.SdTools.KeyAndEncoderBase">
+        <member name="T:BarRaider.SdTools.Backend.KeyAndEncoderBase">
             <summary>
             Main abstract class your plugin should derive from for keys (not dials)
             For dials use the EncoderBase or KeyAndEncoderBase
@@ -401,70 +422,70 @@
             If you're missing an event, you can register to it from the Connection.StreamDeckConnection object
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.KeyAndEncoderBase.DialRotate(BarRaider.SdTools.Payloads.DialRotatePayload)">
+        <member name="M:BarRaider.SdTools.Backend.KeyAndEncoderBase.DialRotate(BarRaider.SdTools.Payloads.DialRotatePayload)">
             <summary>
             Called when the dial is rotated
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.KeyAndEncoderBase.DialDown(BarRaider.SdTools.Payloads.DialPayload)">
+        <member name="M:BarRaider.SdTools.Backend.KeyAndEncoderBase.DialDown(BarRaider.SdTools.Payloads.DialPayload)">
             <summary>
             Called when the Dial is pressed
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.KeyAndEncoderBase.DialUp(BarRaider.SdTools.Payloads.DialPayload)">
+        <member name="M:BarRaider.SdTools.Backend.KeyAndEncoderBase.DialUp(BarRaider.SdTools.Payloads.DialPayload)">
             <summary>
             Called when the Dial is released
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.KeyAndEncoderBase.TouchPress(BarRaider.SdTools.Payloads.TouchpadPressPayload)">
+        <member name="M:BarRaider.SdTools.Backend.KeyAndEncoderBase.TouchPress(BarRaider.SdTools.Payloads.TouchpadPressPayload)">
             <summary>
             Called when the touchpad (above the dials) is pressed
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.KeyAndEncoderBase.KeyPressed(BarRaider.SdTools.KeyPayload)">
+        <member name="M:BarRaider.SdTools.Backend.KeyAndEncoderBase.KeyPressed(BarRaider.SdTools.Payloads.KeyPayload)">
             <summary>
             Called when a Stream Deck key is pressed
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.KeyAndEncoderBase.KeyReleased(BarRaider.SdTools.KeyPayload)">
+        <member name="M:BarRaider.SdTools.Backend.KeyAndEncoderBase.KeyReleased(BarRaider.SdTools.Payloads.KeyPayload)">
             <summary>
             Called when a Stream Deck key is released
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.KeyAndEncoderBase.ReceivedSettings(BarRaider.SdTools.ReceivedSettingsPayload)">
+        <member name="M:BarRaider.SdTools.Backend.KeyAndEncoderBase.ReceivedSettings(BarRaider.SdTools.Payloads.ReceivedSettingsPayload)">
             <summary>
             Called when the PropertyInspector has new settings
             </summary>
             <param name="payload"></param>
         </member>
-        <member name="M:BarRaider.SdTools.KeyAndEncoderBase.ReceivedGlobalSettings(BarRaider.SdTools.ReceivedGlobalSettingsPayload)">
+        <member name="M:BarRaider.SdTools.Backend.KeyAndEncoderBase.ReceivedGlobalSettings(BarRaider.SdTools.Payloads.ReceivedGlobalSettingsPayload)">
             <summary>
             Called when GetGlobalSettings is called.
             </summary>
             <param name="payload"></param>
         </member>
-        <member name="M:BarRaider.SdTools.KeyAndEncoderBase.OnTick">
+        <member name="M:BarRaider.SdTools.Backend.KeyAndEncoderBase.OnTick">
             <summary>
             Called every second
             Logic for displaying title/image can go here
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.KeyAndEncoderBase.Dispose">
+        <member name="M:BarRaider.SdTools.Backend.KeyAndEncoderBase.Dispose">
             <summary>
             Abstract method Called when the plugin is disposed
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.KeyAndEncoderBase.Destroy">
+        <member name="M:BarRaider.SdTools.Backend.KeyAndEncoderBase.Destroy">
             <summary>
             Main iDisposable Dispose function
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.KeyAndEncoderBase.Connection">
+        <member name="P:BarRaider.SdTools.Backend.KeyAndEncoderBase.Connection">
             <summary>
             Connection object which handles your communication with the Stream Deck app
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.KeyAndEncoderBase.#ctor(BarRaider.SdTools.ISDConnection,BarRaider.SdTools.InitialPayload)">
+        <member name="M:BarRaider.SdTools.Backend.KeyAndEncoderBase.#ctor(BarRaider.SdTools.Backend.ISdConnection,BarRaider.SdTools.Payloads.InitialPayload)">
             <summary>
             Constructor for PluginBase. Receives the communication and plugin settings 
             Note that the settings object is not used by the base and should be consumed by the deriving class.
@@ -483,7 +504,7 @@
             <param name="connection">Communication module with Stream Deck</param>
             <param name="payload">Plugin settings - NOTE: Not used in base class, should be consumed by deriving class</param>
         </member>
-        <member name="T:BarRaider.SdTools.KeypadBase">
+        <member name="T:BarRaider.SdTools.Backend.KeypadBase">
             <summary>
             Main abstract class your plugin should derive from for keys (not dials)
             For dials use the EncoderBase or KeyAndEncoderBase
@@ -491,50 +512,50 @@
             If you're missing an event, you can register to it from the Connection.StreamDeckConnection object
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.KeypadBase.KeyPressed(BarRaider.SdTools.KeyPayload)">
+        <member name="M:BarRaider.SdTools.Backend.KeypadBase.KeyPressed(BarRaider.SdTools.Payloads.KeyPayload)">
             <summary>
             Called when a Stream Deck key is pressed
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.KeypadBase.KeyReleased(BarRaider.SdTools.KeyPayload)">
+        <member name="M:BarRaider.SdTools.Backend.KeypadBase.KeyReleased(BarRaider.SdTools.Payloads.KeyPayload)">
             <summary>
             Called when a Stream Deck key is released
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.KeypadBase.ReceivedSettings(BarRaider.SdTools.ReceivedSettingsPayload)">
+        <member name="M:BarRaider.SdTools.Backend.KeypadBase.ReceivedSettings(BarRaider.SdTools.Payloads.ReceivedSettingsPayload)">
             <summary>
             Called when the PropertyInspector has new settings
             </summary>
             <param name="payload"></param>
         </member>
-        <member name="M:BarRaider.SdTools.KeypadBase.ReceivedGlobalSettings(BarRaider.SdTools.ReceivedGlobalSettingsPayload)">
+        <member name="M:BarRaider.SdTools.Backend.KeypadBase.ReceivedGlobalSettings(BarRaider.SdTools.Payloads.ReceivedGlobalSettingsPayload)">
             <summary>
             Called when GetGlobalSettings is called.
             </summary>
             <param name="payload"></param>
         </member>
-        <member name="M:BarRaider.SdTools.KeypadBase.OnTick">
+        <member name="M:BarRaider.SdTools.Backend.KeypadBase.OnTick">
             <summary>
             Called every second
             Logic for displaying title/image can go here
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.KeypadBase.Dispose">
+        <member name="M:BarRaider.SdTools.Backend.KeypadBase.Dispose">
             <summary>
             Abstract method Called when the plugin is disposed
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.KeypadBase.Destroy">
+        <member name="M:BarRaider.SdTools.Backend.KeypadBase.Destroy">
             <summary>
             Main iDisposable Dispose function
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.KeypadBase.Connection">
+        <member name="P:BarRaider.SdTools.Backend.KeypadBase.Connection">
             <summary>
             Connection object which handles your communication with the Stream Deck app
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.KeypadBase.#ctor(BarRaider.SdTools.ISDConnection,BarRaider.SdTools.InitialPayload)">
+        <member name="M:BarRaider.SdTools.Backend.KeypadBase.#ctor(BarRaider.SdTools.Backend.ISdConnection,BarRaider.SdTools.Payloads.InitialPayload)">
             <summary>
             Constructor for PluginBase. Receives the communication and plugin settings 
             Note that the settings object is not used by the base and should be consumed by the deriving class.
@@ -553,186 +574,120 @@
             <param name="connection">Communication module with Stream Deck</param>
             <param name="payload">Plugin settings - NOTE: Not used in base class, should be consumed by deriving class</param>
         </member>
-        <member name="T:BarRaider.SdTools.PluginBase">
-            <summary>
-            Obsolete! Use `KeypadBase` moving forward, or choose one of the other options: `EncoderBase`, `KeyAndEncoderBase`
-            </summary>
-        </member>
-        <member name="M:BarRaider.SdTools.PluginBase.KeyPressed(BarRaider.SdTools.KeyPayload)">
-            <summary>
-            Called when a Stream Deck key is pressed
-            </summary>
-        </member>
-        <member name="M:BarRaider.SdTools.PluginBase.KeyReleased(BarRaider.SdTools.KeyPayload)">
-            <summary>
-            Called when a Stream Deck key is released
-            </summary>
-        </member>
-        <member name="M:BarRaider.SdTools.PluginBase.ReceivedSettings(BarRaider.SdTools.ReceivedSettingsPayload)">
-            <summary>
-            Called when the PropertyInspector has new settings
-            </summary>
-            <param name="payload"></param>
-        </member>
-        <member name="M:BarRaider.SdTools.PluginBase.ReceivedGlobalSettings(BarRaider.SdTools.ReceivedGlobalSettingsPayload)">
-            <summary>
-            Called when GetGlobalSettings is called.
-            </summary>
-            <param name="payload"></param>
-        </member>
-        <member name="M:BarRaider.SdTools.PluginBase.OnTick">
-            <summary>
-            Called every second
-            Logic for displaying title/image can go here
-            </summary>
-        </member>
-        <member name="M:BarRaider.SdTools.PluginBase.Dispose">
-            <summary>
-            Abstract method Called when the plugin is disposed
-            </summary>
-        </member>
-        <member name="M:BarRaider.SdTools.PluginBase.Destroy">
-            <summary>
-            Main iDisposable Dispose function
-            </summary>
-        </member>
-        <member name="P:BarRaider.SdTools.PluginBase.Connection">
+        <!-- Badly formed XML comment ignored for member "F:BarRaider.SdTools.Backend.PluginContainer.Instances" -->
+        <member name="T:BarRaider.SdTools.Backend.SdConnection">
             <summary>
             Connection object which handles your communication with the Stream Deck app
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.PluginBase.#ctor(BarRaider.SdTools.ISDConnection,BarRaider.SdTools.InitialPayload)">
-            <summary>
-            Constructor for PluginBase. Receives the communication and plugin settings 
-            Note that the settings object is not used by the base and should be consumed by the deriving class.
-            Usually, a private class inside the deriving class is created which stores the settings
-            Example for settings usage:
-            * if (payload.Settings == null || payload.Settings.Count == 0)
-            * {
-            *         // CreateAction default settings
-            * }
-            * else
-            * {
-                this.settings = payload.Settings.ToObject();
-            * }
-            
-            </summary>
-            <param name="connection">Communication module with Stream Deck</param>
-            <param name="payload">Plugin settings - NOTE: Not used in base class, should be consumed by deriving class</param>
-        </member>
-        <member name="T:BarRaider.SdTools.SDConnection">
-            <summary>
-            Connection object which handles your communication with the Stream Deck app
-            </summary>
-        </member>
-        <member name="F:BarRaider.SdTools.SDConnection.pluginUUID">
+        <member name="F:BarRaider.SdTools.Backend.SdConnection.pluginUuid">
             <summary>
             An opaque value identifying the plugin. Received as an argument when the executable was launched.
             </summary>
         </member>
-        <member name="F:BarRaider.SdTools.SDConnection.deviceInfo">
+        <member name="F:BarRaider.SdTools.Backend.SdConnection.deviceInfo">
             <summary>
             Holds information about the devices connected to the computer
             </summary>
         </member>
-        <member name="E:BarRaider.SdTools.SDConnection.OnSendToPlugin">
+        <member name="E:BarRaider.SdTools.Backend.SdConnection.OnSendToPlugin">
             <summary>
             Event received by the plugin when the Property Inspector uses the sendToPlugin event.
             </summary>
         </member>
-        <member name="E:BarRaider.SdTools.SDConnection.OnTitleParametersDidChange">
+        <member name="E:BarRaider.SdTools.Backend.SdConnection.OnTitleParametersDidChange">
             <summary>
             Event received when the user changes the title or title parameters.
             </summary>
         </member>
-        <member name="E:BarRaider.SdTools.SDConnection.OnApplicationDidTerminate">
+        <member name="E:BarRaider.SdTools.Backend.SdConnection.OnApplicationDidTerminate">
             <summary>
             Event received when a monitored application is terminated
             </summary>
         </member>
-        <member name="E:BarRaider.SdTools.SDConnection.OnApplicationDidLaunch">
+        <member name="E:BarRaider.SdTools.Backend.SdConnection.OnApplicationDidLaunch">
             <summary>
             Event received when a monitored application is launched
             </summary>
         </member>
-        <member name="E:BarRaider.SdTools.SDConnection.OnDeviceDidDisconnect">
+        <member name="E:BarRaider.SdTools.Backend.SdConnection.OnDeviceDidDisconnect">
             <summary>
             Event received when a device is unplugged from the computer
             </summary>
         </member>
-        <member name="E:BarRaider.SdTools.SDConnection.OnDeviceDidConnect">
+        <member name="E:BarRaider.SdTools.Backend.SdConnection.OnDeviceDidConnect">
             <summary>
             Event received when a device is plugged to the computer.
             </summary>
         </member>
-        <member name="E:BarRaider.SdTools.SDConnection.OnPropertyInspectorDidAppear">
+        <member name="E:BarRaider.SdTools.Backend.SdConnection.OnPropertyInspectorDidAppear">
             <summary>
             Event received when the Property Inspector appears in the Stream Deck software user interface, for example when selecting a new instance.
             </summary>
         </member>
-        <member name="E:BarRaider.SdTools.SDConnection.OnPropertyInspectorDidDisappear">
+        <member name="E:BarRaider.SdTools.Backend.SdConnection.OnPropertyInspectorDidDisappear">
             <summary>
             Event received when the Property Inspector for an instance is removed from the Stream Deck software user interface, for example when selecting a different instance.
             </summary>
         </member>
-        <member name="E:BarRaider.SdTools.SDConnection.OnSystemDidWakeUp">
+        <member name="E:BarRaider.SdTools.Backend.SdConnection.OnSystemDidWakeUp">
             <summary>
             Event received when the computer wakes up
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.SDConnection.ContextId">
+        <member name="P:BarRaider.SdTools.Backend.SdConnection.ContextId">
             <summary>
             An opaque value identifying the plugin. This value is received during the Registration procedure
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.SDConnection.DeviceId">
+        <member name="P:BarRaider.SdTools.Backend.SdConnection.DeviceId">
             <summary>
             An opaque value identifying the device the plugin is launched on.
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.SDConnection.StreamDeckConnection">
+        <member name="P:BarRaider.SdTools.Backend.SdConnection.StreamDeckConnection">
             <summary>
             StreamDeckConnection object, initialized based on the args received when launching the program
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.#ctor(BarRaider.SdTools.Communication.StreamDeckConnection,System.String,BarRaider.SdTools.RegistrationInfo,System.String,System.String,System.String)">
+        <member name="M:BarRaider.SdTools.Backend.SdConnection.#ctor(BarRaider.SdTools.Communication.StreamDeckConnection,System.String,BarRaider.SdTools.StreamDeckInfo.RegistrationInfo,System.String,System.String,System.String)">
             <summary>
             Public constructor, a StreamDeckConnection object is required along with the current action and context IDs
             These will be used to correctly communicate with the StreamDeck App
             </summary>
             <param name="connection"></param>
-            <param name="pluginUUID"></param>
+            <param name="pluginUuid"></param>
             <param name="deviceInfo"></param>
             <param name="actionId"></param>
             <param name="contextId"></param>
             /// <param name="deviceId"></param>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.Dispose">
+        <member name="M:BarRaider.SdTools.Backend.SdConnection.Dispose">
             <summary>
             Dispose (Destructor) function
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.DeviceInfo">
+        <member name="M:BarRaider.SdTools.Backend.SdConnection.DeviceInfo">
             <summary>
             Gets the Stream Deck device's info
             </summary>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.SendToPropertyInspectorAsync(Newtonsoft.Json.Linq.JObject)">
+        <member name="M:BarRaider.SdTools.Backend.SdConnection.SendToPropertyInspectorAsync(Newtonsoft.Json.Linq.JObject)">
             <summary>
             Send settings to the PropertyInspector
             </summary>
             <param name="settings"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.SetSettingsAsync(Newtonsoft.Json.Linq.JObject)">
+        <member name="M:BarRaider.SdTools.Backend.SdConnection.SetSettingsAsync(Newtonsoft.Json.Linq.JObject)">
             <summary>
             Persists your plugin settings
             </summary>
             <param name="settings"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.SetGlobalSettingsAsync(Newtonsoft.Json.Linq.JObject,System.Boolean)">
+        <member name="M:BarRaider.SdTools.Backend.SdConnection.SetGlobalSettingsAsync(Newtonsoft.Json.Linq.JObject,System.Boolean)">
             <summary>
             Persists your global plugin settings
             </summary>
@@ -740,13 +695,13 @@
             <param name="triggerDidReceiveGlobalSettings">Boolean whether to also trigger a didReceiveGlobalSettings event. Default is true</param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.GetGlobalSettingsAsync">
+        <member name="M:BarRaider.SdTools.Backend.SdConnection.GetGlobalSettingsAsync">
             <summary>
             Persists your global plugin settings
             </summary>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.SetImageAsync(System.String,System.Nullable{System.Int32},System.Boolean)">
+        <member name="M:BarRaider.SdTools.Backend.SdConnection.SetImageAsync(System.String,System.Nullable{System.Int32},System.Boolean)">
             <summary>
             Sets an image on the StreamDeck key.
             </summary>
@@ -755,22 +710,22 @@
             <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.SetImageAsync(System.Drawing.Image,System.Nullable{System.Int32},System.Boolean)">
+        <member name="M:BarRaider.SdTools.Backend.SdConnection.SetImageAsync(SkiaSharp.SKData,System.Nullable{System.Int32},System.Boolean)">
             <summary>
             Sets an image on the StreamDeck key
             </summary>
-            <param name="image">Image object</param>
+            <param name="data">An SKData object representing the encoded image</param>
             <param name="state">A 0-based integer value representing the state of an action with multiple states. This is an optional parameter. If not specified, the title is set to all states.</param>
             <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.SetDefaultImageAsync">
+        <member name="M:BarRaider.SdTools.Backend.SdConnection.SetDefaultImageAsync">
             <summary>
             Sets the default image for this state, as configured in the manifest
             </summary>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.SetTitleAsync(System.String,System.Nullable{System.Int32})">
+        <member name="M:BarRaider.SdTools.Backend.SdConnection.SetTitleAsync(System.String,System.Nullable{System.Int32})">
             <summary>
             Sets a title on the StreamDeck key
             </summary>
@@ -778,14 +733,14 @@
             <param name="state">A 0-based integer value representing the state of an action with multiple states. This is an optional parameter. If not specified, the title is set to all states.</param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.SwitchProfileAsync(System.String)">
+        <member name="M:BarRaider.SdTools.Backend.SdConnection.SwitchProfileAsync(System.String)">
             <summary>
             Switches to one of the plugin's built-in profiles
             </summary>
             <param name="profileName"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.SwitchProfileAsync(System.String,System.String)">
+        <member name="M:BarRaider.SdTools.Backend.SdConnection.SwitchProfileAsync(System.String,System.String)">
             <summary>
             Switches to one of the plugin's built-in profiles. Allows to choose which device to switch it on.
             </summary>
@@ -793,109 +748,96 @@
             <param name="deviceId"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.ShowAlert">
+        <member name="M:BarRaider.SdTools.Backend.SdConnection.ShowAlert">
             <summary>
             Shows the Alert (Yellow Triangle) on the StreamDeck key
             </summary>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.ShowOk">
+        <member name="M:BarRaider.SdTools.Backend.SdConnection.ShowOk">
             <summary>
             Shows the Success (Green checkmark) on the StreamDeck key
             </summary>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.LogSDMessage(System.String)">
+        <member name="M:BarRaider.SdTools.Backend.SdConnection.LogSdMessage(System.String)">
             <summary>
             Add a message to the Stream Deck log. This is the log located at: %appdata%\Elgato\StreamDeck\logs\StreamDeck0.log
             </summary>
             <param name="message"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.GetSettingsAsync">
+        <member name="M:BarRaider.SdTools.Backend.SdConnection.GetSettingsAsync">
             <summary>
             Tells Stream Deck to return the current plugin settings via the ReceivedSettings function
             </summary>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.OpenUrlAsync(System.String)">
+        <member name="M:BarRaider.SdTools.Backend.SdConnection.OpenUrlAsync(System.String)">
             <summary>
             Opens a URI in the user's browser
             </summary>
             <param name="uri"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.OpenUrlAsync(System.Uri)">
+        <member name="M:BarRaider.SdTools.Backend.SdConnection.OpenUrlAsync(System.Uri)">
             <summary>
             Opens a URI in the user's browser
             </summary>
             <param name="uri"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.SetStateAsync(System.UInt32)">
+        <member name="M:BarRaider.SdTools.Backend.SdConnection.SetStateAsync(System.Nullable{System.UInt32})">
             <summary>
             Sets the plugin to a specific state which is pre-configured in the manifest file
             </summary>
             <param name="state"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.SetFeedbackAsync(System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:BarRaider.SdTools.Backend.SdConnection.SetFeedbackAsync(System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             Sets the values of touchpad layouts items
             </summary>
             <param name="dictKeyValues"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.SetFeedbackAsync(System.String,System.String)">
+        <member name="M:BarRaider.SdTools.Backend.SdConnection.SetFeedbackAsync(System.String,System.String)">
             <summary>
             Sets the value of a single touchpad layout item
             </summary>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.SetFeedbackAsync(Newtonsoft.Json.Linq.JObject)">
+        <member name="M:BarRaider.SdTools.Backend.SdConnection.SetFeedbackAsync(Newtonsoft.Json.Linq.JObject)">
             <summary>
             Sets the value of a single touchpad layout item
             </summary>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.SetFeedbackLayoutAsync(System.String)">
+        <member name="M:BarRaider.SdTools.Backend.SdConnection.SetFeedbackLayoutAsync(System.String)">
             <summary>
             Changes the current Stream Deck+ touch display layout
             </summary>
             <returns></returns>
         </member>
-        <member name="T:BarRaider.SdTools.SDWrapper">
-             <summary>
-             * Easy Configuration Instructions:
-            * 1. Use NuGet to get the following packages: 
-            *          CommandLineParser by gsscoder
-            *          streamdeck-client-csharp by Shane DeSeranno
-            *          Newtonsoft.Json by James Newton-King
-            * 2. CreateAction a class that implements the IPluginable interface (which is located in BarRaider.SDTools), this will be your main plugin
-            * 3. Pass the type of the class to the main function
-             </summary>
-        </member>
-        <member name="M:BarRaider.SdTools.SDWrapper.Run(System.String[],BarRaider.SdTools.IUpdateHandler)">
-            /************************************************************************
-            * Initial configuration from TyrenDe's streamdeck-client-csharp example:
-            * https://github.com/TyrenDe/streamdeck-client-csharp
-            * and SaviorXTanren's MixItUp.StreamDeckPlugin:
-            * https://github.com/SaviorXTanren/mixer-mixitup/
-            *************************************************************************/
+        <member name="T:BarRaider.SdTools.Backend.SdWrapper">
             <summary>
-            Library's main initialization point. 
-            Pass the args from your Main function. We'll handle the rest
+            * Configuration Instructions: TODO
             </summary>
-            <param name="args"></param>
-            <param name="updateHandler"></param>
         </member>
-        <member name="M:BarRaider.SdTools.SDWrapper.Run(System.String[],BarRaider.SdTools.PluginActionId[],BarRaider.SdTools.IUpdateHandler)">
+        <member name="M:BarRaider.SdTools.Backend.SdWrapper.Run(System.String[],BarRaider.SdTools.Backend.IPluginActionRegistry,BarRaider.SdTools.Utilities.IUpdateHandler)">
+            /************************************************************************
+            Based on Barraider's C# StreamDeck tools, which in turn was based on:
+              * Initial configuration from TyrenDe's streamdeck-client-csharp example:
+                - https://github.com/TyrenDe/streamdeck-client-csharp
+              *  and SaviorXTanren's MixItUp.StreamDeckPlugin:
+                - https://github.com/SaviorXTanren/mixer-mixitup/
+            *************************************************************************/
             <summary>
             Library's main initialization point. 
             Pass the args from your Main function and a list of supported PluginActionIds, the framework will handle the rest.
             </summary>
             <param name="args"></param>
-            <param name="supportedActionIds"></param>
+            <param name="registry"></param>
             /// <param name="updateHandler"></param>
         </member>
         <member name="T:BarRaider.SdTools.Communication.Messages.EmptyPayload">
@@ -1288,22 +1230,22 @@
             settings
             </summary>
         </member>
-        <member name="T:BarRaider.SdTools.Communication.SDKTarget">
+        <member name="T:BarRaider.SdTools.Communication.SdkTarget">
             <summary>
             Target to send Title/Image to
             </summary>
         </member>
-        <member name="F:BarRaider.SdTools.Communication.SDKTarget.HardwareAndSoftware">
+        <member name="F:BarRaider.SdTools.Communication.SdkTarget.HardwareAndSoftware">
             <summary>
             Send to both App and Device
             </summary>
         </member>
-        <member name="F:BarRaider.SdTools.Communication.SDKTarget.HardwareOnly">
+        <member name="F:BarRaider.SdTools.Communication.SdkTarget.HardwareOnly">
             <summary>
             Send only to device
             </summary>
         </member>
-        <member name="F:BarRaider.SdTools.Communication.SDKTarget.SoftwareOnly">
+        <member name="F:BarRaider.SdTools.Communication.SdkTarget.SoftwareOnly">
             <summary>
             Send only to app
             </summary>
@@ -1318,7 +1260,7 @@
             The port used to connect to the StreamDeck websocket
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.Communication.StreamDeckConnection.UUID">
+        <member name="P:BarRaider.SdTools.Communication.StreamDeckConnection.Uuid">
             <summary>
             This is the unique identifier used to communicate with the register StreamDeck plugin.
             </summary>
@@ -1425,7 +1367,7 @@
         </member>
         <member name="E:BarRaider.SdTools.Communication.StreamDeckConnection.OnTouchpadPress">
             <summary>
-            Raised when the tochpad is pressed
+            Raised when the touchpad is pressed
             </summary>
         </member>
         <member name="T:BarRaider.SdTools.Events.ApplicationDidLaunch">
@@ -1475,7 +1417,7 @@
             Device Info
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.Events.DeviceDidConnect.#ctor(BarRaider.SdTools.StreamDeckDeviceInfo)">
+        <member name="M:BarRaider.SdTools.Events.DeviceDidConnect.#ctor(BarRaider.SdTools.StreamDeckInfo.StreamDeckDeviceInfo)">
             <summary>
             Constructor
             </summary>
@@ -1627,7 +1569,7 @@
         </member>
         <member name="T:BarRaider.SdTools.Payloads.AppearancePayload">
             <summary>
-            Payload for Apperance settings
+            Payload for Appearance settings
             </summary>
         </member>
         <member name="P:BarRaider.SdTools.Payloads.AppearancePayload.Settings">
@@ -1691,7 +1633,7 @@
             Coordinates of key on the stream deck
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.Payloads.DialPayload.#ctor(BarRaider.SdTools.KeyCoordinates,Newtonsoft.Json.Linq.JObject,System.String)">
+        <member name="M:BarRaider.SdTools.Payloads.DialPayload.#ctor(BarRaider.SdTools.Wrappers.KeyCoordinates,Newtonsoft.Json.Linq.JObject,System.String)">
             <summary>
             Constructor
             </summary>
@@ -1734,7 +1676,7 @@
             Boolean whether the dial is currently pressed or not
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.Payloads.DialRotatePayload.#ctor(BarRaider.SdTools.KeyCoordinates,Newtonsoft.Json.Linq.JObject,System.String,System.Int32,System.Boolean)">
+        <member name="M:BarRaider.SdTools.Payloads.DialRotatePayload.#ctor(BarRaider.SdTools.Wrappers.KeyCoordinates,Newtonsoft.Json.Linq.JObject,System.String,System.Int32,System.Boolean)">
             <summary>
             Constructor
             </summary>
@@ -1749,6 +1691,123 @@
             Default constructor for serialization
             </summary>
         </member>
+        <member name="T:BarRaider.SdTools.Payloads.InitialPayload">
+            <summary>
+            Payload received during the plugin's constructor
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.InitialPayload.Settings">
+            <summary>
+            Plugin instance's settings (set through Property Inspector)
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.InitialPayload.Coordinates">
+            <summary>
+            Plugin's physical location on the Stream Deck device
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.InitialPayload.State">
+            <summary>
+            Current plugin state
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.InitialPayload.IsInMultiAction">
+            <summary>
+            Is it in a Multiaction
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.InitialPayload.Controller">
+            <summary>
+            The controller of the current action. Values include "Keypad" and "Encoder".
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.InitialPayload.DeviceInfo">
+            <summary>
+            Information regarding the Stream Deck hardware device
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.Payloads.InitialPayload.#ctor(BarRaider.SdTools.Payloads.AppearancePayload,BarRaider.SdTools.StreamDeckInfo.RegistrationInfo)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="appearancePayload"></param>
+            <param name="deviceInfo"></param>
+        </member>
+        <member name="T:BarRaider.SdTools.Payloads.KeyPayload">
+            <summary>
+            Payload received when a key is pressed or released
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.KeyPayload.Settings">
+            <summary>
+            Current event settings
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.KeyPayload.Coordinates">
+            <summary>
+            Coordinates of key on the stream deck
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.KeyPayload.State">
+            <summary>
+            Current key state
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.KeyPayload.UserDesiredState">
+            <summary>
+            Desired state
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.KeyPayload.IsInMultiAction">
+            <summary>
+            Is part of a multiAction
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.Payloads.KeyPayload.#ctor(BarRaider.SdTools.Wrappers.KeyCoordinates,Newtonsoft.Json.Linq.JObject,System.Nullable{System.UInt32},System.UInt32,System.Boolean)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="coordinates"></param>
+            <param name="settings"></param>
+            <param name="state"></param>
+            <param name="userDesiredState"></param>
+            <param name="isInMultiAction"></param>
+        </member>
+        <member name="M:BarRaider.SdTools.Payloads.KeyPayload.#ctor">
+            <summary>
+            For serialization
+            </summary>
+        </member>
+        <member name="T:BarRaider.SdTools.Payloads.ReceivedGlobalSettingsPayload">
+            <summary>
+            Payload that holds all the settings in the ReceivedGlobalSettings event
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.ReceivedGlobalSettingsPayload.Settings">
+            <summary>
+            Global settings object
+            </summary>
+        </member>
+        <member name="T:BarRaider.SdTools.Payloads.ReceivedSettingsPayload">
+            <summary>
+            Payload that holds all the settings in the ReceivedSettings event
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.ReceivedSettingsPayload.Settings">
+            <summary>
+            Action's settings
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.ReceivedSettingsPayload.Coordinates">
+            <summary>
+            Coordinates of the key pressed
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.ReceivedSettingsPayload.IsInMultiAction">
+            <summary>
+            Is event part of a multiaction
+            </summary>
+        </member>
         <member name="T:BarRaider.SdTools.Payloads.StreamDeckOptions">
             <summary>
             Class holding all the information passed to the plugin when the program was launched
@@ -1759,7 +1818,7 @@
             Port to communicate with the StreamDeck app
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.Payloads.StreamDeckOptions.PluginUUID">
+        <member name="P:BarRaider.SdTools.Payloads.StreamDeckOptions.PluginUuid">
             <summary>
             UUID of the plugin
             </summary>
@@ -1814,7 +1873,7 @@
             Raw Title Parameters (not as proper object)
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.Payloads.TitleParametersPayload.#ctor(Newtonsoft.Json.Linq.JObject,BarRaider.SdTools.KeyCoordinates,System.UInt32,System.String,BarRaider.SdTools.Wrappers.TitleParameters)">
+        <member name="M:BarRaider.SdTools.Payloads.TitleParametersPayload.#ctor(Newtonsoft.Json.Linq.JObject,BarRaider.SdTools.Wrappers.KeyCoordinates,System.Nullable{System.UInt32},System.String,BarRaider.SdTools.Wrappers.TitleParameters)">
             <summary>
             Constructor
             </summary>
@@ -1899,7 +1958,7 @@
             Position on touchpad which was pressed
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.Payloads.TouchpadPressPayload.#ctor(BarRaider.SdTools.KeyCoordinates,Newtonsoft.Json.Linq.JObject,System.String,System.Boolean,System.Int32[])">
+        <member name="M:BarRaider.SdTools.Payloads.TouchpadPressPayload.#ctor(BarRaider.SdTools.Wrappers.KeyCoordinates,Newtonsoft.Json.Linq.JObject,System.String,System.Boolean,System.Int32[])">
             <summary>
             Constructor
             </summary>
@@ -1914,215 +1973,129 @@
             Default constructor for serialization
             </summary>
         </member>
-        <member name="T:BarRaider.SdTools.InitialPayload">
-            <summary>
-            Payload received during the plugin's constructor
-            </summary>
-        </member>
-        <member name="P:BarRaider.SdTools.InitialPayload.Settings">
-            <summary>
-            Plugin instance's settings (set through Property Inspector)
-            </summary>
-        </member>
-        <member name="P:BarRaider.SdTools.InitialPayload.Coordinates">
-            <summary>
-            Plugin's physical location on the Stream Deck device
-            </summary>
-        </member>
-        <member name="P:BarRaider.SdTools.InitialPayload.State">
-            <summary>
-            Current plugin state
-            </summary>
-        </member>
-        <member name="P:BarRaider.SdTools.InitialPayload.IsInMultiAction">
-            <summary>
-            Is it in a Multiaction
-            </summary>
-        </member>
-        <member name="P:BarRaider.SdTools.InitialPayload.Controller">
-            <summary>
-            The controller of the current action. Values include "Keypad" and "Encoder".
-            </summary>
-        </member>
-        <member name="P:BarRaider.SdTools.InitialPayload.DeviceInfo">
-            <summary>
-            Information regarding the Stream Deck hardware device
-            </summary>
-        </member>
-        <member name="M:BarRaider.SdTools.InitialPayload.#ctor(BarRaider.SdTools.Payloads.AppearancePayload,BarRaider.SdTools.RegistrationInfo)">
-            <summary>
-            Constructor
-            </summary>
-            <param name="appearancePayload"></param>
-            <param name="deviceInfo"></param>
-        </member>
-        <member name="T:BarRaider.SdTools.KeyPayload">
-            <summary>
-            Payload received when a key is pressed or released
-            </summary>
-        </member>
-        <member name="P:BarRaider.SdTools.KeyPayload.Settings">
-            <summary>
-            Current event settings
-            </summary>
-        </member>
-        <member name="P:BarRaider.SdTools.KeyPayload.Coordinates">
-            <summary>
-            Coordinates of key on the stream deck
-            </summary>
-        </member>
-        <member name="P:BarRaider.SdTools.KeyPayload.State">
-            <summary>
-            Current key state
-            </summary>
-        </member>
-        <member name="P:BarRaider.SdTools.KeyPayload.UserDesiredState">
-            <summary>
-            Desired state
-            </summary>
-        </member>
-        <member name="P:BarRaider.SdTools.KeyPayload.IsInMultiAction">
-            <summary>
-            Is part of a multiAction
-            </summary>
-        </member>
-        <member name="M:BarRaider.SdTools.KeyPayload.#ctor(BarRaider.SdTools.KeyCoordinates,Newtonsoft.Json.Linq.JObject,System.UInt32,System.UInt32,System.Boolean)">
-            <summary>
-            Constructor
-            </summary>
-            <param name="coordinates"></param>
-            <param name="settings"></param>
-            <param name="state"></param>
-            <param name="userDesiredState"></param>
-            <param name="isInMultiAction"></param>
-        </member>
-        <member name="M:BarRaider.SdTools.KeyPayload.#ctor">
-            <summary>
-            For serialization
-            </summary>
-        </member>
-        <member name="T:BarRaider.SdTools.ReceivedGlobalSettingsPayload">
-            <summary>
-            Payload that holds all the settings in the ReceivedGlobalSettings event
-            </summary>
-        </member>
-        <member name="P:BarRaider.SdTools.ReceivedGlobalSettingsPayload.Settings">
-            <summary>
-            Global settings object
-            </summary>
-        </member>
-        <member name="T:BarRaider.SdTools.ReceivedSettingsPayload">
-            <summary>
-            Payload that holds all the settings in the ReceivedSettings event
-            </summary>
-        </member>
-        <member name="P:BarRaider.SdTools.ReceivedSettingsPayload.Settings">
-            <summary>
-            Action's settings
-            </summary>
-        </member>
-        <member name="P:BarRaider.SdTools.ReceivedSettingsPayload.Coordinates">
-            <summary>
-            Coordinates of the key pressed
-            </summary>
-        </member>
-        <member name="P:BarRaider.SdTools.ReceivedSettingsPayload.IsInMultiAction">
-            <summary>
-            Is event part of a multiaction
-            </summary>
-        </member>
-        <member name="T:BarRaider.SdTools.DeviceType">
+        <member name="T:BarRaider.SdTools.StreamDeckInfo.DeviceType">
             <summary>
             Type of StreamDeck hardware device, currently two are supported (classic and mini)
             </summary>
         </member>
-        <member name="F:BarRaider.SdTools.DeviceType.StreamDeckClassic">
+        <member name="F:BarRaider.SdTools.StreamDeckInfo.DeviceType.StreamDeckClassic">
             <summary>
             StreamDeck classic with 15 keys
             </summary>
         </member>
-        <member name="F:BarRaider.SdTools.DeviceType.StreamDeckMini">
+        <member name="F:BarRaider.SdTools.StreamDeckInfo.DeviceType.StreamDeckMini">
             <summary>
             StreamDeck mini with 6 keys
             </summary>
         </member>
-        <member name="F:BarRaider.SdTools.DeviceType.StreamDeckXL">
+        <member name="F:BarRaider.SdTools.StreamDeckInfo.DeviceType.StreamDeckXl">
             <summary>
             StreamDeck XL with 32 keys
             </summary>
         </member>
-        <member name="F:BarRaider.SdTools.DeviceType.StreamDeckMobile">
+        <member name="F:BarRaider.SdTools.StreamDeckInfo.DeviceType.StreamDeckMobile">
             <summary>
             StreamDeck Mobile version
             </summary>
         </member>
-        <member name="F:BarRaider.SdTools.DeviceType.CorsairGKeys">
+        <member name="F:BarRaider.SdTools.StreamDeckInfo.DeviceType.CorsairGKeys">
             <summary>
             Corsair G-Keys version
             </summary>
         </member>
-        <member name="F:BarRaider.SdTools.DeviceType.StreamDeckPedal">
+        <member name="F:BarRaider.SdTools.StreamDeckInfo.DeviceType.StreamDeckPedal">
             <summary>
             Pedal
             </summary>
         </member>
-        <member name="F:BarRaider.SdTools.DeviceType.CorsairCueSDK">
+        <member name="F:BarRaider.SdTools.StreamDeckInfo.DeviceType.CorsairCueSdk">
             <summary>
             Corsair CUE SDK (?)
             </summary>
         </member>
-        <member name="F:BarRaider.SdTools.DeviceType.StreamDeckPlus">
+        <member name="F:BarRaider.SdTools.StreamDeckInfo.DeviceType.StreamDeckPlus">
             <summary>
             Stream Deck+
             </summary>
         </member>
-        <member name="T:BarRaider.SdTools.StreamDeckApplicationInfo">
+        <member name="T:BarRaider.SdTools.StreamDeckInfo.RegistrationInfo">
             <summary>
-            Holds general information on the StreamDeck App we're communicating with
+            Class which holds information on the StreamDeck app and StreamDeck hardware device that the plugin is communicating with
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.StreamDeckApplicationInfo.Language">
+        <member name="P:BarRaider.SdTools.StreamDeckInfo.RegistrationInfo.Application">
             <summary>
-            Current language of the StreamDeck app
+            Information on the StreamDeck App which we're communicating with
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.StreamDeckApplicationInfo.Platform">
+        <member name="P:BarRaider.SdTools.StreamDeckInfo.RegistrationInfo.Devices">
             <summary>
-            OS Platform
+            Information on the StreamDeck hardware device that the plugin is running on
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.StreamDeckApplicationInfo.Version">
+        <member name="P:BarRaider.SdTools.StreamDeckInfo.RegistrationInfo.Plugin">
             <summary>
-            Current version of the StreamDeck app
+            Information on the Plugin we're currently running
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.StreamDeckApplicationInfo.ToString">
+        <member name="P:BarRaider.SdTools.StreamDeckInfo.RegistrationInfo.DevicePixelRatio">
+            <summary>
+            Device pixel ratio
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.StreamDeckInfo.RegistrationInfo.ToString">
             <summary>
             Shows class information as string
             </summary>
             <returns></returns>
         </member>
-        <member name="T:BarRaider.SdTools.StreamDeckDeviceInfo">
+        <member name="T:BarRaider.SdTools.StreamDeckInfo.StreamDeckApplicationInfo">
+            <summary>
+            Holds general information on the StreamDeck App we're communicating with
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.StreamDeckInfo.StreamDeckApplicationInfo.Language">
+            <summary>
+            Current language of the StreamDeck app
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.StreamDeckInfo.StreamDeckApplicationInfo.Platform">
+            <summary>
+            OS Platform
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.StreamDeckInfo.StreamDeckApplicationInfo.Version">
+            <summary>
+            Current version of the StreamDeck app
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.StreamDeckInfo.StreamDeckApplicationInfo.ToString">
+            <summary>
+            Shows class information as string
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:BarRaider.SdTools.StreamDeckInfo.StreamDeckDeviceInfo">
             <summary>
             Class which holds information on the StreamDeck hardware device
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.StreamDeckDeviceInfo.Size">
+        <member name="P:BarRaider.SdTools.StreamDeckInfo.StreamDeckDeviceInfo.Size">
             <summary>
             Details on number of keys of the StreamDeck hardware device
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.StreamDeckDeviceInfo.Type">
+        <member name="P:BarRaider.SdTools.StreamDeckInfo.StreamDeckDeviceInfo.Type">
             <summary>
             Type of StreamDeck hardware device
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.StreamDeckDeviceInfo.Id">
+        <member name="P:BarRaider.SdTools.StreamDeckInfo.StreamDeckDeviceInfo.Id">
             <summary>
             Id of the StreamDeck hardware device
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.StreamDeckDeviceInfo.#ctor(BarRaider.SdTools.StreamDeckDeviceSize,BarRaider.SdTools.DeviceType,System.String)">
+        <member name="M:BarRaider.SdTools.StreamDeckInfo.StreamDeckDeviceInfo.#ctor(BarRaider.SdTools.StreamDeckInfo.StreamDeckDeviceSize,BarRaider.SdTools.StreamDeckInfo.DeviceType,System.String)">
             <summary>
             Constructor
             </summary>
@@ -2130,201 +2103,183 @@
             <param name="type"></param>
             <param name="deviceId"></param>
         </member>
-        <member name="M:BarRaider.SdTools.StreamDeckDeviceInfo.ToString">
+        <member name="M:BarRaider.SdTools.StreamDeckInfo.StreamDeckDeviceInfo.ToString">
             <summary>
             Shows class information as string
             </summary>
             <returns></returns>
         </member>
-        <member name="T:BarRaider.SdTools.StreamDeckDeviceSize">
+        <member name="T:BarRaider.SdTools.StreamDeckInfo.StreamDeckDeviceSize">
             <summary>
             Layout of the keys on the StreamDeck hardware device
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.StreamDeckDeviceSize.Rows">
+        <member name="P:BarRaider.SdTools.StreamDeckInfo.StreamDeckDeviceSize.Rows">
             <summary>
             Number of key rows on the StreamDeck hardware device
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.StreamDeckDeviceSize.Cols">
+        <member name="P:BarRaider.SdTools.StreamDeckInfo.StreamDeckDeviceSize.Cols">
             <summary>
             Number of key columns on the StreamDeck hardware device
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.StreamDeckDeviceSize.#ctor(System.Int32,System.Int32)">
+        <member name="M:BarRaider.SdTools.StreamDeckInfo.StreamDeckDeviceSize.#ctor(System.Int32,System.Int32)">
             <summary>
             Constructor
             </summary>
             <param name="rows"></param>
             <param name="cols"></param>
         </member>
-        <member name="M:BarRaider.SdTools.StreamDeckDeviceSize.ToString">
+        <member name="M:BarRaider.SdTools.StreamDeckInfo.StreamDeckDeviceSize.ToString">
             <summary>
             Shows class information as string
             </summary>
             <returns></returns>
         </member>
-        <member name="T:BarRaider.SdTools.RegistrationInfo">
-            <summary>
-            Class which holds information on the StreamDeck app and StreamDeck hardware device that the plugin is communicating with
-            </summary>
-        </member>
-        <member name="P:BarRaider.SdTools.RegistrationInfo.Application">
-            <summary>
-            Information on the StreamDeck App which we're communicating with
-            </summary>
-        </member>
-        <member name="P:BarRaider.SdTools.RegistrationInfo.Devices">
-            <summary>
-            Information on the StreamDeck hardware device that the plugin is running on
-            </summary>
-        </member>
-        <member name="P:BarRaider.SdTools.RegistrationInfo.Plugin">
-            <summary>
-            Information on the Plugin we're currently running
-            </summary>
-        </member>
-        <member name="P:BarRaider.SdTools.RegistrationInfo.DevicePixelRatio">
-            <summary>
-            Device pixel ratio
-            </summary>
-        </member>
-        <member name="M:BarRaider.SdTools.RegistrationInfo.ToString">
-            <summary>
-            Shows class information as string
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="T:BarRaider.SdTools.StreamDeckPluginInfo">
+        <member name="T:BarRaider.SdTools.StreamDeckInfo.StreamDeckPluginInfo">
             <summary>
             Holds general information on the StreamDeck App we're communicating with
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.StreamDeckPluginInfo.Version">
+        <member name="P:BarRaider.SdTools.StreamDeckInfo.StreamDeckPluginInfo.Version">
             <summary>
             Current version of the plugin
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.StreamDeckPluginInfo.ToString">
+        <member name="M:BarRaider.SdTools.StreamDeckInfo.StreamDeckPluginInfo.ToString">
             <summary>
             Shows class information as string
             </summary>
             <returns></returns>
         </member>
-        <member name="T:BarRaider.SdTools.ExtensionMethods">
+        <member name="T:BarRaider.SdTools.Utilities.ExtensionMethods">
             <summary>
             Extension methods for various objects
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.ExtensionMethods.IsCoordinatesSame(BarRaider.SdTools.KeyCoordinates,BarRaider.SdTools.KeyCoordinates)">
+        <member name="M:BarRaider.SdTools.Utilities.ExtensionMethods.IsCoordinatesSame(BarRaider.SdTools.Wrappers.KeyCoordinates,BarRaider.SdTools.Wrappers.KeyCoordinates)">
             <summary>
-            Checks if too KeyCoordinates match to the same key
+            Checks if two KeyCoordinates match to the same key
             </summary>
             <param name="coordinates"></param>
             <param name="secondCoordinates"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ExtensionMethods.ToHex(System.Drawing.Color)">
+        <member name="M:BarRaider.SdTools.Utilities.ExtensionMethods.ToHex(SkiaSharp.SKColor)">
             <summary>
             Shows Color In Hex Format
             </summary>
             <param name="color"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ExtensionMethods.ToHex(System.Drawing.Brush)">
+        <member name="M:BarRaider.SdTools.Utilities.ExtensionMethods.ToHex(SkiaSharp.SKPaint)">
             <summary>
             Shows Color in Hex format
             </summary>
             <param name="brush"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ExtensionMethods.ToByteArray(System.Drawing.Image)">
+        <member name="M:BarRaider.SdTools.Utilities.ExtensionMethods.ToByteArray(SkiaSharp.SKImage)">
             <summary>
             Converts an Image into a Byte Array
             </summary>
             <param name="image"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ExtensionMethods.ToBase64(System.Drawing.Image,System.Boolean)">
+        <member name="M:BarRaider.SdTools.Utilities.ExtensionMethods.ToBase64(SkiaSharp.SKImage,System.Boolean)">
             <summary>
-            Convert a in-memory image object to Base64 format. Set the addHeaderPrefix to true, if this is sent to the SendImageAsync function
+            Convert an in-memory SKImage to Base64 format. Set the addHeaderPrefix to true, if this is sent to the SendImageAsync function
             </summary>
             <param name="image"></param>
             <param name="addHeaderPrefix"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ExtensionMethods.DrawAndMeasureString(System.Drawing.Graphics,System.String,System.Drawing.Font,System.Drawing.Brush,System.Drawing.PointF)">
+        <member name="M:BarRaider.SdTools.Utilities.ExtensionMethods.ToBase64(SkiaSharp.SKBitmap,System.Boolean)">
+            <summary>
+            Convert an in-memory SKImage to Base64 format. Set the addHeaderPrefix to true, if this is sent to the SendImageAsync function
+            </summary>
+            <param name="image"></param>
+            <param name="addHeaderPrefix"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.Utilities.ExtensionMethods.DrawAndMeasureString(SkiaSharp.SKCanvas,SkiaSharp.SKPaint,System.String,SkiaSharp.SKPoint,System.Boolean)">
+            <summary>
+            Draws a string on a Canvas object and returns the ending Y position of the string
+            </summary>
+            <param name="canvas"></param>
+            <param name="brush"></param>
+            <param name="text"></param>
+            <param name="position"></param>
+            <param name="horizontal"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.Utilities.ExtensionMethods.DrawAndMeasureStringWidth(SkiaSharp.SKCanvas,SkiaSharp.SKPaint,System.String,SkiaSharp.SKPoint)">
             <summary>
             Draws a string on a Graphics object and returns the ending Y position of the string
             </summary>
-            <param name="graphics"></param>
-            <param name="text"></param>
-            <param name="font"></param>
+            <param name="canvas"></param>
             <param name="brush"></param>
+            <param name="text"></param>
             <param name="position"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ExtensionMethods.GetTextCenter(System.Drawing.Graphics,System.String,System.Int32,System.Drawing.Font,System.Boolean@,System.Int32)">
+        <member name="M:BarRaider.SdTools.Utilities.ExtensionMethods.DrawAndMeasureStringHeight(SkiaSharp.SKCanvas,SkiaSharp.SKPaint,System.String,SkiaSharp.SKPoint)">
+            <summary>
+            Draws a string on a Graphics object and returns the ending Y position of the string
+            </summary>
+            <param name="canvas"></param>
+            <param name="brush"></param>
+            <param name="text"></param>
+            <param name="position"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.Utilities.ExtensionMethods.GetTextCenter(SkiaSharp.SKCanvas,SkiaSharp.SKPaint,System.String,System.Int32,System.Boolean@,System.Int32)">
             <summary>
             Returns the center X position of a string, given the image's max Width and Font information
             </summary>
-            <param name="graphics"></param>
+            <param name="canvas"></param>
+            <param name="brush"></param>
             <param name="text"></param>
             <param name="imageWidth"></param>
-            <param name="font"></param>
-            /// <param name="textFitsImage">True/False - Does text fit image? False if text overflows</param>
+            <param name="textFitsImage">True/False - Does text fit image? False if text overflows</param>
             <param name="minIndentation"></param>
             
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ExtensionMethods.GetTextCenter(System.Drawing.Graphics,System.String,System.Int32,System.Drawing.Font,System.Int32)">
+        <member name="M:BarRaider.SdTools.Utilities.ExtensionMethods.GetTextCenter(SkiaSharp.SKCanvas,SkiaSharp.SKPaint,System.String,System.Int32,System.Int32)">
             <summary>
             Returns the center X position of a string, given the image's max Width and Font information
             </summary>
-            <param name="graphics"></param>
+            <param name="canvas"></param>
+            <param name="brush"></param>
             <param name="text"></param>
             <param name="imageWidth"></param>
-            <param name="font"></param>
             <param name="minIndentation"></param>
             
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ExtensionMethods.GetFontSizeWhereTextFitsImage(System.Drawing.Graphics,System.String,System.Int32,System.Drawing.Font,System.Int32)">
+        <member name="M:BarRaider.SdTools.Utilities.ExtensionMethods.GetFontSizeWhereTextFitsImage(SkiaSharp.SKCanvas,System.String,System.Int32,SkiaSharp.SKFont,System.Int32)">
             <summary>
             Returns the highest size of the given font in which the text fits the image
             </summary>
-            <param name="graphics"></param>
+            <param name="canvas"></param>
             <param name="text"></param>
             <param name="imageWidth"></param>
             <param name="font"></param>
-            /// <param name="minimalFontSize"></param>
+            <param name="minimumFontSize"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ExtensionMethods.AddTextPath(System.Drawing.Graphics,BarRaider.SdTools.Wrappers.TitleParameters,System.Int32,System.Int32,System.String,System.Int32)">
+        <member name="M:BarRaider.SdTools.Utilities.ExtensionMethods.AddTextPath(SkiaSharp.SKCanvas,BarRaider.SdTools.Wrappers.TitleParameters,SkiaSharp.SKBitmap,System.String)">
             <summary>
             Adds a text path to an existing Graphics object. Uses TitleParameters to emulate the Text settings in the Property Inspector
             </summary>
-            <param name="graphics"></param>
+            <param name="canvas"></param>
             <param name="titleParameters"></param>
-            <param name="imageHeight"></param>
-            <param name="imageWidth"></param>
+            <param name="image"></param>
             <param name="text"></param>
-            <param name="pixelsAlignment"></param>
         </member>
-        <member name="M:BarRaider.SdTools.ExtensionMethods.AddTextPath(System.Drawing.Graphics,BarRaider.SdTools.Wrappers.TitleParameters,System.Int32,System.Int32,System.String,System.Drawing.Color,System.Single,System.Int32)">
-            <summary>
-            Adds a text path to an existing Graphics object. Uses TitleParameters to emulate the Text settings in the Property Inspector
-            </summary>
-            <param name="graphics"></param>
-            <param name="titleParameters"></param>
-            <param name="imageHeight"></param>
-            <param name="imageWidth"></param>
-            <param name="text"></param>
-            <param name="strokeColor"></param>
-            <param name="strokeThickness"></param>
-            <param name="pixelsAlignment"></param>
-        </member>
-        <member name="M:BarRaider.SdTools.ExtensionMethods.Truncate(System.String,System.Int32)">
+        <member name="M:BarRaider.SdTools.Utilities.ExtensionMethods.Truncate(System.String,System.Int32)">
             <summary>
             /// Truncates a string to the first maxSize characters. If maxSize is less than string length, original string will be returned
             </summary>
@@ -2332,7 +2287,7 @@
             <param name="maxSize">Max size for string</param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.ExtensionMethods.SplitToFitKey(System.String,BarRaider.SdTools.Wrappers.TitleParameters,System.Int32,System.Int32,System.Int32)">
+        <member name="M:BarRaider.SdTools.Utilities.ExtensionMethods.SplitToFitKey(System.String,BarRaider.SdTools.Wrappers.TitleParameters,System.Int32,System.Int32,System.Int32)">
             <summary>
             Adds line breaks (\n) to the text to make sure it fits the key when using SetTitleAsync()
             </summary>
@@ -2343,28 +2298,28 @@
             <param name="imageWidthPixels"></param>
             <returns></returns>
         </member>
-        <member name="T:BarRaider.SdTools.GlobalSettingsManager">
+        <member name="T:BarRaider.SdTools.Utilities.GlobalSettingsManager">
             <summary>
             Helper class which allows fetching the GlobalSettings of a plugin
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.GlobalSettingsManager.Instance">
+        <member name="P:BarRaider.SdTools.Utilities.GlobalSettingsManager.Instance">
             <summary>
             Returns singleton entry of GlobalSettingsManager
             </summary>
         </member>
-        <member name="E:BarRaider.SdTools.GlobalSettingsManager.OnReceivedGlobalSettings">
+        <member name="E:BarRaider.SdTools.Utilities.GlobalSettingsManager.OnReceivedGlobalSettings">
             <summary>
             Event triggered when Global Settings are received
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.GlobalSettingsManager.RequestGlobalSettings">
+        <member name="M:BarRaider.SdTools.Utilities.GlobalSettingsManager.RequestGlobalSettings">
             <summary>
             Command to request the Global Settings. Use the OnDidReceiveGlobalSSettings callback function to receive the Global Settings.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.GlobalSettingsManager.SetGlobalSettings(Newtonsoft.Json.Linq.JObject,System.Boolean)">
+        <member name="M:BarRaider.SdTools.Utilities.GlobalSettingsManager.SetGlobalSettings(Newtonsoft.Json.Linq.JObject,System.Boolean)">
             <summary>
             Sets the Global Settings for the plugin
             </summary>
@@ -2372,19 +2327,19 @@
             <param name="triggerDidReceiveGlobalSettings"></param>
             <returns></returns>
         </member>
-        <member name="T:BarRaider.SdTools.GraphicsTools">
+        <member name="T:BarRaider.SdTools.Utilities.GraphicsTools">
             <summary>
             Library of tools used to manipulate graphics
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.GraphicsTools.ColorFromHex(System.String)">
+        <member name="M:BarRaider.SdTools.Utilities.GraphicsTools.ColorFromHex(System.String)">
             <summary>
             Return a Color object based on the hex value
             </summary>
             <param name="hexColor"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.GraphicsTools.GenerateColorShades(System.String,System.Int32,System.Int32)">
+        <member name="M:BarRaider.SdTools.Utilities.GraphicsTools.GenerateColorShades(System.String,System.Int32,System.Int32)">
             <summary>
             Generates multiple shades based on an initial color, and number of stages/shades you want
             </summary>
@@ -2393,51 +2348,34 @@
             <param name="totalAmountOfShades"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.GraphicsTools.ResizeImage(System.Drawing.Image,System.Int32,System.Int32)">
+        <member name="M:BarRaider.SdTools.Utilities.GraphicsTools.ResizeImage(SkiaSharp.SKBitmap,System.Int32)">
             <summary>
             Resizes an image while scaling
             </summary>
             <param name="original"></param>
             <param name="newWidth"></param>
-            <param name="newHeight"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.GraphicsTools.ExtractRectangle(System.Drawing.Image,System.Int32,System.Int32,System.Int32,System.Int32)">
+        <member name="M:BarRaider.SdTools.Utilities.GraphicsTools.CropImage(SkiaSharp.SKBitmap,System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
-            Extract a part of an Image
+            Extract a part of an image (aka crop)
             </summary>
-            <param name="image"></param>
+            <param name="original"></param>
             <param name="startX"></param>
             <param name="startY"></param>
             <param name="width"></param>
             <param name="height"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.GraphicsTools.CreateOpacityImage(System.Drawing.Image,System.Single)">
+        <member name="M:BarRaider.SdTools.Utilities.GraphicsTools.ChangeOpacity(SkiaSharp.SKBitmap,System.Byte)">
             <summary>
             Creates a new image with different opacity
             </summary>
-            <param name="image"></param>
+            <param name="original"></param>
             <param name="opacity"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.GraphicsTools.DrawMultiLinedText(System.String,System.Int32,System.Int32,System.Int32,System.Drawing.Font,System.Drawing.Color,System.Drawing.Color,System.Boolean,System.Drawing.PointF)">
-            <summary>
-            Generates one (or more) images where each one has a few letters drawn on them based on the parameters. You can set number of letters and number of lines per key. 
-            Use expandToNextImage to decide if you want only one Image returned or multiple if text is too long for one key
-            </summary>
-            <param name="text"></param>
-            <param name="currentTextPosition"></param>
-            <param name="lettersPerLine"></param>
-            <param name="numberOfLines"></param>
-            <param name="font"></param>
-            <param name="backgroundColor"></param>
-            <param name="textColor"></param>
-            <param name="expandToNextImage"></param>
-            <param name="keyDrawStartingPosition"></param>
-            <returns></returns>
-        </member>
-        <member name="M:BarRaider.SdTools.GraphicsTools.WrapStringToFitImage(System.String,BarRaider.SdTools.Wrappers.TitleParameters,System.Int32,System.Int32,System.Int32)">
+        <member name="M:BarRaider.SdTools.Utilities.GraphicsTools.WrapStringToFitImage(System.String,BarRaider.SdTools.Wrappers.TitleParameters,System.Int32,System.Int32,System.Int32)">
             <summary>
             Adds line breaks ('\n') to the string every time the text would overflow the image
             </summary>
@@ -2448,162 +2386,137 @@
             <param name="imageWidthPixels"></param>
             <returns></returns>
         </member>
-        <member name="T:BarRaider.SdTools.IUpdateHandler">
+        <member name="T:BarRaider.SdTools.Utilities.IUpdateHandler">
             <summary>
             Interface for a plugin update handler
             </summary>
         </member>
-        <member name="E:BarRaider.SdTools.IUpdateHandler.OnUpdateStatusChanged">
+        <member name="E:BarRaider.SdTools.Utilities.IUpdateHandler.OnUpdateStatusChanged">
             <summary>
             Event received by the infrastructure after an upgrade check
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.IUpdateHandler.IsBlockingUpdate">
+        <member name="P:BarRaider.SdTools.Utilities.IUpdateHandler.IsBlockingUpdate">
             <summary>
             Is the current update a blocking one
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.IUpdateHandler.SetPluginConfiguration(System.String,System.String)">
+        <member name="M:BarRaider.SdTools.Utilities.IUpdateHandler.SetPluginConfiguration(System.String,System.String)">
             <summary>
             Sets the information about the plugin
             </summary>
             <param name="pluginName"></param>
             <param name="pluginVersion"></param>
         </member>
-        <member name="M:BarRaider.SdTools.IUpdateHandler.SetGlobalSettings(System.Object)">
+        <member name="M:BarRaider.SdTools.Utilities.IUpdateHandler.SetGlobalSettings(System.Object)">
             <summary>
             Sets the plugin global settings
             </summary>
             <param name="settings"></param>
         </member>
-        <member name="M:BarRaider.SdTools.IUpdateHandler.CheckForUpdate">
+        <member name="M:BarRaider.SdTools.Utilities.IUpdateHandler.CheckForUpdate">
             <summary>
             Checks for update
             </summary>
         </member>
-        <member name="T:BarRaider.SdTools.TracingLevel">
+        <member name="T:BarRaider.SdTools.Utilities.TracingLevel">
             <summary>
             Tracing levels used for Logger
             </summary>
         </member>
-        <member name="F:BarRaider.SdTools.TracingLevel.DEBUG">
-            <summary>
-            Debug level
-            </summary>
-        </member>
-        <member name="F:BarRaider.SdTools.TracingLevel.INFO">
-            <summary>
-            Informational level
-            </summary>
-        </member>
-        <member name="F:BarRaider.SdTools.TracingLevel.WARN">
-            <summary>
-            Warning level
-            </summary>
-        </member>
-        <member name="F:BarRaider.SdTools.TracingLevel.ERROR">
-            <summary>
-            Error level
-            </summary>
-        </member>
-        <member name="F:BarRaider.SdTools.TracingLevel.FATAL">
-            <summary>
-            Fatal (highest) level
-            </summary>
-        </member>
-        <member name="T:BarRaider.SdTools.Logger">
+        <member name="T:BarRaider.SdTools.Utilities.Logger">
             <summary>
             Log4Net logger helper class
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.Logger.Instance">
+        <member name="P:BarRaider.SdTools.Utilities.Logger.Instance">
             <summary>
             Returns singleton entry of Log4Net logger
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.Logger.LogMessage(BarRaider.SdTools.TracingLevel,System.String)">
+        <member name="M:BarRaider.SdTools.Utilities.Logger.LogMessage(BarRaider.SdTools.Utilities.TracingLevel,System.String)">
             <summary>
             Add message to log with a specific severity level. 
             </summary>
-            <param name="Level"></param>
-            <param name="Message"></param>
+            <param name="level"></param>
+            <param name="message"></param>
         </member>
-        <member name="T:BarRaider.SdTools.PluginUpdateStatus">
+        <member name="T:BarRaider.SdTools.Utilities.PluginUpdateStatus">
             <summary>
             Status of update request
             </summary>
         </member>
-        <member name="F:BarRaider.SdTools.PluginUpdateStatus.Unknown">
+        <member name="F:BarRaider.SdTools.Utilities.PluginUpdateStatus.Unknown">
             <summary>
             Unknown reply
             </summary>
         </member>
-        <member name="F:BarRaider.SdTools.PluginUpdateStatus.UpToDate">
+        <member name="F:BarRaider.SdTools.Utilities.PluginUpdateStatus.UpToDate">
             <summary>
             Plugin is up to date
             </summary>
         </member>
-        <member name="F:BarRaider.SdTools.PluginUpdateStatus.MinorUpgrade">
+        <member name="F:BarRaider.SdTools.Utilities.PluginUpdateStatus.MinorUpgrade">
             <summary>
             Minor version update available
             </summary>
         </member>
-        <member name="F:BarRaider.SdTools.PluginUpdateStatus.MajorUpgrade">
+        <member name="F:BarRaider.SdTools.Utilities.PluginUpdateStatus.MajorUpgrade">
             <summary>
             Major version update available
             </summary>
         </member>
-        <member name="F:BarRaider.SdTools.PluginUpdateStatus.CriticalUpgrade">
+        <member name="F:BarRaider.SdTools.Utilities.PluginUpdateStatus.CriticalUpgrade">
             <summary>
             Critical update needed
             </summary>
         </member>
-        <member name="T:BarRaider.SdTools.PluginUpdateInfo">
+        <member name="T:BarRaider.SdTools.Utilities.PluginUpdateInfo">
             <summary>
             Response to an update request
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.PluginUpdateInfo.Status">
+        <member name="P:BarRaider.SdTools.Utilities.PluginUpdateInfo.Status">
             <summary>
             Status
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.PluginUpdateInfo.UpdateURL">
+        <member name="P:BarRaider.SdTools.Utilities.PluginUpdateInfo.UpdateUrl">
             <summary>
             Update URL
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.PluginUpdateInfo.UpdateImage">
+        <member name="P:BarRaider.SdTools.Utilities.PluginUpdateInfo.UpdateImage">
             <summary>
             Update URL
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.PluginUpdateInfo.#ctor">
+        <member name="M:BarRaider.SdTools.Utilities.PluginUpdateInfo.#ctor">
             <summary>
             Default Constructor
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.PluginUpdateInfo.#ctor(BarRaider.SdTools.PluginUpdateStatus,System.String,System.String)">
+        <member name="M:BarRaider.SdTools.Utilities.PluginUpdateInfo.#ctor(BarRaider.SdTools.Utilities.PluginUpdateStatus,System.String,System.String)">
             <summary>
             Constructor
             </summary>
             <param name="status"></param>
-            <param name="updateURL"></param>
+            <param name="updateUrl"></param>
             /// <param name="updateImage"></param>
         </member>
-        <member name="T:BarRaider.SdTools.RandomGenerator">
+        <member name="T:BarRaider.SdTools.Utilities.RandomGenerator">
             <summary>
             Helper class for generating random numbers
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.RandomGenerator.Next(System.Int32)">
+        <member name="M:BarRaider.SdTools.Utilities.RandomGenerator.Next(System.Int32)">
             <summary>
             Returns a non-negative random integer that is less than the specified maximum.
             </summary>
             <param name="maxValue"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.RandomGenerator.Next(System.Int32,System.Int32)">
+        <member name="M:BarRaider.SdTools.Utilities.RandomGenerator.Next(System.Int32,System.Int32)">
             <summary>
             Returns a random integer that is within a specified range. Value will be less than the specified maximum.
             </summary>
@@ -2611,13 +2524,13 @@
             <param name="maxValue"></param>
             <returns></returns>
         </member>
-        <member name="T:BarRaider.SdTools.Utilities">
+        <member name="T:BarRaider.SdTools.Utilities.Tools">
             <summary>
             Set of common utilities used by various plugins
             Currently the class mostly focuses on image-related functions that will be passed to the StreamDeck key
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.Utilities.FileToBase64(System.String,System.Boolean)">
+        <member name="M:BarRaider.SdTools.Utilities.Tools.FileToBase64(System.String,System.Boolean)">
             <summary>
             Convert an image file to Base64 format. Set the addHeaderPrefix to true, if this is sent to the SendImageAsync function
             </summary>
@@ -2625,22 +2538,30 @@
             <param name="addHeaderPrefix"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.Utilities.ImageToBase64(System.Drawing.Image,System.Boolean)">
+        <member name="M:BarRaider.SdTools.Utilities.Tools.ImageToBase64(SkiaSharp.SKImage,System.Boolean)">
             <summary>
-            Convert a in-memory image object to Base64 format. Set the addHeaderPrefix to true, if this is sent to the SendImageAsync function
+            Convert an in-memory image object to Base64 format. Set the addHeaderPrefix to true, if this is sent to the SendImageAsync function
             </summary>
             <param name="image"></param>
             <param name="addHeaderPrefix"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.Utilities.Base64StringToImage(System.String)">
+        <member name="M:BarRaider.SdTools.Utilities.Tools.ImageToBase64(SkiaSharp.SKBitmap,System.Boolean)">
+            <summary>
+            Convert an in-memory image object to Base64 format. Set the addHeaderPrefix to true, if this is sent to the SendImageAsync function
+            </summary>
+            <param name="image"></param>
+            <param name="addHeaderPrefix"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.Utilities.Tools.Base64StringToImage(System.String)">
             <summary>
             Convert a base64 image string to an Image object
             </summary>
             <param name="base64String"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.Utilities.GetKeyDefaultHeight(BarRaider.SdTools.DeviceType)">
+        <member name="M:BarRaider.SdTools.Utilities.Tools.GetKeyDefaultHeight(BarRaider.SdTools.StreamDeckInfo.DeviceType)">
             <summary>
             Gets the key default height in pixels.
             To get the StreamDeckType use Connection.DeviceInfo()
@@ -2648,7 +2569,7 @@
             <param name="streamDeckType"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.Utilities.GetKeyDefaultWidth(BarRaider.SdTools.DeviceType)">
+        <member name="M:BarRaider.SdTools.Utilities.Tools.GetKeyDefaultWidth(BarRaider.SdTools.StreamDeckInfo.DeviceType)">
             <summary>
             Gets the key default width in pixels.
             To get the StreamDeckType use Connection.DeviceInfo()
@@ -2656,94 +2577,84 @@
             <param name="streamDeckType"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.Utilities.GenerateKeyImage(BarRaider.SdTools.DeviceType,System.Drawing.Graphics@)">
+        <member name="M:BarRaider.SdTools.Utilities.Tools.GenerateKeyImage(BarRaider.SdTools.StreamDeckInfo.DeviceType)">
             <summary>
             Generates an empty key bitmap with the default height and width.
             New: To get the StreamDeckType use Connection.DeviceInfo()
             </summary>
             <param name="streamDeckType"></param>
-            <param name="graphics"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.Utilities.GenerateGenericKeyImage(System.Drawing.Graphics@)">
+        <member name="M:BarRaider.SdTools.Utilities.Tools.GenerateGenericKeyImage">
             <summary>
             Creates a key image that fits all Stream Decks
             </summary>
-            <param name="graphics"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.Utilities.GenerateKeyImage(System.Int32,System.Int32,System.Drawing.Graphics@)">
+        <member name="M:BarRaider.SdTools.Utilities.Tools.GenerateKeyImage(BarRaider.SdTools.Wrappers.TitleParameters,System.String,SkiaSharp.SKColor,SkiaSharp.SKEncodedImageFormat,System.Int32)">
             <summary>
-            Creates a key image based on given height and width
+            Creates a key image that fits all Stream Decks, with the specified color and font properties.
+            </summary>
+            <param name="titleParameters"></param>
+            <param name="text"></param>
+            <param name="backgroundColor"></param>
+            <param name="imageFormat"></param>
+            <param name="quality"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.Utilities.Tools.GenerateKeyImage(System.Int32,System.Int32,System.String,BarRaider.SdTools.Wrappers.TitleParameters,SkiaSharp.SKColor,SkiaSharp.SKEncodedImageFormat,System.Int32)">
+            <summary>
+            Creates a key image based on given height, width, color and font properties.
             </summary>
             <param name="height"></param>
             <param name="width"></param>
-            <param name="graphics"></param>
+            <param name="text"></param>
+            <param name="titleParameters"></param>
+            <param name="backgroundColor"></param>
+            <param name="imageFormat"></param>
+            <param name="quality"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.Utilities.AddTextPathToGraphics(System.Drawing.Graphics,BarRaider.SdTools.Wrappers.TitleParameters,System.Int32,System.Int32,System.String,System.Int32)">
-            <summary>
-            Deprecated! Use AddTextPath on the Graphics extension method instead.
-            Adds a text path to an existing Graphics object. Uses TitleParser to emulate the Text settings in the Property Inspector
-            </summary>
-            <param name="graphics"></param>
-            <param name="titleParameters"></param>
-            <param name="imageHeight"></param>
-            <param name="imageWidth"></param>
-            <param name="text"></param>
-            <param name="pixelsAlignment"></param>
-        </member>
-        <member name="M:BarRaider.SdTools.Utilities.FilenameFromPayload(Newtonsoft.Json.Linq.JToken)">
+        <member name="M:BarRaider.SdTools.Utilities.Tools.FilenameFromPayload(Newtonsoft.Json.Linq.JToken)">
             <summary>
             Extracts the actual filename from a file payload received from the Property Inspector
             </summary>
             <param name="payload"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.Utilities.FormatNumber(System.Int64)">
+        <member name="M:BarRaider.SdTools.Utilities.Tools.FormatNumber(System.Int64)">
             <summary>
             Converts a long to a human-readable string. Example: 54,265 => 54.27k
             </summary>
             <param name="num"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.Utilities.FormatBytes(System.Double)">
+        <member name="M:BarRaider.SdTools.Utilities.Tools.FormatBytes(System.Double)">
             <param name="numberInBytes">Size in bytes</param>
             <returns>Formatted human-readable string (ex. "2 MB")</returns>
         </member>
-        <member name="M:BarRaider.SdTools.Utilities.SplitStringToFit(System.String,BarRaider.SdTools.Wrappers.TitleParameters,System.Int32,System.Int32,System.Int32)">
-            <summary>
-            OBSOLETE - Use String.SplitToFitKey() from SdTools.ExtensionMethods
-            </summary>
-            <param name="str"></param>
-            <param name="titleParameters"></param>
-            <param name="leftPaddingPixels"></param>
-            <param name="rightPaddingPixels"></param>
-            <param name="imageWidthPixels"></param>
-            <returns></returns>
-        </member>
-        <member name="M:BarRaider.SdTools.Utilities.ImageToSHA512(System.Drawing.Image)">
+        <member name="M:BarRaider.SdTools.Utilities.Tools.ImageToSha512(SkiaSharp.SKData)">
             <summary>
             Returns SHA512 Hash from an image object
             </summary>
-            <param name="image"></param>
+            <param name="data"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.Utilities.StringToSHA512(System.String)">
+        <member name="M:BarRaider.SdTools.Utilities.Tools.StringToSha512(System.String)">
             <summary>
             Returns SHA512 Hash from a string
             </summary>
             <param name="str"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.Utilities.BytesToSHA512(System.Byte[])">
+        <member name="M:BarRaider.SdTools.Utilities.Tools.BytesToSha512(System.Byte[])">
             <summary>
             Returns SHA512 Hash from a byte stream
             </summary>
             <param name="byteStream"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.Utilities.AutoPopulateSettings``1(``0,Newtonsoft.Json.Linq.JObject)">
+        <member name="M:BarRaider.SdTools.Utilities.Tools.AutoPopulateSettings``1(``0,Newtonsoft.Json.Linq.JObject)">
             <summary>
             Iterates through the fromJObject, finds the property that matches in the toSettings object, and sets the value from the fromJObject object
             </summary>
@@ -2752,7 +2663,7 @@
             <param name="fromJObject"></param>
             <returns>Number of properties updated</returns>
         </member>
-        <member name="M:BarRaider.SdTools.Utilities.RangeToPercentage(System.Int32,System.Int32,System.Int32)">
+        <member name="M:BarRaider.SdTools.Utilities.Tools.RangeToPercentage(System.Int32,System.Int32,System.Int32)">
             <summary>
             Takes a custom range and recalculates the value on a scale from 0 to 100
             </summary>
@@ -2761,58 +2672,52 @@
             <param name="originalMax"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.Utilities.PluginActionIDs">
-            <summary>
-            Uses the PluginActionId attribute on the various classes derived from PluginBase to find all the actions supported in this assembly
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="T:BarRaider.SdTools.KeyCoordinates">
+        <member name="T:BarRaider.SdTools.Wrappers.KeyCoordinates">
             <summary>
             Coordinates of the current key
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.KeyCoordinates.Column">
+        <member name="P:BarRaider.SdTools.Wrappers.KeyCoordinates.Column">
             <summary>
             Column of the current key
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.KeyCoordinates.Row">
+        <member name="P:BarRaider.SdTools.Wrappers.KeyCoordinates.Row">
             <summary>
             Row of the current key
             </summary>
         </member>
-        <member name="T:BarRaider.SdTools.PluginActionId">
+        <member name="T:BarRaider.SdTools.Wrappers.PluginActionId">
             <summary>
             This class associates a plugin UUID (which is indicated in the Manifest file), with the type of the implementation class.
             The implementation class must be derived from the PluginBase class for this to work properly.
-            If the type passed does not derrive from PluginBase, a NotSupportedException will be thrown
+            If the type passed does not derive from PluginBase, a NotSupportedException will be thrown
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.PluginActionId.ActionId">
+        <member name="P:BarRaider.SdTools.Wrappers.PluginActionId.ActionId">
             <summary>
             Action UUID as indicated in the manifest file
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.PluginActionId.PluginBaseType">
+        <member name="P:BarRaider.SdTools.Wrappers.PluginActionId.PluginBaseType">
             <summary>
-            Type of class that implemented this action. Must inherit PluginBase
+            Type of class that implemented this action. Must inherit KeyAndEncoderBase, KeypadBase or EncoderBase
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.PluginActionId.#ctor(System.String,System.Type)">
+        <member name="M:BarRaider.SdTools.Wrappers.PluginActionId.#ctor(System.String,System.Type)">
             <summary>
             PluginActionId constructor
             </summary>
             <param name="actionId">actionId is the UUID from the manifest file</param>
             <param name="pluginBaseType">Type of class that implemented this action. Must inherit PluginBase</param>
         </member>
-        <member name="T:BarRaider.SdTools.Wrappers.SDEventReceivedEventArgs`1">
+        <member name="T:BarRaider.SdTools.Wrappers.SdEventReceivedEventArgs`1">
             <summary>
             Base (Generic) EventArgs used for events
             </summary>
             <typeparam name="T"></typeparam>
         </member>
-        <member name="P:BarRaider.SdTools.Wrappers.SDEventReceivedEventArgs`1.Event">
+        <member name="P:BarRaider.SdTools.Wrappers.SdEventReceivedEventArgs`1.Event">
             <summary>
             Event Information
             </summary>
@@ -2837,6 +2742,26 @@
             Bottom Alignment
             </summary>
         </member>
+        <member name="T:BarRaider.SdTools.Wrappers.TitleHorizontalAlignment">
+            <summary>
+            Enum for the alignment of the Title text on the key
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.Wrappers.TitleHorizontalAlignment.Left">
+            <summary>
+            Top Alignment
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.Wrappers.TitleHorizontalAlignment.Middle">
+            <summary>
+            Middle/Center Alignment
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.Wrappers.TitleHorizontalAlignment.Right">
+            <summary>
+            Bottom Alignment
+            </summary>
+        </member>
         <member name="T:BarRaider.SdTools.Wrappers.TitleParameters">
             <summary>
             Class holding all the Title Information set by a user in the Property Inspector
@@ -2844,7 +2769,17 @@
         </member>
         <member name="P:BarRaider.SdTools.Wrappers.TitleParameters.TitleColor">
             <summary>
-            Title Color
+            Title color
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Wrappers.TitleParameters.TitleStrokeColor">
+            <summary>
+            Title stroke color
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Wrappers.TitleParameters.TitleStrokeThickness">
+            <summary>
+            Title stroke thickness
             </summary>
         </member>
         <member name="P:BarRaider.SdTools.Wrappers.TitleParameters.FontSizeInPoints">
@@ -2854,35 +2789,40 @@
         </member>
         <member name="P:BarRaider.SdTools.Wrappers.TitleParameters.FontSizeInPixels">
             <summary>
-            Font Size in Pixels
+            Font size in Pixels
             </summary>
         </member>
         <member name="P:BarRaider.SdTools.Wrappers.TitleParameters.FontSizeInPixelsScaledToDefaultImage">
             <summary>
-            Font Size Scaled to Image
+            Font size Scaled to Image
             </summary>
         </member>
         <member name="P:BarRaider.SdTools.Wrappers.TitleParameters.FontFamily">
             <summary>
-            Font Family
+            Font family
             </summary>
         </member>
         <member name="P:BarRaider.SdTools.Wrappers.TitleParameters.FontStyle">
             <summary>
-            Font Style
+            Font style
             </summary>
         </member>
         <member name="P:BarRaider.SdTools.Wrappers.TitleParameters.ShowTitle">
             <summary>
-            Should Title be shown
+            Should title be shown
             </summary>
         </member>
         <member name="P:BarRaider.SdTools.Wrappers.TitleParameters.VerticalAlignment">
             <summary>
-            Alignment position of the Title text on the key
+            Vertical alignment of the title text on the key
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.Wrappers.TitleParameters.#ctor(System.Drawing.FontFamily,System.Drawing.FontStyle,System.Double,System.Drawing.Color,System.Boolean,BarRaider.SdTools.Wrappers.TitleVerticalAlignment)">
+        <member name="P:BarRaider.SdTools.Wrappers.TitleParameters.HorizontalAlignment">
+            <summary>
+            Horizontal alignment of the title text on the key
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.Wrappers.TitleParameters.#ctor(SkiaSharp.SKTypeface,SkiaSharp.SKFontStyle,System.Double,SkiaSharp.SKColor,System.Boolean,BarRaider.SdTools.Wrappers.TitleVerticalAlignment,BarRaider.SdTools.Wrappers.TitleHorizontalAlignment)">
             <summary>
             Constructor
             </summary>
@@ -2892,18 +2832,23 @@
             <param name="titleColor"></param>
             <param name="showTitle"></param>
             <param name="verticalAlignment"></param>
+            <param name="horizontalAlignment"></param>
         </member>
-        <member name="M:BarRaider.SdTools.Wrappers.TitleParameters.#ctor(System.String,System.UInt32,System.String,System.Boolean,System.Boolean,System.String,System.String)">
+        <member name="M:BarRaider.SdTools.Wrappers.TitleParameters.#ctor(System.String,System.UInt32,System.String,System.Boolean,System.String,System.String)">
             <summary>
             Constructor
             </summary>
             <param name="fontFamily"></param>
             <param name="fontSize"></param>
             <param name="fontStyle"></param>
-            <param name="fontUnderline"></param>
             <param name="showTitle"></param>
             <param name="titleAlignment"></param>
             <param name="titleColor"></param>
+        </member>
+        <member name="M:BarRaider.SdTools.Wrappers.TitleParameters.#ctor">
+            <summary>
+            Default constructor, for object initializer
+            </summary>
         </member>
     </members>
 </doc>
