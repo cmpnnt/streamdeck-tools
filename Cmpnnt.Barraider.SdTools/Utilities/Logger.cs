@@ -8,10 +8,25 @@ namespace BarRaider.SdTools.Utilities
     /// </summary>
     public enum TracingLevel
     {
+        /// <summary>
+        /// Represents messages that should only be used for debugging
+        /// </summary>
         Debug,
+        /// <summary>
+        /// Represents informational messages
+        /// </summary>
         Info,
+        /// <summary>
+        /// Represents warnings that might need attention
+        /// </summary>
         Warn,
+        /// <summary>
+        /// Represents errors that need attention and might cause issues
+        /// </summary>
         Error,
+        /// <summary>
+        /// Represents fatal errors
+        /// </summary>
         Fatal
     }
 

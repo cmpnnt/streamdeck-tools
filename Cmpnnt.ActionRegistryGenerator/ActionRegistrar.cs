@@ -30,6 +30,7 @@ public class PluginRegistrar : IIncrementalGenerator
                 SemanticModel? semanticModel = ctx.Item1;
                 var className = semanticModel.GetDeclaredSymbol(classDecl)?.ToString();
 
+                // TODO: Replace this attribute nonsense. Instead, look for a base class that it inherits from.
                 return from attributeList in classDecl.AttributeLists
                     from attribute in attributeList.Attributes
                     where attribute.Name.ToString().Contains("PluginActionId") &&

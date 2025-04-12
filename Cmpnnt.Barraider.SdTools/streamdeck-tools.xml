@@ -2424,6 +2424,31 @@
             Tracing levels used for Logger
             </summary>
         </member>
+        <member name="F:BarRaider.SdTools.Utilities.TracingLevel.Debug">
+            <summary>
+            Represents messages that should only be used for debugging
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.Utilities.TracingLevel.Info">
+            <summary>
+            Represents informational messages
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.Utilities.TracingLevel.Warn">
+            <summary>
+            Represents warnings that might need attention
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.Utilities.TracingLevel.Error">
+            <summary>
+            Represents errors that need attention and might cause issues
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.Utilities.TracingLevel.Fatal">
+            <summary>
+            Represents fatal errors
+            </summary>
+        </member>
         <member name="T:BarRaider.SdTools.Utilities.Logger">
             <summary>
             Log4Net logger helper class
