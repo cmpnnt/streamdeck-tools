@@ -2,6 +2,11 @@
   
   <UsingTask TaskName="Cmpnnt.BuildTasks.SetOutputDirectory" TaskFactory="TaskHostFactory" AssemblyFile="$(TaskAssemblyPath)" />
   <UsingTask TaskName="Cmpnnt.BuildTasks.RenameOutputDirectory" TaskFactory="TaskHostFactory" AssemblyFile="$(TaskAssemblyPath)" />
+  <UsingTask TaskName="Cmpnnt.BuildTasks.CloseStreamDeck" TaskFactory="TaskHostFactory" AssemblyFile="$(TaskAssemblyPath)" />
+  <UsingTask TaskName="Cmpnnt.BuildTasks.OpenStreamDeck" TaskFactory="TaskHostFactory" AssemblyFile="$(TaskAssemblyPath)" />
+  <UsingTask TaskName="Cmpnnt.BuildTasks.CloseStreamDeck" TaskFactory="TaskHostFactory" AssemblyFile="$(TaskAssemblyPath)" />
+  <UsingTask TaskName="Cmpnnt.BuildTasks.LinkPlugin" TaskFactory="TaskHostFactory" AssemblyFile="$(TaskAssemblyPath)" />
+  <UsingTask TaskName="Cmpnnt.BuildTasks.PackagePlugin" TaskFactory="TaskHostFactory" AssemblyFile="$(TaskAssemblyPath)" />
   
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -27,6 +32,7 @@
   </Target>
   
   <Target Name="SetOutputDir" DependsOnTargets="BuildTasks">
+    <Cmpnnt.BuildTasks.CloseStreamDeck PluginName="$(AssemblyName)" />
     <Cmpnnt.BuildTasks.SetOutputDirectory JsonFilePath="$(JsonFilePath)">
       <Output TaskParameter="OutputDirectory" PropertyName="OutputDirectory" />
     </Cmpnnt.BuildTasks.SetOutputDirectory>
@@ -38,6 +44,11 @@
     </PropertyGroup>
     <Cmpnnt.BuildTasks.RenameOutputDirectory OldPath="$(BaseDir)\tmp.sdPlugin" NewPath="$(RenamedDir)" />
     <Message Importance="high" Text="Output directory renamed to $(RenamedDir)" />
+
+    <Cmpnnt.BuildTasks.LinkPlugin Condition="'$(Configuration)' == 'Debug'"  BuildDir="$(BaseDir)\$(OutputDirectory).sdPlugin" PluginName="$(AssemblyName)" />
+    <Cmpnnt.BuildTasks.PackagePlugin Condition="'$(Configuration)' == 'Release'"  BuildDir="$(BaseDir)\$(OutputDirectory).sdPlugin" />
+    
+    <Cmpnnt.BuildTasks.OpenStreamDeck />
   </Target>
   
   <ItemGroup>

@@ -8,18 +8,6 @@ namespace Cmpnnt.BuildTasks;
 
 public class LinkPlugin : Task
 {
-    private string pluginsDirPath;
-    
-    /// <summary>
-    /// The path to the directory where the Stream Deck application stores installed plugins. Defaults are provided for
-    /// macOS and Windows, but can be overridden with the setter;
-    /// </summary>
-    public string PluginsDirectoryPath
-    {
-        get => PluginsDirectory();
-        set => pluginsDirPath = value;
-    }
-
     /// <summary>
     /// The name of your plugin, used to stop the process.
     /// </summary>
@@ -32,12 +20,8 @@ public class LinkPlugin : Task
     [Required]
     public string BuildDir { get; set; }
     
-    [Required]
-    public bool ClosedStreamDeck { get; set; }
-    
     public override bool Execute()
     {
-        
         // TODO: This is an `AfterBuild` task to replace the install script. First, it
         // checks if the CLI app exists, and skip the task if not. It then deletes the
         // existing link in the SD plugins directory, if present, and recreates it with
@@ -49,26 +33,12 @@ public class LinkPlugin : Task
         
         ProcessUtilities pu = new(PluginName, this);
 
-        if (!ClosedStreamDeck) return false;
-        if (!pu.FindCli()) return false;
-        if (!pu.LinkPlugin(PluginsDirectoryPath)) return false;
-        if (!pu.StartStreamDeck(BuildDir)) return false;
-
-        return true;
-    }
-
-    private static string PluginsDirectory()
-    {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (pu.IsRunning("StreamDeck"))
         {
-            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            return @$"{appData}\Elgato\StreamDeck\Plugins";
+            Log.LogError("StreamDeck is running. Please close the application before continuing.");
+            return false;
         }
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            return "~/Library/Application Support/Elgato/StreamDeck/Plugins";
-        }
-
-        throw new PlatformNotSupportedException();
+        
+        return pu.FindCli() && pu.LinkPlugin(BuildDir);
     }
 }

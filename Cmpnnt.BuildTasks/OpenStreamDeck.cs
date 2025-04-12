@@ -7,12 +7,8 @@ using Task = Microsoft.Build.Utilities.Task;
 
 namespace Cmpnnt.BuildTasks;
 
-public class CloseStreamDeck : Task
+public class OpenStreamDeck : Task
 {
-    
-    [Required]
-    public string PluginName { get; set; }
-    
     public override bool Execute()
     {
         // This is a `BeforeBuild` task to stop the streamdeck and the plugin instance, because
@@ -24,23 +20,14 @@ public class CloseStreamDeck : Task
         // set `ClosedStreamDeck` to true. If either one was running and was successfully stopped,
         // set it to true. This will also run only in debug.
         
-        ProcessUtilities pu = new(PluginName, this);
-
-        if (!pu.FindCli())
+        string appPath = Environment.OSVersion.Platform switch
         {
-            return false;
-        }
-
-        if (!pu.StopPlugin())
-        {
-            return false;
-        }
-
-        if (!pu.StopStreamDeck())
-        {
-            return false;
-        }
-
-        return true;
+            PlatformID.Win32NT => @"C:\Program Files\Elgato\StreamDeck\StreamDeck.exe",
+            PlatformID.MacOSX => "",
+            _ => throw new NotSupportedException() // Linux: Wishful thinking
+        };
+        
+        ProcessUtilities pu = new("", this);
+        return pu.StartStreamDeck(appPath);
     }
 }

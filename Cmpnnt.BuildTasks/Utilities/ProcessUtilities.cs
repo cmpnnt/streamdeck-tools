@@ -12,11 +12,11 @@ public class ProcessUtilities(string pluginName, Task task)
 
     public bool FindCli()
     {
-        (bool success, string output) result = CommandLineWrapper.Execute("streamdeck", "-v").Result;
+        (bool success, string output) result = CommandLineWrapper.Execute("streamdeck", "-v", true).Result;
 
         if (!result.success)
         {
-            logger.LogError("Cannot find streamdeck CLI installed. Skipping...");
+            logger.LogError("Cannot find streamdeck CLI installed.");
             return false;
         }
        
@@ -25,7 +25,7 @@ public class ProcessUtilities(string pluginName, Task task)
         
         if (matches.Count == 0)
         {
-            logger.LogError("Cannot find streamdeck CLI installed. Skipping...");
+            logger.LogError("Cannot find streamdeck CLI installed.");
             return false;
         }
         
@@ -89,8 +89,25 @@ public class ProcessUtilities(string pluginName, Task task)
     /// <returns>True, if successful</returns>
     public bool LinkPlugin(string buildDir)
     {
-        (bool success, string _) result = CommandLineWrapper.Execute("streamdeck", $"link {buildDir}").Result;
-        return result.success;
+        (bool success, string output) result = CommandLineWrapper.Execute("streamdeck", $"link {buildDir}", true).Result;
+        if (!result.success)
+        {
+            logger.LogError(result.output);
+        }
+        
+        return true;
+    }
+    
+    public bool PackPlugin(string buildDir, string outputDir)
+    {
+        var packCommand = $"pack {buildDir} -o {outputDir}";
+        (bool success, string output) result = CommandLineWrapper.Execute("streamdeck", packCommand, true).Result;
+        if (!result.success)
+        {
+            logger.LogError($"Failed to pack plugin. {result.output}");
+        }
+        
+        return true;
     }
     
     /// <summary>
@@ -99,7 +116,13 @@ public class ProcessUtilities(string pluginName, Task task)
     /// <returns>True, if successful</returns>
     public bool StartStreamDeck(string appPath)
     {
-        (bool success, string _) result =CommandLineWrapper.Run(appPath).Result;
-        return result.success;
+        Process process = Process.Start(appPath);
+        return process is { Responding: true };
+    }
+    
+    public bool IsRunning(string processName)
+    {
+        Process[] procs = Process.GetProcessesByName(processName);
+        return procs.Length > 0;
     }
 }

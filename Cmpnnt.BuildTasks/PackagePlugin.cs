@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.InteropServices;
+using Cmpnnt.BuildTasks.Utilities;
 using Microsoft.Build.Framework;
 using Task = Microsoft.Build.Utilities.Task;
 
@@ -6,18 +8,43 @@ namespace Cmpnnt.BuildTasks;
 
 public class PackagePlugin : Task
 {
+    /// <summary>
+    /// The path to your plugin's build directory.
+    /// </summary>
     [Required]
-    public string PublishedPath { get; set; }
+    public string BuildDir { get; set; }
     
-    // If this isn't set, default to the build output directory
-    public string PluginDestinationPath { get; set; }
+    /// <summary>
+    /// The destination for your packaged plugin.
+    /// </summary>
+    public string OutputDir { get; set; } = PluginsDirectory();
     
     public override bool Execute()
     {
-        // TODO: This should run the streamdeck command to package the specified directory
-        // into a streamdeck plugin. It should check if the `streamdeck` command is available
-        // and log the exception, if not installed. This will be an `AfterPublish` task.
+        ProcessUtilities pu = new("", this);
+
+        if (pu.IsRunning("StreamDeck"))
+        {
+            Log.LogError("StreamDeck is running. Please close the application before continuing.");
+            return false;
+        }
         
-        throw new NotImplementedException();
+        return pu.FindCli() && pu.PackPlugin(BuildDir, OutputDir);
+    }
+    
+    // TODO: Note the default directories for the packaged plugin in the documentation.
+    private static string PluginsDirectory()
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            return @$"{appData}\Elgato\StreamDeck\Plugins";
+        }
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            return "~/Library/Application Support/Elgato/StreamDeck/Plugins";
+        }
+
+        throw new PlatformNotSupportedException();
     }
 }
