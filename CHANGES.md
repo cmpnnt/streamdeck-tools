@@ -13,10 +13,16 @@ Other changes, in no particular order:
 - Sample project now uses plugin `UUID` from `manifest.json` for build output directory
 - In Progress: New MSBuild tasks to automate plugin installation during development (in debug mode only)
 - Minor refactoring to use new language features
-- Remove code marked `deprecated` and `obsolete` by Barraider
-- Drop legacy .NET Framework in favor of .NET 8 minimum
+- Removed code marked `deprecated` and `obsolete` by Barraider
+- Dropped legacy .NET Framework in favor of .NET 8 minimum
 - TODO: Update to latest Stream Deck SDK 
 - TODO: Reversioning the changelog
+- TODO: Obsolete and remove PluginActionId
+  - This is necessary because currently the source generator uses it to instantiate the plugin class, instead of using
+  - the class's actual name. Modify the generator to instead look for a base class that it inherits from.
+  - Also, manipulate the manifest.json to make the UUID be the class name with a namespace prefix.
+- TODO: Put conditionals in the sample project's csproj file to skip everything but the package step (release mode only), 
+  - which will be only for Release mode
 
 ## Backlogged TODO:
 
