@@ -24,7 +24,6 @@ public static class CommandLineWrapper
         {
             PlatformID.Win32NT => "cmd.exe",
             PlatformID.MacOSX => "/bin/bash",
-            PlatformID.Unix => "/bin/bash",
             _ => throw new NotSupportedException()
         };
 
@@ -44,6 +43,7 @@ public static class CommandLineWrapper
 
         var output = new StringBuilder();
         var error = new StringBuilder();
+        int exitCode = 0;
 
         proc.OutputDataReceived += (_, e) =>
         {
@@ -57,7 +57,7 @@ public static class CommandLineWrapper
         {
             if (!string.IsNullOrEmpty(e.Data))
             {
-                error.Append(e.Data.Trim());
+                error.Append($"{e.Data.Trim()} ");
             }
         };
 
@@ -84,12 +84,19 @@ public static class CommandLineWrapper
         }
         finally
         {
+            exitCode = proc.ExitCode;
             proc.Close();
         }
         
-        return error.Length == 0 ? (true, output.ToString()) : (false, error.ToString());
+        bool hasError = exitCode != 0 || error.Length > 0;
+        if (hasError)
+        {
+            error.Append(output);
+        }
+        
+        return !hasError ? (true, output.ToString()) : (false, error.ToString());
     }
-
+    
     public static async Task<(bool, string)> Run(string command, string args = "", CancellationToken ct = default)
     {
         return await Execute(command, args, commandLine: false, ct: ct);
