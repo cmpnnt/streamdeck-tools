@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
@@ -24,6 +23,8 @@ namespace BarRaider.SdTools.Utilities
         private const string HEADER_PREFIX = "data:image/png;base64,";
         private const int CLASSIC_KEY_DEFAULT_HEIGHT = 72;
         private const int CLASSIC_KEY_DEFAULT_WIDTH = 72;
+        private const int PLUS_KEY_DEFAULT_HEIGHT = 144;
+        private const int PLUS_KEY_DEFAULT_WIDTH = 144;
         private const int XL_KEY_DEFAULT_HEIGHT = 96;
         private const int XL_KEY_DEFAULT_WIDTH = 96;
         private const int GENERIC_KEY_IMAGE_SIZE = 144;
@@ -118,6 +119,7 @@ namespace BarRaider.SdTools.Utilities
                 case DeviceType.StreamDeckClassic:
                 case DeviceType.StreamDeckMini:
                 case DeviceType.StreamDeckMobile:
+                case DeviceType.StreamDeckNeo:
                     return CLASSIC_KEY_DEFAULT_HEIGHT;
                 case DeviceType.StreamDeckXl:
                     return XL_KEY_DEFAULT_HEIGHT;
@@ -141,9 +143,12 @@ namespace BarRaider.SdTools.Utilities
                 case DeviceType.StreamDeckClassic:
                 case DeviceType.StreamDeckMini:
                 case DeviceType.StreamDeckMobile:
+                case DeviceType.StreamDeckNeo:
                     return CLASSIC_KEY_DEFAULT_WIDTH;
                 case DeviceType.StreamDeckXl:
                     return XL_KEY_DEFAULT_WIDTH;
+                case DeviceType.StreamDeckPlus:
+                    return PLUS_KEY_DEFAULT_WIDTH;
                 default:
                     Logger.Instance.LogMessage(TracingLevel.Error, $"SDTools GetKeyDefaultHeight Error: Invalid StreamDeckDeviceType: {streamDeckType}");
                     break;
