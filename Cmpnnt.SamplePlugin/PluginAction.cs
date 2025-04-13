@@ -10,9 +10,10 @@ using SkiaSharp;
 
 namespace Cmpnnt.SamplePlugin
 {
-    [PluginActionId("com.test.sdtools.sampleplugin")]
     public partial class PluginAction : KeyAndEncoderBase
     {
+        public const string ActionId = "com.test.sdtools.sampleplugin";
+        
         // TODO: Can the framework be refactored to have a standardized settings class?
         //   See: https://docs.elgato.com/streamdeck/sdk/guides/settings
         private class PluginSettings

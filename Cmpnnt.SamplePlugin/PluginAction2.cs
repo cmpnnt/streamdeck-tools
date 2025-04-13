@@ -10,14 +10,17 @@ using SkiaSharp;
 
 namespace Cmpnnt.SamplePlugin
 {
-    [PluginActionId("com.test.sdtools.sampleplugin2")]
-    public class PluginAction2 : KeyAndEncoderBase
+    public partial class PluginAction2 : KeyAndEncoderBase
     {
-        private class PluginSettings2
+        public const string ActionId = "com.test.sdtools.sampleplugin2";
+        
+        // TODO: Can the framework be refactored to have a standardized settings class?
+        //   See: https://docs.elgato.com/streamdeck/sdk/guides/settings
+        private class PluginSettings
         {
-            public static PluginSettings2 CreateDefaultSettings()
+            public static PluginSettings CreateDefaultSettings()
             {
-                var instance = new PluginSettings2
+                var instance = new PluginSettings
                 {
                     OutputFileName = string.Empty,
                     InputString = string.Empty
@@ -34,14 +37,14 @@ namespace Cmpnnt.SamplePlugin
         }
 
         #region Private Members
-        private readonly PluginSettings2 settings;
+        private readonly PluginSettings settings;
         #endregion
         
         public PluginAction2(ISdConnection connection, InitialPayload payload) : base(connection, payload)
         {
             settings = payload.Settings == null || payload.Settings.Count == 0 ?
-                PluginSettings2.CreateDefaultSettings() :
-                payload.Settings.ToObject<PluginSettings2>();
+                PluginSettings.CreateDefaultSettings() :
+                payload.Settings.ToObject<PluginSettings>();
 
             Connection.OnApplicationDidLaunch += Connection_OnApplicationDidLaunch;
             Connection.OnApplicationDidTerminate += Connection_OnApplicationDidTerminate;
