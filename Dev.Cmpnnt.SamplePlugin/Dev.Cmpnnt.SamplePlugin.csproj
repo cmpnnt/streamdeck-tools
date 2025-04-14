@@ -1,5 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" InitialTargets="GenerateManifest" >
-  
+﻿<Project Sdk="Microsoft.NET.Sdk" InitialTargets="BuildTasks" >
   <UsingTask TaskName="Cmpnnt.BuildTasks.SetOutputDirectory" TaskFactory="TaskHostFactory" AssemblyFile="$(TaskAssemblyPath)" />
   <UsingTask TaskName="Cmpnnt.BuildTasks.RenameOutputDirectory" TaskFactory="TaskHostFactory" AssemblyFile="$(TaskAssemblyPath)" />
   <UsingTask TaskName="Cmpnnt.BuildTasks.CloseStreamDeck" TaskFactory="TaskHostFactory" AssemblyFile="$(TaskAssemblyPath)" />
@@ -8,7 +7,7 @@
   <UsingTask TaskName="Cmpnnt.BuildTasks.LinkPlugin" TaskFactory="TaskHostFactory" AssemblyFile="$(TaskAssemblyPath)" />
   <UsingTask TaskName="Cmpnnt.BuildTasks.PackagePlugin" TaskFactory="TaskHostFactory" AssemblyFile="$(TaskAssemblyPath)" />
   <UsingTask TaskName="Cmpnnt.BuildTasks.GenerateManifest" AssemblyFile="$(TaskAssemblyPath)" />
-  
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
@@ -17,7 +16,6 @@
     <!-- TODO: convert to native compilation -->
     <!-- TODO: extract properties and targets into .props and .targets files and reference them here -->
   </PropertyGroup>
-  
   <PropertyGroup>
     <TaskAssemblyPath>$(SolutionDir)Cmpnnt.BuildTasks\bin\$(Configuration)\$(Platform)\Cmpnnt.BuildTasks.dll</TaskAssemblyPath>
   </PropertyGroup>
@@ -26,18 +24,16 @@
     <OutDir>bin\$(Configuration)\$(Platform)\$(AssemblyNameLower).sdPlugin\</OutDir>
     <BaseDir>$(MSBuildThisFileDirectory)bin\$(Configuration)\$(Platform)</BaseDir>
   </PropertyGroup>
-  
+
   <Target Name="BuildTasks">
     <MSBuild Projects="..\Cmpnnt.BuildTasks\Cmpnnt.BuildTasks.csproj" />
   </Target>
-  
   <Target Name="GenerateManifest" AfterTargets="Build">
     <Cmpnnt.BuildTasks.CloseStreamDeck PluginName="$(AssemblyName)" />
-    <Cmpnnt.BuildTasks.GenerateManifest 
-            PluginAssemblyPath="$(BaseDir)\$(AssemblyNameLower).sdPlugin\$(AssemblyNameLower).dll" 
+    <Cmpnnt.BuildTasks.GenerateManifest
+            PluginAssemblyPath="$(BaseDir)\$(AssemblyNameLower).sdPlugin\$(AssemblyNameLower).dll"
             OutputManifestPath="$(BaseDir)\$(AssemblyNameLower).sdPlugin\manifest.json" />
   </Target>
-  
   <Target Name="RenameOutputDirectory" AfterTargets="Build" DependsOnTargets="GenerateManifest">
     <Cmpnnt.BuildTasks.LinkPlugin Condition="'$(Configuration)' == 'Debug'"  BuildDir="$(BaseDir)\$(AssemblyNameLower).sdPlugin" PluginName="$(AssemblyNameLower)" />
     <Cmpnnt.BuildTasks.PackagePlugin Condition="'$(Configuration)' == 'Release'"  BuildDir="$(BaseDir)\$(AssemblyNameLower).sdPlugin" />
@@ -110,9 +106,9 @@
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
-  
   <ItemGroup>
     <ProjectReference Include="..\Cmpnnt.ActionRegistryGenerator\Cmpnnt.ActionRegistryGenerator.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
+    <ProjectReference Include="..\Cmpnnt.BuildTasks\Cmpnnt.BuildTasks.csproj" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\Cmpnnt.Barraider.SdTools\Cmpnnt.Barraider.SdTools.csproj" />
   </ItemGroup>
 </Project>
