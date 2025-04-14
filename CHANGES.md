@@ -6,13 +6,14 @@ The two biggest updates are **Native AOT** compatibility and **cross-platform** 
 
 Other changes, in no particular order:
 
+- Automatic manifest generation
+- New MSBuild tasks to automate plugin installation during development and plugin packaging
 - TODO: `Newtonsoft.Json` replaced with source-generated `System.Text.Json`
 - Reflection-based plugin action autoloading replaced with source generation
 - `System.Drawing` replaced with `Skia Sharp` for cross-platform purposes
 - Sample plugin updated to use Skia Sharp, and include dial press and encoder examples
 - Sample project now uses plugin `UUID` from `manifest.json` for build output directory
-- In Progress: New MSBuild tasks to automate plugin installation during development (in debug mode only)
-- Minor refactoring to use new language features
+- Refactoring to use new language features
 - Removed code marked `deprecated` and `obsolete` by Barraider
 - Dropped legacy .NET Framework in favor of .NET 8 minimum
 - TODO: Update to latest Stream Deck SDK 
