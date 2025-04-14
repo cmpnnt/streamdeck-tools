@@ -19,7 +19,6 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <JsonFilePath>manifest.json</JsonFilePath>
     <TaskAssemblyPath>$(SolutionDir)Cmpnnt.BuildTasks\bin\$(Configuration)\$(Platform)\Cmpnnt.BuildTasks.dll</TaskAssemblyPath>
   </PropertyGroup>
   <PropertyGroup>
@@ -37,11 +36,6 @@
     <Cmpnnt.BuildTasks.GenerateManifest 
             PluginAssemblyPath="$(BaseDir)\$(AssemblyNameLower).sdPlugin\$(AssemblyNameLower).dll" 
             OutputManifestPath="$(BaseDir)\$(AssemblyNameLower).sdPlugin\manifest.json" />
-    <ItemGroup>
-      <Content Include="$(JsonFilePath)" Condition="Exists('$(JsonFilePath)')">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-    </ItemGroup>
   </Target>
   
   <Target Name="RenameOutputDirectory" AfterTargets="Build" DependsOnTargets="GenerateManifest">
