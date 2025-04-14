@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
-using System.Threading; // Required for CancellationToken
+using System.Threading;
 
 namespace Cmpnnt.ActionRegistryGenerator;
 
@@ -14,8 +14,8 @@ public class PluginRegistrar : IIncrementalGenerator
 {
     // Define the fully qualified name of the interface we're looking for
     private const string INTERFACE_FULL_NAME = "BarRaider.SdTools.Backend.ICommonPluginFunctions";
-    // Define the name of the constant field we expect for the Action ID
-    private const string ACTION_ID_FIELD_NAME = "ActionId";
+    // REMOVED: ACTION_ID_FIELD_NAME constant is no longer needed.
+    // private const string ACTION_ID_FIELD_NAME = "ActionId"; 
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
@@ -30,28 +30,32 @@ public class PluginRegistrar : IIncrementalGenerator
         IncrementalValueProvider<(Compilation, ImmutableArray<ClassDeclarationSyntax>)> compilationAndClasses =
             context.CompilationProvider.Combine(classDeclarations.Collect());
 
-        // 3. Filter classes and extract required data.
-        IncrementalValueProvider<ImmutableArray<(string ClassName, string ActionId)>> pluginData =
+        // 3. Filter classes and extract required data (now just the full class name).
+        //    The type parameter is changed to ImmutableArray<string>.
+        IncrementalValueProvider<ImmutableArray<string>> pluginClassNames =
             compilationAndClasses.Select((tuple, ct) =>
-                GetPluginClasses(tuple.Item1, tuple.Item2, ct));
+                GetPluginClassNames(tuple.Item1, tuple.Item2, ct)); // Renamed method for clarity
 
         // 4. Register the source output.
-        context.RegisterSourceOutput(pluginData, Generate);
+        //    Pass the new data structure (ImmutableArray<string>) to Generate.
+        context.RegisterSourceOutput(pluginClassNames, Generate);
     }
 
-    private static ImmutableArray<(string ClassName, string ActionId)> GetPluginClasses(
-        Compilation compilation, 
-        ImmutableArray<ClassDeclarationSyntax> classes, 
+    // Renamed method and changed return type to ImmutableArray<string>
+    private static ImmutableArray<string> GetPluginClassNames(
+        Compilation compilation,
+        ImmutableArray<ClassDeclarationSyntax> classes,
         CancellationToken ct)
     {
-        ImmutableArray<(string ClassName, string ActionId)>.Builder results = 
-            ImmutableArray.CreateBuilder<(string ClassName, string ActionId)>();
-        
+        // Builder now holds strings (the fully qualified class names)
+        ImmutableArray<string>.Builder results = ImmutableArray.CreateBuilder<string>();
+
         INamedTypeSymbol? interfaceSymbol = compilation.GetTypeByMetadataName(INTERFACE_FULL_NAME);
 
         if (interfaceSymbol == null)
         {
             // Interface not found in compilation, cannot proceed.
+            // Optionally report a diagnostic here.
             return results.ToImmutable();
         }
 
@@ -66,48 +70,47 @@ public class PluginRegistrar : IIncrementalGenerator
             }
 
             // Check if the class is concrete (not abstract, static) and implements the target interface.
+            // Using OriginalDefinition is robust against constructed generic types if the interface itself were generic.
             if (classSymbol.IsAbstract || classSymbol.IsStatic ||
-                !classSymbol.AllInterfaces.Contains(interfaceSymbol, SymbolEqualityComparer.Default))
+                !classSymbol.AllInterfaces.Any(i => SymbolEqualityComparer.Default.Equals(i.OriginalDefinition, interfaceSymbol.OriginalDefinition)))
             {
                 continue; // Skip abstract/static classes or those not implementing the interface
             }
 
-            // Find the required constant field (ActionId)
-            ISymbol? actionIdMember = classSymbol.GetMembers(ACTION_ID_FIELD_NAME)
-                .FirstOrDefault(m => m is IFieldSymbol { IsConst: true } fs && // Must be const
-                                     fs.DeclaredAccessibility == Accessibility.Public && // Must be public
-                                     fs.Type.SpecialType == SpecialType.System_String); // Must be a string
+            // REMOVED: Logic to find the ActionId constant field.
 
-            if (actionIdMember is not IFieldSymbol actionIdField || actionIdField.ConstantValue == null)
+            // Get the fully qualified class name.
+            string className = classSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+            // Clean up the "global::" prefix if it exists.
+            className = className.Replace("global::", "");
+
+            // Ensure we got a valid class name (should always be true if symbol resolution worked)
+            if (!string.IsNullOrEmpty(className))
             {
-                // Optionally report a diagnostic: Class implements interface but lacks the required public const string ActionId field.
-                continue; // Skip if ActionId constant is missing, not public, not const, not a string, or has no value
-            }
-
-            var actionIdValue = actionIdField.ConstantValue.ToString();
-            string className = classSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat); // Get fully qualified name
-
-            // Ensure we got valid data
-            if (!string.IsNullOrEmpty(actionIdValue) && !string.IsNullOrEmpty(className))
-            {
-                 results.Add((ClassName: $"{className}", ActionId: actionIdValue));
+                // Add the fully qualified class name directly to the results.
+                results.Add(className);
             }
         }
 
         return results.ToImmutable();
     }
 
-    // Note: The signature of Generate now matches the data structure from GetPluginClasses
-    private static void Generate(SourceProductionContext context, ImmutableArray<(string ClassName, string ActionId)> plugins)
+    // Updated signature to accept ImmutableArray<string>
+    private static void Generate(SourceProductionContext context, ImmutableArray<string> pluginClassNames)
     {
-        if (plugins.IsEmpty)
+        if (pluginClassNames.IsEmpty)
         {
             return;
         }
 
-        // Assume 'Templates.CreateRegistrar' is updated to accept this new structure
-        // You will need to modify the Templates class accordingly.
-        SourceText sourceText = SourceText.From(Templates.CreateRegistrar(plugins), Encoding.UTF8);
-        context.AddSource("PluginActionIdRegistry.g.cs", sourceText); // Consistent naming with example output
+        // *** CRITICAL NOTE ***
+        // You MUST update the 'Templates.CreateRegistrar' method
+        // to accept 'ImmutableArray<string> pluginClassNames' instead of the previous tuple structure.
+        // It should now use the strings directly as the Action IDs in the generated code.
+        // Example assumption for Templates.CreateRegistrar(pluginClassNames):
+        // It might iterate through pluginClassNames and use each string where ActionId was previously used.
+
+        SourceText sourceText = SourceText.From(Templates.CreateRegistrar(pluginClassNames), Encoding.UTF8);
+        context.AddSource("PluginActionIdRegistry.g.cs", sourceText);
     }
 }

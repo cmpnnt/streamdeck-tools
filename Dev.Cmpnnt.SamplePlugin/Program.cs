@@ -3,7 +3,7 @@ using BarRaider.SdTools.Wrappers;
 using Cmpnnt.SdTools.Generators;
 using System.Collections.Frozen;
 
-namespace Cmpnnt.SamplePlugin
+namespace Dev.Cmpnnt.SamplePlugin
 {
     class Program
     {

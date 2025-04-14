@@ -25,31 +25,6 @@
       "Tooltip": "Sample Plugin to Test SDTools",
       "PropertyInspectorPath": "PropertyInspector/Sample.html",
       "UUID": "com.test.sdtools.sampleplugin"
-    },
-    {
-      "Icon": "Images/icon",
-      "Name": "SDTools Test 2",
-      "Controllers": ["Keypad", "Encoder"],
-      "Encoder": {
-        "layout": "$B1",
-        "TriggerDescription": {
-          "Push": "Play / Pause",
-          "Rotate": "Adjust Volume",
-          "Touch": "Play / Pause",
-          "LongTouch": "Skip Track"
-        }
-      },
-      "States": [
-        {
-          "Image": "Images/pluginAction",
-          "TitleAlignment": "middle",
-          "FontSize": 12
-        }
-      ],
-      "SupportedInMultiActions": true,
-      "Tooltip": "Sample Plugin to Test SDTools 2",
-      "PropertyInspectorPath": "PropertyInspector/Sample.html",
-      "UUID": "com.test.sdtools.sampleplugin2"
     }
   ],
   "Author": "BarRaider",

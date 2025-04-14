@@ -16,13 +16,11 @@ Other changes, in no particular order:
 - Removed code marked `deprecated` and `obsolete` by Barraider
 - Dropped legacy .NET Framework in favor of .NET 8 minimum
 - TODO: Update to latest Stream Deck SDK 
+- Removed PluginActionId attribute in favor of automatic generation based on the class name
+  - This is part of a new source generation process that replaces reflection-based plugin autoloading.
+  - The Plugin ID is now generated based on the class name and is automatically populated in manifest.json
 - TODO: Reversioning the changelog
-- TODO: Obsolete and remove PluginActionId
-  - This is necessary because currently the source generator uses it to instantiate the plugin class, instead of using
-  - the class's actual name. Modify the generator to instead look for a base class that it inherits from.
-  - Also, manipulate the manifest.json to make the UUID be the class name with a namespace prefix.
-- TODO: Put conditionals in the sample project's csproj file to skip everything but the package step (release mode only), 
-  - which will be only for Release mode
+  - The library no longer tracks with the Stream Deck SDK version.
 
 ## Backlogged TODO:
 

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using Cmpnnt.BuildTasks.Utilities;
+﻿using Cmpnnt.BuildTasks.Utilities;
 using Microsoft.Build.Framework;
 using Task = Microsoft.Build.Utilities.Task;
 
@@ -33,12 +31,8 @@ public class LinkPlugin : Task
         
         ProcessUtilities pu = new(PluginName, this);
 
-        if (pu.IsRunning("StreamDeck"))
-        {
-            Log.LogError("StreamDeck is running. Please close the application before continuing.");
-            return false;
-        }
-        
-        return pu.FindCli() && pu.LinkPlugin(BuildDir);
+        if (!pu.IsRunning("StreamDeck")) return pu.FindCli() && pu.LinkPlugin(BuildDir);
+        Log.LogError("StreamDeck is running. Please close the application before continuing.");
+        return false;
     }
 }

@@ -8,12 +8,10 @@ using BarRaider.SdTools.Payloads;
 using BarRaider.SdTools.Utilities;
 using SkiaSharp;
 
-namespace Cmpnnt.SamplePlugin
+namespace Dev.Cmpnnt.SamplePlugin
 {
     public partial class PluginAction : KeyAndEncoderBase
     {
-        public const string ActionId = "com.test.sdtools.sampleplugin";
-        
         // TODO: Can the framework be refactored to have a standardized settings class?
         //   See: https://docs.elgato.com/streamdeck/sdk/guides/settings
         private class PluginSettings

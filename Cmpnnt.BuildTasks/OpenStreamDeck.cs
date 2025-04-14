@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
 using Cmpnnt.BuildTasks.Utilities;
-using Microsoft.Build.Framework;
 using Task = Microsoft.Build.Utilities.Task;
 
 namespace Cmpnnt.BuildTasks;
