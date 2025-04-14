@@ -44,7 +44,7 @@ namespace Cmpnnt.SdTools.Generators
             // Add each Action ID to the HashSet initializer
             foreach (string actionId in plugins)
             {
-                sb.AppendLine($"                \"{EscapeString(actionId)}\",");
+                sb.AppendLine($"                \"{EscapeString(actionId.ToLower())}\",");
             }
 
             sb.AppendLine(@"            };
@@ -60,7 +60,7 @@ namespace Cmpnnt.SdTools.Generators
             foreach (string actionId in plugins)
             {
                 // Note: Using fully qualified class name with global:: prefix
-                sb.AppendLine($"                [\"{EscapeString(actionId)}\"] = (conn, load) => new {actionId}(conn, load),");
+                sb.AppendLine($"                [\"{EscapeString(actionId.ToLower())}\"] = (conn, load) => new {actionId}(conn, load),");
             }
 
             sb.AppendLine(@"            };
