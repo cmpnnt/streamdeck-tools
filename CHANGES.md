@@ -12,7 +12,6 @@ Other changes, in no particular order:
 - Reflection-based plugin action autoloading replaced with source generation
 - `System.Drawing` replaced with `Skia Sharp` for cross-platform purposes
 - Sample plugin updated to use Skia Sharp, and include dial press and encoder examples
-- Sample project now uses plugin `UUID` from `manifest.json` for build output directory
 - Refactoring to use new language features
 - Removed code marked `deprecated` and `obsolete` by Barraider
 - Dropped legacy .NET Framework in favor of .NET 8 minimum
