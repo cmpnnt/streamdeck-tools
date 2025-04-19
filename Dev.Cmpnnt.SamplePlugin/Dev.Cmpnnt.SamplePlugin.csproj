@@ -30,8 +30,10 @@
   <Target Name="BuildTasks">
     <MSBuild Projects="..\Cmpnnt.BuildTasks\Cmpnnt.BuildTasks.csproj" />
   </Target>
-  <Target Name="GenerateManifest" AfterTargets="Build">
+  <Target Name="CloseStreamDeck" AfterTargets="Build">
     <Cmpnnt.BuildTasks.CloseStreamDeck PluginName="$(AssemblyName)" />
+  </Target>
+  <Target Name="GenerateManifest" AfterTargets="Build" DependsOnTargets="CloseStreamDeck">
     <Cmpnnt.BuildTasks.GenerateManifest
             PluginAssemblyPath="$(BaseDir)\$(AssemblyNameLower).sdPlugin\$(AssemblyNameLower).dll"
             OutputManifestPath="$(BaseDir)\$(AssemblyNameLower).sdPlugin\manifest.json" />
